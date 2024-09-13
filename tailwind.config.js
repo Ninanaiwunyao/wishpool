@@ -7,6 +7,13 @@ export default {
       fontFamily: {
         sans: ["Noto Sans TC", "sans-serif"],
       },
+      colors: {
+        darkBlue: "#2F3061",
+        lightBlue: "#6CA6C1",
+        yellow: "#FFE66D",
+        jet: "#343434",
+        cream: "#F7FFF7",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
