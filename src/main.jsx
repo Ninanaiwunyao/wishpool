@@ -22,18 +22,18 @@ root.render(
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} />
-        <Route path="WishForm" element={<WishForm />} />
-        <Route path="WishPool" element={<WishPool />} />
-        <Route path="WishCardDetail/:id" element={<WishCardDetail />} />
-        <Route path="Leaderboard" element={<Leaderboard />} />
+        <Route path="wishForm" element={<WishForm />} />
+        <Route path="wishPool" element={<WishPool />} />
+        <Route path="wishcarddetail/:id" element={<WishCardDetail />} />
+        <Route path="leaderboard" element={<Leaderboard />} />
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-      <Route path="/MemberPage" element={<MemberPage />}>
-        <Route path="Profile" element={<Profile />} />
-        <Route path="Favorites" element={<Favorites />} />
-        <Route path="Progress" element={<Progress />} />
-        <Route path="Message" element={<Message />} />
-        <Route path="Transaction" element={<Transaction />} />
+        <Route path="/memberpage" element={<MemberPage />}>
+          <Route path="profile" element={<Profile />} />
+          <Route path="favorites" element={<Favorites />} />
+          <Route path="progress" element={<Progress />} />
+          <Route path="message" element={<Message />} />
+          <Route path="transaction" element={<Transaction />} />
+        </Route>
       </Route>
     </Routes>
   </BrowserRouter>
