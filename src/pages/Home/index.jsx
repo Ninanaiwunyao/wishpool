@@ -4,7 +4,7 @@ import gifImage from "./pool.gif";
 const Home = () => {
   return (
     <div
-      className="relative flex items-center justify-center min-h-screen bg-darkBlue"
+      className="h-screen relative flex items-center justify-center min-h-screen bg-darkBlue"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
@@ -12,8 +12,8 @@ const Home = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="relative mt-64">
-        <img src={gifImage} alt="中心 GIF" className="w-[900px] h-auto" />
+      <div className="relative mt-80 ml-12">
+        <img src={gifImage} alt="wishpool" className="w-[900px] h-auto" />
 
         <Link
           to="/wishform"
