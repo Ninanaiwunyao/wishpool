@@ -15,7 +15,7 @@
 }
 
 #root {
-  @apply min-h-screen relative;
+  @apply h-screen relative;
 }
 
 /* :root {
