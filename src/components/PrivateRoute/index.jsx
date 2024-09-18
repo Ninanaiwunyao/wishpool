@@ -1,21 +1,10 @@
 import PropTypes from "prop-types";
-import { Navigate, useLocation } from "react-router-dom";
-import { getAuth } from "firebase/auth";
+import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const location = useLocation();
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
 
-  if (location.pathname === "/login" || location.pathname === "/register") {
-    return children;
-  }
-
-  if (user) {
-    return children;
-  }
-
-  return <Navigate to="/login" />;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 PrivateRoute.propTypes = {

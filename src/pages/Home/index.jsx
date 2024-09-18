@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import backgroundImage from "./homeBackground.png";
 import gifImage from "./pool.gif";
+
 const Home = () => {
   return (
     <div
@@ -12,7 +13,7 @@ const Home = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="relative mt-80 ml-12">
+      <div className="relative mt-64 ml-12">
         <img src={gifImage} alt="wishpool" className="w-[900px] h-auto" />
 
         <Link
