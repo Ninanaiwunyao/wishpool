@@ -1,6 +1,11 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { useEffect } from "react";
 
 const Login = () => {
   const {
@@ -9,15 +14,28 @@ const Login = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        localStorage.setItem("isAuthenticated", "true");
+        navigate("/");
+      } else {
+        console.log("用戶未登入");
+        localStorage.removeItem("isAuthenticated");
+      }
+    });
+    return () => unsubscribe();
+  }, [auth, navigate]);
 
   const handleLogin = async (data) => {
-    const auth = getAuth();
-
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      navigate("/");
+      // 在這裡不需要導航，因為 `onAuthStateChanged` 會自動處理
     } catch (err) {
       console.error("登入失敗:", err.message);
+      alert("登入失敗，請檢查您的電子郵件和密碼");
     }
   };
 
@@ -59,9 +77,9 @@ const Login = () => {
         </form>
         <p className="text-center mt-4">
           還沒有許可證？{" "}
-          <a href="/register" className="text-darkBlue font-bold">
+          <Link to="/register" className="text-darkBlue font-bold">
             立即申請
-          </a>
+          </Link>
         </p>
       </div>
     </div>

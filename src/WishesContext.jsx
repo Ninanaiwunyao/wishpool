@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase/firebaseConfig";
 import PropTypes from "prop-types";
 
@@ -10,23 +10,21 @@ export const WishesProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchWishes = async () => {
-      setLoading(true);
-      try {
-        const querySnapshot = await getDocs(collection(db, "wishes"));
-        const wishesData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setWishes(wishesData);
-      } catch (error) {
-        console.error("Error fetching wishes data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const wishesRef = collection(db, "wishes");
 
-    fetchWishes();
+    // 使用 onSnapshot 监听数据变化
+    const unsubscribe = onSnapshot(wishesRef, (snapshot) => {
+      const wishesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("Fetched wishes:", wishesData); // 日志输出所有卡片数据
+      setWishes(wishesData);
+      setLoading(false);
+    });
+
+    // 在组件卸载时取消监听
+    return () => unsubscribe();
   }, []);
 
   return (

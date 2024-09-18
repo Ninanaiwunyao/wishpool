@@ -104,6 +104,10 @@ const WishForm = () => {
             <option value="學業">學業</option>
             <option value="生活">生活</option>
             <option value="工作">工作</option>
+            <option value="興趣">興趣</option>
+            <option value="家庭">家庭</option>
+            <option value="公益">公益</option>
+            <option value="人際">人際</option>
           </select>
 
           <select
@@ -115,6 +119,10 @@ const WishForm = () => {
             <option value="學業">學業</option>
             <option value="生活">生活</option>
             <option value="工作">工作</option>
+            <option value="興趣">興趣</option>
+            <option value="家庭">家庭</option>
+            <option value="公益">公益</option>
+            <option value="人際">人際</option>
           </select>
 
           <select className="w-full p-2 border rounded" {...register("tag3")}>
@@ -123,6 +131,10 @@ const WishForm = () => {
             <option value="學業">學業</option>
             <option value="生活">生活</option>
             <option value="工作">工作</option>
+            <option value="興趣">興趣</option>
+            <option value="家庭">家庭</option>
+            <option value="公益">公益</option>
+            <option value="人際">人際</option>
           </select>
         </div>
 
