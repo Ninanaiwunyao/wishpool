@@ -13,9 +13,7 @@ const Category = () => {
 
   useEffect(() => {
     if (wishes.length > 0) {
-      console.log("Filtering wishes by category:", category);
       const filtered = wishes.filter((wish) => {
-        console.log(`Wish ID: ${wish.id}, Tags: ${wish.tags}`);
         return wish.tags.includes(category);
       });
       setFilteredWishes(filtered);

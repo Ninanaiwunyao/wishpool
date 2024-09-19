@@ -22,7 +22,6 @@ const Login = () => {
         localStorage.setItem("isAuthenticated", "true");
         navigate("/");
       } else {
-        console.log("用戶未登入");
         localStorage.removeItem("isAuthenticated");
       }
     });

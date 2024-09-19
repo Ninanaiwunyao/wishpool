@@ -18,7 +18,6 @@ export const WishesProvider = ({ children }) => {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log("Fetched wishes:", wishesData); // 日志输出所有卡片数据
       setWishes(wishesData);
       setLoading(false);
     });

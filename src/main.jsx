@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import Favorites from "./pages/Favorites";
 import Progress from "./pages/Progress";
 import Message from "./pages/Message";
+import Chat from "./pages/Chat";
 import Transaction from "./pages/Transaction";
 import { WishesProvider } from "./WishesContext.jsx";
 import PrivateRoute from "./components/PrivateRoute";
@@ -61,6 +62,7 @@ root.render(
             <Route path="favorites" element={<Favorites />} />
             <Route path="progress" element={<Progress />} />
             <Route path="message" element={<Message />} />
+            <Route path="chat/:id" element={<Chat />} />
             <Route path="transaction" element={<Transaction />} />
           </Route>
         </Route>

@@ -6,9 +6,14 @@ import {
   getFirestore,
   getDoc,
   doc,
+  addDoc,
   updateDoc,
   arrayUnion,
   arrayRemove,
+  collection,
+  serverTimestamp,
+  deleteDoc,
+  getDocs,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -17,12 +22,60 @@ const WishCardDetail = () => {
   const { id } = useParams();
   const { wishes, loading } = useWishes();
   const [isFavorited, setIsFavorited] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [endDate, setEndDate] = useState("");
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
 
   const wish = wishes.find((wish) => wish.id === id);
+  useEffect(() => {
+    const checkExpiredDreams = async () => {
+      const dreamsSnapshot = await getDocs(collection(db, "dreams"));
+      const today = new Date();
 
+      dreamsSnapshot.forEach(async (dreamDoc) => {
+        const dreamData = dreamDoc.data();
+        const endDate = dreamData.endDate.toDate();
+
+        // 如果截止日期已過
+        if (endDate < today) {
+          console.log(`Dream ${dreamDoc.id} 已過期，正在刪除...`);
+
+          // 刪除該 dream 文檔
+          await deleteDoc(dreamDoc.ref);
+
+          // 刪除對應的聊天室
+          const chatRef = doc(db, "chats", dreamData.chatId);
+          await deleteDoc(chatRef);
+
+          // 刪除聊天室中的消息
+          const messagesRef = collection(
+            db,
+            "chats",
+            dreamData.chatId,
+            "messages"
+          );
+          const messagesSnapshot = await getDocs(messagesRef);
+          messagesSnapshot.forEach(async (messageDoc) => {
+            await deleteDoc(messageDoc.ref);
+          });
+
+          // 更新對應的願望狀態
+          const wishRef = doc(db, "wishes", dreamData.wishId);
+          await updateDoc(wishRef, {
+            status: "open",
+          });
+
+          console.log(
+            `Dream ${dreamDoc.id} 已刪除，對應的 wish 狀態已更新為 open。`
+          );
+        }
+      });
+    };
+
+    checkExpiredDreams();
+  }, [db]);
   useEffect(() => {
     if (user && wish) {
       const userRef = doc(db, "users", user.uid);
@@ -43,6 +96,8 @@ const WishCardDetail = () => {
   if (!wish) {
     return <p>No wish found with the given ID.</p>;
   }
+  const openStatus = wish.status === "open";
+  const isOwner = user && wish.creatorId === user.uid;
   const tags = [
     { tag_category: "愛情", href: "/category?category=愛情" },
     { tag_category: "學業", href: "/category?category=學業" },
@@ -82,6 +137,61 @@ const WishCardDetail = () => {
       console.error("更新收藏狀態失敗:", error);
     }
   };
+  const handleDreamClick = () => {
+    setShowForm(true); // 顯示表單
+  };
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 確保時間部分被設定為午夜（避免時區或小時的問題）
+    const selectedEndDate = new Date(endDate);
+    if (selectedEndDate < today) {
+      alert("截止日期不能早於今天！");
+      return;
+    }
+    try {
+      // 首先創建聊天室文檔
+      const chatDocRef = await addDoc(collection(db, "chats"), {
+        participants: [wish.creatorId, user.uid], // 許願者和圓夢者
+      });
+
+      // 然後創建新的 dream 文檔並將 chatId 存入其中
+      await addDoc(collection(db, "dreams"), {
+        wishId: wish.id,
+        dreamerId: user.uid,
+        wishOwnerId: wish.creatorId,
+        startDate: serverTimestamp(),
+        endDate: new Date(endDate), // 將選擇的截止日期轉換為日期對象
+        status: "in-progress",
+        chatId: chatDocRef.id, // 儲存 chatId
+      });
+
+      // 更新 wish 文檔的狀態
+      const wishRef = doc(db, "wishes", wish.id);
+      await updateDoc(wishRef, {
+        status: "accepted",
+      });
+
+      // 為聊天室創建一個歡迎訊息
+      const messagesRef = collection(db, "chats", chatDocRef.id, "messages");
+      await addDoc(messagesRef, {
+        senderId: user.uid,
+        content: "嗨！我來幫你圓夢了！",
+        timestamp: serverTimestamp(),
+        messageType: "text",
+      });
+
+      // 導航到聊天室頁面
+      navigate(`/memberPage/chat/${chatDocRef.id}`);
+      // 設置自動刪除功能：根據截止日期設定一個時間，在截止日期後刪除聊天室
+
+      alert("圓夢已開始，聊天室已建立！");
+      setShowForm(false); // 隱藏表單
+    } catch (error) {
+      console.error("無法創建 dream：", error);
+      alert("圓夢創建失敗！");
+    }
+  };
 
   return (
     <div className="bg-darkblue min-h-screen flex flex-col items-center p-8 mt-32">
@@ -117,9 +227,14 @@ const WishCardDetail = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button className="bg-yellow-300 text-primaryBlue font-semibold rounded-full px-6 py-2 hover:bg-yellow-400">
-              圓夢
-            </button>
+            {!isOwner && openStatus && (
+              <button
+                className="bg-yellow-300 text-primaryBlue font-semibold rounded-full px-6 py-2 hover:bg-yellow-400"
+                onClick={handleDreamClick}
+              >
+                圓夢
+              </button>
+            )}
             <button
               className="bg-transparent text-white text-2xl"
               onClick={handleToggleFavorite}
@@ -129,6 +244,33 @@ const WishCardDetail = () => {
           </div>
         </div>
       </div>
+      {showForm && (
+        <div className="bg-white p-4 rounded shadow-lg mt-4">
+          <h3 className="text-lg font-bold mb-2">選擇截止時間</h3>
+          <form onSubmit={handleFormSubmit}>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              required
+              className="border p-2 rounded mb-4"
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-4 rounded"
+            >
+              確認
+            </button>
+            <button
+              type="button"
+              className="ml-2 bg-red-500 text-white py-2 px-4 rounded"
+              onClick={() => setShowForm(false)}
+            >
+              取消
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
