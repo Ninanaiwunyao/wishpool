@@ -8,7 +8,7 @@ const WishPool = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  const filteredWishes = wishes.filter((wish) => wish.status === "open");
   const settings = {
     dots: false,
     infinite: true,
@@ -22,7 +22,7 @@ const WishPool = () => {
   return (
     <div className="bg-darkBlue relative w-full h-screen flex items-center justify-center">
       <Slider {...settings} className="w-full max-w-4xl">
-        {wishes.map((wish) => (
+        {filteredWishes.map((wish) => (
           <div key={wish.id} className="px-4">
             <WishCard wish={wish} />
           </div>
