@@ -14,6 +14,8 @@ import {
   serverTimestamp,
   deleteDoc,
   getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -137,6 +139,26 @@ const WishCardDetail = () => {
       console.error("更新收藏狀態失敗:", error);
     }
   };
+  const checkIfChatExists = async (creatorId, dreamerId) => {
+    const chatsRef = collection(db, "chats");
+    const q = query(
+      chatsRef,
+      where("participants", "array-contains", creatorId)
+    );
+    const querySnapshot = await getDocs(q);
+
+    for (const docSnapshot of querySnapshot.docs) {
+      const chatData = docSnapshot.data();
+      if (
+        chatData.participants.length === 2 &&
+        chatData.participants.includes(dreamerId)
+      ) {
+        // 已存在這兩個人的聊天室，返回聊天室 ID
+        return docSnapshot.id;
+      }
+    }
+    return null;
+  };
   const handleDreamClick = () => {
     setShowForm(true); // 顯示表單
   };
@@ -150,10 +172,20 @@ const WishCardDetail = () => {
       return;
     }
     try {
-      // 首先創建聊天室文檔
-      const chatDocRef = await addDoc(collection(db, "chats"), {
-        participants: [wish.creatorId, user.uid], // 許願者和圓夢者
-      });
+      const existingChatId = await checkIfChatExists(wish.creatorId, user.uid);
+
+      let chatDocRef;
+
+      if (existingChatId) {
+        console.log("已找到現有聊天室，使用現有聊天室:", existingChatId);
+        chatDocRef = doc(db, "chats", existingChatId);
+      } else {
+        // 如果沒有找到聊天室，則創建新的聊天室
+        console.log("未找到聊天室，創建新的聊天室");
+        chatDocRef = await addDoc(collection(db, "chats"), {
+          participants: [wish.creatorId, user.uid], // 許願者和圓夢者
+        });
+      }
 
       // 然後創建新的 dream 文檔並將 chatId 存入其中
       await addDoc(collection(db, "dreams"), {
