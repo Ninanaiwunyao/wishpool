@@ -90,11 +90,17 @@ const Messages = () => {
                 "",
             };
           }
-
+          const unreadMessagesQuery = query(
+            messagesRef,
+            where("readBy", "==", []) // 查詢包含當前使用者的readBy
+          );
+          const unreadMessagesSnapshot = await getDocs(unreadMessagesQuery);
+          const unreadCount = unreadMessagesSnapshot.size; // 記錄未讀訊息數
           // 存儲參與者信息和最後一條訊息
           chatInfoMap[chat.id] = {
             userInfo,
             lastMessage,
+            unreadCount,
           };
         });
 
@@ -134,31 +140,38 @@ const Messages = () => {
                 className="bg-white p-4 rounded-lg shadow-md cursor-pointer border-b-4"
                 onClick={() => navigate(`/memberpage/chat/${chat.id}`)}
               >
-                <div className="flex items-center">
-                  {chatDetails ? (
-                    <>
-                      <img
-                        src={chatDetails.userInfo.avatarUrl}
-                        alt="头像"
-                        className="w-10 h-10 rounded-full mr-4"
-                      />
-                      <div>
-                        <p className="text-darkBlue font-bold">
-                          {chatDetails.userInfo.userName}
-                        </p>
-                        <p className="text-gray-500">
-                          {chatDetails.lastMessage.content.length > 30
-                            ? chatDetails.lastMessage.content.slice(0, 30) +
-                              "..."
-                            : chatDetails.lastMessage.content}
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          {chatDetails.lastMessage.timestamp}
-                        </p>
-                      </div>
-                    </>
-                  ) : (
-                    <p className="text-darkBlue">無訊息</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    {chatDetails ? (
+                      <>
+                        <img
+                          src={chatDetails.userInfo.avatarUrl}
+                          alt="头像"
+                          className="w-10 h-10 rounded-full mr-4"
+                        />
+                        <div>
+                          <p className="text-darkBlue font-bold">
+                            {chatDetails.userInfo.userName}
+                          </p>
+                          <p className="text-gray-500">
+                            {chatDetails.lastMessage.content.length > 30
+                              ? chatDetails.lastMessage.content.slice(0, 30) +
+                                "..."
+                              : chatDetails.lastMessage.content}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            {chatDetails.lastMessage.timestamp}
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-darkBlue">無訊息</p>
+                    )}
+                  </div>
+                  {chatDetails?.unreadCount > 0 && (
+                    <div className="flex items-center justify-center w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full">
+                      {chatDetails.unreadCount}
+                    </div>
                   )}
                 </div>
               </div>

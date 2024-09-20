@@ -211,6 +211,7 @@ const WishCardDetail = () => {
         content: "嗨！我來幫你圓夢了！",
         timestamp: serverTimestamp(),
         messageType: "text",
+        readBy: [],
       });
 
       // 導航到聊天室頁面

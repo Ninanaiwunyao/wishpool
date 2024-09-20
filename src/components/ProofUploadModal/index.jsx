@@ -96,6 +96,7 @@ const ProofUploadModal = ({ onClose, dreamId, wishOwnerId, wishId }) => {
         proofText: proofText || "", // 上傳的文字證明
         fileUrl: fileUrl,
         approved: false,
+        readBy: [],
       });
 
       alert("證明上傳成功，已通知許願者！");
