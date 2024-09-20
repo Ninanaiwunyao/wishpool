@@ -92,7 +92,7 @@ const Messages = () => {
           }
           const unreadMessagesQuery = query(
             messagesRef,
-            where("readBy", "==", []) // 查詢包含當前使用者的readBy
+            where("readBy", "array-contains", otherParticipantId) // 查詢包含當前使用者的readBy
           );
           const unreadMessagesSnapshot = await getDocs(unreadMessagesQuery);
           const unreadCount = unreadMessagesSnapshot.size; // 記錄未讀訊息數

@@ -82,11 +82,14 @@ const WishCardDetail = () => {
     if (user && wish) {
       const userRef = doc(db, "users", user.uid);
       getDoc(userRef).then((docSnapshot) => {
-        if (
-          docSnapshot.exists() &&
-          docSnapshot.data().favorites.includes(wish.id)
-        ) {
-          setIsFavorited(true);
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          if (userData.favorites && Array.isArray(userData.favorites)) {
+            // 檢查 favorites 是否包含 wish.id
+            if (userData.favorites.includes(wish.id)) {
+              setIsFavorited(true);
+            }
+          }
         }
       });
     }
