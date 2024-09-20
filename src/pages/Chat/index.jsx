@@ -12,15 +12,17 @@ import {
   getDoc,
   updateDoc,
   increment,
-  setDoc,
+  where,
+  getDocs,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import angel from "./angel-stand.png";
 
 const Chat = () => {
   const { id: chatId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [isApproved, setIsApproved] = useState(false);
+  const [isSystemChat, setIsSystemChat] = useState(false);
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -35,18 +37,25 @@ const Chat = () => {
 
         for (const docSnapshot of querySnapshot.docs) {
           const messageData = docSnapshot.data();
-          const userRef = doc(db, "users", messageData.senderId);
-          const userDoc = await getDoc(userRef);
 
           let avatarUrl = "";
-          if (userDoc.exists()) {
-            avatarUrl = userDoc.data().avatarUrl; // 假設用戶文檔中有 avatarUrl 字段
+          if (messageData.senderId === "system") {
+            // 对于系统消息，使用本地头像和预定义昵称
+            avatarUrl = angel;
+          } else {
+            const userRef = doc(db, "users", messageData.senderId);
+            const userDoc = await getDoc(userRef);
+
+            if (userDoc.exists()) {
+              avatarUrl = userDoc.data().avatarUrl; // 假設用戶文檔中有 avatarUrl 字段
+            }
           }
 
           fetchedMessages.push({
             id: docSnapshot.id,
             ...messageData,
             avatarUrl, // 加入發送者的頭像
+            approved: messageData.approved || false,
           });
         }
 
@@ -58,40 +67,77 @@ const Chat = () => {
 
     fetchMessages();
   }, [chatId, db]);
+  useEffect(() => {
+    const fetchChatInfo = async () => {
+      const chatDocRef = doc(db, "chats", chatId);
+      const chatDoc = await getDoc(chatDocRef);
+      if (chatDoc.exists()) {
+        const chatData = chatDoc.data();
+        // 檢查參與者是否包含 "system"
+        setIsSystemChat(chatData.participants.includes("system"));
+      }
+    };
+
+    fetchChatInfo();
+  }, [chatId, db]);
+
   const sendMessageToDreamer = async (dreamerId, messageContent) => {
     const db = getFirestore();
 
     try {
-      // 定位到 chats 子集合，查找或創建夢者與 system 的聊天
-      const chatDocRef = doc(db, "chats", dreamerId);
-      const chatDoc = await getDoc(chatDocRef);
+      const chatsRef = collection(db, "chats");
+      // 查詢是否存在 `system` 和 `dreamerId` 的聊天室
+      const q = query(
+        chatsRef,
+        where("participants", "array-contains", dreamerId)
+      );
+      const querySnapshot = await getDocs(q);
 
-      if (!chatDoc.exists()) {
-        // 如果聊天文檔不存在，則創建它
-        await setDoc(chatDocRef, {
+      let existingChat = null;
+
+      querySnapshot.forEach((docSnapshot) => {
+        const chatData = docSnapshot.data();
+        // 確保參與者為 `system` 和 `dreamerId` 且聊天室參與者數量為 2
+        if (
+          chatData.participants.includes("system") &&
+          chatData.participants.includes(dreamerId) &&
+          chatData.participants.length === 2
+        ) {
+          existingChat = { id: docSnapshot.id, ...chatData };
+        }
+      });
+
+      if (existingChat) {
+        // 如果找到現有聊天室，則使用此聊天室發送訊息
+        console.log("找到現有聊天室:", existingChat.id);
+        await addDoc(collection(db, "chats", existingChat.id, "messages"), {
+          senderId: "system",
+          content: messageContent,
+          timestamp: serverTimestamp(),
+          messageType: "proof",
+        });
+      } else {
+        // 如果沒有找到聊天室，則創建新的聊天室
+        console.log("未找到聊天室，創建新的聊天室");
+        const newChatDocRef = await addDoc(chatsRef, {
           participants: ["system", dreamerId],
           createdAt: serverTimestamp(),
         });
+        await addDoc(collection(db, "chats", newChatDocRef.id, "messages"), {
+          senderId: "system",
+          content: messageContent,
+          timestamp: serverTimestamp(),
+          messageType: "text",
+        });
       }
-
-      // 發送訊息到該聊天文檔的 messages 子集合中
-      const messagesRef = collection(db, "chats", dreamerId, "messages");
-      await addDoc(messagesRef, {
-        senderId: "system",
-        content: messageContent,
-        timestamp: serverTimestamp(),
-        messageType: "text",
-      });
-
-      console.log("訊息已發送到圓夢者的聊天中！");
     } catch (error) {
-      console.error("發送訊息失敗：", error);
+      console.error("查找或創建聊天時出錯：", error);
     }
   };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (newMessage.trim() === "") return;
-
+    if (newMessage.trim() === "" || isSystemChat) return;
     const messagesRef = collection(db, "chats", chatId, "messages");
 
     try {
@@ -106,7 +152,7 @@ const Chat = () => {
       console.error("發送訊息失敗：", error);
     }
   };
-  const handleApprove = async (dreamId, wishId, dreamerId) => {
+  const handleApprove = async (dreamId, wishId, dreamerId, messageId) => {
     try {
       // 增加圓夢者的 coins
       const userDocRef = doc(db, "users", dreamerId);
@@ -118,6 +164,15 @@ const Chat = () => {
       const wishDocRef = doc(db, "wishes", wishId);
       await updateDoc(wishDocRef, {
         status: "fulfilled",
+      });
+
+      const dreamDocRef = doc(db, "dreams", dreamId);
+      await updateDoc(dreamDocRef, {
+        status: "fulfilled",
+      });
+      const messageRef = doc(db, "chats", chatId, "messages", messageId);
+      await updateDoc(messageRef, {
+        approved: true, // 標記為已核可
       });
 
       // 發送通知到聊天室
@@ -133,14 +188,18 @@ const Chat = () => {
       });
 
       alert("核可成功！");
-      setIsApproved(true);
     } catch (error) {
       console.error("核可失敗：", error);
     }
   };
 
-  const handleReject = async () => {
+  const handleReject = async (messageId) => {
     try {
+      const messageRef = doc(db, "chats", chatId, "messages", messageId);
+      await updateDoc(messageRef, {
+        approved: false, // 標記為不核可
+      });
+
       // 發送通知到聊天室
       const messagesRef = collection(db, "chats", chatId, "messages");
       await addDoc(messagesRef, {
@@ -200,7 +259,7 @@ const Chat = () => {
                         className="w-32 h-32 mt-2 object-cover"
                       />
                     )}
-                    {!isApproved && (
+                    {!message.approved && (
                       <div className="flex space-x-4 mt-2">
                         <button
                           className="bg-green-500 text-white px-4 py-2 rounded"
@@ -208,7 +267,8 @@ const Chat = () => {
                             handleApprove(
                               message.relatedId, // Dream ID
                               message.wishId, // Wish ID
-                              message.dreamerId // Dreamer ID
+                              message.dreamerId, // Dreamer ID
+                              message.id
                             )
                           }
                         >
@@ -246,15 +306,18 @@ const Chat = () => {
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="輸入訊息..."
+          placeholder={isSystemChat ? "系統通知不可回覆" : "輸入訊息..."}
           className="flex-grow p-2 rounded-l-lg"
+          disabled={isSystemChat} // 禁用輸入框
         />
-        <button
-          type="submit"
-          className="bg-lightBlue text-white py-2 px-4 rounded-r-lg"
-        >
-          送出
-        </button>
+        {!isSystemChat && (
+          <button
+            type="submit"
+            className="bg-lightBlue text-white py-2 px-4 rounded-r-lg"
+          >
+            送出
+          </button>
+        )}
       </form>
     </div>
   );
