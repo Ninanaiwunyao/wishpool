@@ -15,12 +15,12 @@ import { getStorage } from "firebase/storage";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "appworks-school-wishpool.firebaseapp.com",
-  projectId: "appworks-school-wishpool",
-  storageBucket: "appworks-school-wishpool.appspot.com",
-  messagingSenderId: "584829340999",
-  appId: "1:584829340999:web:2ec7858ef00b2f95889062",
-  measurementId: "G-VYJMKBX3LR",
+  authDomain: "wishpoolbackup.firebaseapp.com",
+  projectId: "wishpoolbackup",
+  storageBucket: "wishpoolbackup.appspot.com",
+  messagingSenderId: "412735616430",
+  appId: "1:412735616430:web:a9168fc73198a8f21a043f",
+  measurementId: "G-VN10VSL627",
 };
 
 // Initialize Firebase

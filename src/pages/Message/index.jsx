@@ -7,14 +7,17 @@ import {
   getDocs,
   doc,
   getDoc,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import angel from "./angel-stand.png"; // 系統通知頭像
 
 const Messages = () => {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [usernames, setUsernames] = useState({});
+  const [chatInfo, setChatInfo] = useState({});
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -27,49 +30,88 @@ const Messages = () => {
         return;
       }
 
-      const chatsRef = collection(db, "chats");
-      const q = query(
-        chatsRef,
-        where("participants", "array-contains", user.uid)
-      );
-      const querySnapshot = await getDocs(q);
+      try {
+        const chatsRef = collection(db, "chats");
+        const q = query(
+          chatsRef,
+          where("participants", "array-contains", user.uid)
+        );
+        const querySnapshot = await getDocs(q);
 
-      const fetchedChats = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+        const fetchedChats = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      setChats(fetchedChats);
-      setLoading(false);
+        setChats(fetchedChats);
 
-      // Fetch user information for participants
-      const participantsSet = new Set();
-      fetchedChats.forEach((chat) =>
-        chat.participants.forEach((participant) =>
-          participantsSet.add(participant)
-        )
-      );
+        // 並行查詢所有參與者的資訊和最後一條訊息
+        const chatInfoMap = {};
+        const fetchPromises = fetchedChats.map(async (chat) => {
+          const otherParticipantId = chat.participants.find(
+            (participant) => participant !== user.uid
+          );
 
-      const fetchUsernames = async () => {
-        const usernamesMap = {};
-        for (const participant of participantsSet) {
-          if (participant === "system") {
-            usernamesMap[participant] = "系統通知";
+          // 獲取參與者信息
+          let userInfo = { userName: "Unknown", avatarUrl: "" };
+          if (otherParticipantId === "system") {
+            userInfo = {
+              userName: "系統通知",
+              avatarUrl: angel,
+            }; // 系統頭像
           } else {
-            const userRef = doc(db, "users", participant);
+            const userRef = doc(db, "users", otherParticipantId);
             const userDoc = await getDoc(userRef);
             if (userDoc.exists()) {
-              usernamesMap[participant] =
-                userDoc.data().userName || participant;
-            } else {
-              usernamesMap[participant] = participant; // fallback to userId if username not found
+              userInfo = {
+                userName: userDoc.data().userName || "Unknown",
+                avatarUrl:
+                  userDoc.data().avatarUrl || "https://via.placeholder.com/40",
+              };
             }
           }
-        }
-        setUsernames(usernamesMap);
-      };
 
-      fetchUsernames();
+          // 獲取最後一條訊息
+          const messagesRef = collection(db, "chats", chat.id, "messages");
+          const lastMessageQuery = query(
+            messagesRef,
+            orderBy("timestamp", "desc"),
+            limit(1)
+          );
+          const lastMessageSnapshot = await getDocs(lastMessageQuery);
+
+          let lastMessage = { content: "無訊息", timestamp: null };
+          if (!lastMessageSnapshot.empty) {
+            const lastMessageDoc = lastMessageSnapshot.docs[0];
+            lastMessage = {
+              content: lastMessageDoc.data().content,
+              timestamp:
+                lastMessageDoc.data().timestamp?.toDate().toLocaleString() ||
+                "",
+            };
+          }
+
+          // 存儲參與者信息和最後一條訊息
+          chatInfoMap[chat.id] = {
+            userInfo,
+            lastMessage,
+          };
+        });
+
+        await Promise.all(fetchPromises);
+        const sortedChats = fetchedChats.sort((a, b) => {
+          const lastMessageA = chatInfoMap[a.id]?.lastMessage.timestamp || 0;
+          const lastMessageB = chatInfoMap[b.id]?.lastMessage.timestamp || 0;
+          return lastMessageB.localeCompare(lastMessageA); // 最新訊息排在前面
+        });
+
+        setChats(sortedChats);
+        setChatInfo(chatInfoMap);
+      } catch (error) {
+        console.error("Error fetching chats:", error);
+      }
+
+      setLoading(false);
     };
 
     fetchChats();
@@ -81,24 +123,47 @@ const Messages = () => {
 
   return (
     <div className="bg-darkBlue min-h-screen p-8">
-      <h2 className="text-2xl font-bold text-cream mb-6 mt-32">聊天室</h2>
+      <h2 className="text-2xl font-bold text-cream mb-6 mt-32 ml-24">聊天室</h2>
       {chats.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {chats.map((chat) => (
-            <div
-              key={chat.id}
-              className="bg-white p-4 rounded-lg shadow-md cursor-pointer"
-              onClick={() => navigate(`/memberpage/chat/${chat.id}`)}
-            >
-              <h3 className="text-darkBlue">聊天室ID: {chat.id}</h3>
-              <p className="text-darkBlue">
-                參與者:{" "}
-                {chat.participants
-                  .map((participant) => usernames[participant] || participant)
-                  .join(", ")}
-              </p>
-            </div>
-          ))}
+        <div className="flex flex-col w-4/5 ml-24">
+          {chats.map((chat) => {
+            const chatDetails = chatInfo[chat.id];
+            return (
+              <div
+                key={chat.id}
+                className="bg-white p-4 rounded-lg shadow-md cursor-pointer border-b-4"
+                onClick={() => navigate(`/memberpage/chat/${chat.id}`)}
+              >
+                <div className="flex items-center">
+                  {chatDetails ? (
+                    <>
+                      <img
+                        src={chatDetails.userInfo.avatarUrl}
+                        alt="头像"
+                        className="w-10 h-10 rounded-full mr-4"
+                      />
+                      <div>
+                        <p className="text-darkBlue font-bold">
+                          {chatDetails.userInfo.userName}
+                        </p>
+                        <p className="text-gray-500">
+                          {chatDetails.lastMessage.content.length > 30
+                            ? chatDetails.lastMessage.content.slice(0, 30) +
+                              "..."
+                            : chatDetails.lastMessage.content}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {chatDetails.lastMessage.timestamp}
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-darkBlue">無訊息</p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       ) : (
         <p className="text-white">目前沒有聊天室。</p>
