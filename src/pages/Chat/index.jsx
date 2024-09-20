@@ -14,6 +14,7 @@ import {
   increment,
   where,
   getDocs,
+  arrayUnion,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import angel from "./angel-stand.png";
@@ -115,6 +116,7 @@ const Chat = () => {
           content: messageContent,
           timestamp: serverTimestamp(),
           messageType: "proof",
+          readBy: [],
         });
       } else {
         // 如果沒有找到聊天室，則創建新的聊天室
@@ -128,6 +130,7 @@ const Chat = () => {
           content: messageContent,
           timestamp: serverTimestamp(),
           messageType: "text",
+          readBy: [],
         });
       }
     } catch (error) {
@@ -146,6 +149,7 @@ const Chat = () => {
         content: newMessage,
         timestamp: serverTimestamp(),
         messageType: "text",
+        readBy: [],
       });
       setNewMessage(""); // 發送成功後清空輸入框
     } catch (error) {
@@ -207,6 +211,7 @@ const Chat = () => {
         content: "您的圓夢證明未被核可，請重新上傳。",
         timestamp: serverTimestamp(),
         messageType: "text",
+        readBy: [],
       });
 
       alert("不核可操作已執行");
@@ -214,6 +219,27 @@ const Chat = () => {
       console.error("不核可操作失敗：", error);
     }
   };
+  useEffect(() => {
+    const markMessagesAsRead = async () => {
+      const messagesRef = collection(db, "chats", chatId, "messages");
+      const q = query(messagesRef, where("readBy", "not-in", [user.uid]));
+
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach(async (docSnapshot) => {
+        const messageRef = doc(db, "chats", chatId, "messages", docSnapshot.id);
+
+        // 更新訊息的 readBy 字段
+        await updateDoc(messageRef, {
+          readBy: arrayUnion(user.uid),
+        });
+      });
+    };
+
+    if (chatId && user) {
+      markMessagesAsRead();
+    }
+  }, [chatId, user, db]); // 添加 chatId 和 user 到依賴項數組中
 
   return (
     <div className="bg-darkBlue min-h-screen p-8 flex flex-col">
