@@ -1,9 +1,19 @@
 import { useForm } from "react-hook-form";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  getFirestore,
+  doc,
+  getDoc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "@/firebase/firebaseConfig";
+import { storage } from "@/firebase/firebaseConfig";
+
 const WishForm = () => {
   const {
     register,
@@ -11,12 +21,31 @@ const WishForm = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+
   const onSubmit = async (data) => {
+    const db = getFirestore();
     const auth = getAuth();
     const user = auth.currentUser;
 
     if (!user) {
       console.error("用戶未登錄");
+      return;
+    }
+
+    // 獲取用戶的硬幣數量
+    const userRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      console.error("找不到用戶");
+      return;
+    }
+
+    const currentCoins = userDoc.data().coins;
+    const amount = parseInt(data.amount);
+
+    if (currentCoins < amount) {
+      alert("你的硬幣不足以許願");
       return;
     }
 
@@ -26,13 +55,18 @@ const WishForm = () => {
       if (data.image[0]) {
         const imageFile = data.image[0];
         const storageRef = ref(storage, `wish_images/${imageFile.name}`);
-
         await uploadBytes(storageRef, imageFile);
-
         imageUrl = await getDownloadURL(storageRef);
       }
-      await addDoc(collection(db, "wishes"), {
-        amount: parseInt(data.amount),
+
+      // 扣除硬幣
+      await updateDoc(userRef, {
+        coins: increment(-amount),
+      });
+
+      // 新增願望至 wishes 集合
+      const wishDocRef = await addDoc(collection(db, "wishes"), {
+        amount,
         createdAt: serverTimestamp(),
         creatorId: user.uid,
         description: data.description,
@@ -42,6 +76,15 @@ const WishForm = () => {
         status: "open",
         tags,
         title: data.title,
+      });
+
+      // 新增交易紀錄至 transactions 集合
+      await addDoc(collection(db, "transactions"), {
+        userId: user.uid,
+        amount: -amount, // 扣除的硬幣
+        type: "make-wish", // 許願交易類型
+        timestamp: serverTimestamp(),
+        relatedId: wishDocRef.id, // 記錄相關的願望 ID
       });
 
       alert("願望已成功提交！");

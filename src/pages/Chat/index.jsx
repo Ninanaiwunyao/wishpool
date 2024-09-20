@@ -81,16 +81,15 @@ const Chat = () => {
 
     fetchChatInfo();
   }, [chatId, db]);
-
-  const sendMessageToDreamer = async (dreamerId, messageContent) => {
+  const sendSystemNotification = async (userId, messageContent) => {
     const db = getFirestore();
 
     try {
       const chatsRef = collection(db, "chats");
-      // 查詢是否存在 `system` 和 `dreamerId` 的聊天室
+      // 查詢是否存在 `system` 和 `userId` 的聊天室
       const q = query(
         chatsRef,
-        where("participants", "array-contains", dreamerId)
+        where("participants", "array-contains", userId)
       );
       const querySnapshot = await getDocs(q);
 
@@ -98,10 +97,9 @@ const Chat = () => {
 
       querySnapshot.forEach((docSnapshot) => {
         const chatData = docSnapshot.data();
-        // 確保參與者為 `system` 和 `dreamerId` 且聊天室參與者數量為 2
         if (
           chatData.participants.includes("system") &&
-          chatData.participants.includes(dreamerId) &&
+          chatData.participants.includes(userId) &&
           chatData.participants.length === 2
         ) {
           existingChat = { id: docSnapshot.id, ...chatData };
@@ -109,32 +107,32 @@ const Chat = () => {
       });
 
       if (existingChat) {
-        // 如果找到現有聊天室，則使用此聊天室發送訊息
+        // 如果找到現有聊天室，則使用此聊天室發送交易通知
         console.log("找到現有聊天室:", existingChat.id);
         await addDoc(collection(db, "chats", existingChat.id, "messages"), {
           senderId: "system",
           content: messageContent,
           timestamp: serverTimestamp(),
-          messageType: "proof",
+          messageType: "transaction", // 设定类型为 'transaction'
           readBy: [],
         });
       } else {
-        // 如果沒有找到聊天室，則創建新的聊天室
-        console.log("未找到聊天室，創建新的聊天室");
+        // 如果没有找到聊天室，則创建一个新的聊天室
+        console.log("未找到聊天室，创建新的聊天室");
         const newChatDocRef = await addDoc(chatsRef, {
-          participants: ["system", dreamerId],
+          participants: ["system", userId],
           createdAt: serverTimestamp(),
         });
         await addDoc(collection(db, "chats", newChatDocRef.id, "messages"), {
           senderId: "system",
           content: messageContent,
           timestamp: serverTimestamp(),
-          messageType: "text",
+          messageType: "transaction", // 设定类型为 'transaction'
           readBy: [],
         });
       }
     } catch (error) {
-      console.error("查找或創建聊天時出錯：", error);
+      console.error("查找或创建聊天时出错：", error);
     }
   };
 
@@ -180,7 +178,7 @@ const Chat = () => {
       });
 
       // 發送通知到聊天室
-      await sendMessageToDreamer(dreamerId, "您的圓夢已被核可，恭喜！");
+      await sendSystemNotification(dreamerId, "您的圓夢證明已被核可，恭喜！");
 
       // 記錄交易
       await addDoc(collection(db, "transactions"), {
@@ -190,6 +188,10 @@ const Chat = () => {
         timestamp: serverTimestamp(),
         relatedId: dreamId,
       });
+      await sendSystemNotification(
+        dreamerId,
+        `硬幣交易通知：您已獲得 50 個硬幣`
+      );
 
       alert("核可成功！");
     } catch (error) {
