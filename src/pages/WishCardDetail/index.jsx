@@ -16,6 +16,7 @@ import {
   getDocs,
   query,
   where,
+  increment,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -124,24 +125,39 @@ const WishCardDetail = () => {
   };
   const handleToggleFavorite = async () => {
     const userRef = doc(db, "users", user.uid);
+    const wishRef = doc(db, "wishes", wish.id); // 取得 wish 文檔的引用
+
     try {
-      if (isFavorited) {
-        // 如果已收藏，則移除收藏
-        await updateDoc(userRef, {
-          favorites: arrayRemove(wish.id),
-        });
-        setIsFavorited(false);
-      } else {
-        // 如果未收藏，則添加收藏
-        await updateDoc(userRef, {
-          favorites: arrayUnion(wish.id),
-        });
-        setIsFavorited(true);
+      const userDoc = await getDoc(userRef);
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const hasFavorited = userData.favorites?.includes(wish.id);
+
+        if (hasFavorited) {
+          // 如果已收藏，則移除收藏，並減少 likeCount
+          await updateDoc(userRef, {
+            favorites: arrayRemove(wish.id),
+          });
+          await updateDoc(wishRef, {
+            likeCount: increment(-1), // 減少 likeCount
+          });
+          setIsFavorited(false);
+        } else {
+          // 如果未收藏，則添加收藏，並增加 likeCount
+          await updateDoc(userRef, {
+            favorites: arrayUnion(wish.id),
+          });
+          await updateDoc(wishRef, {
+            likeCount: increment(1), // 增加 likeCount
+          });
+          setIsFavorited(true);
+        }
       }
     } catch (error) {
       console.error("更新收藏狀態失敗:", error);
     }
   };
+
   const checkIfChatExists = async (creatorId, dreamerId) => {
     const chatsRef = collection(db, "chats");
     const q = query(

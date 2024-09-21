@@ -92,10 +92,25 @@ const Messages = () => {
           }
           const unreadMessagesQuery = query(
             messagesRef,
-            where("readBy", "array-contains", otherParticipantId) // 查詢包含當前使用者的readBy
+            orderBy("timestamp", "asc") // 根據需要排序
           );
-          const unreadMessagesSnapshot = await getDocs(unreadMessagesQuery);
-          const unreadCount = unreadMessagesSnapshot.size; // 記錄未讀訊息數
+
+          const allMessagesSnapshot = await getDocs(unreadMessagesQuery);
+          const unreadMessages = allMessagesSnapshot.docs.filter((doc) => {
+            const messageData = doc.data();
+
+            // 自己發送的訊息不計算為未讀
+            if (messageData.senderId === user.uid) {
+              return false;
+            }
+
+            // 如果是對方發送的訊息，並且 readBy 不包含對方的 ID
+            return (
+              !messageData.readBy || !messageData.readBy.includes(user.uid)
+            );
+          });
+
+          const unreadCount = unreadMessages.length; // 記錄未讀訊息數
           // 存儲參與者信息和最後一條訊息
           chatInfoMap[chat.id] = {
             userInfo,
