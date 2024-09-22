@@ -6,6 +6,8 @@ import {
   where,
   orderBy,
   getDocs,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import coinspng from "./coin.png"; // 系統通知頭像
@@ -13,17 +15,27 @@ import coinspng from "./coin.png"; // 系統通知頭像
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [totalCoins, setTotalCoins] = useState(0);
-  const [filterType, setFilterType] = useState(""); // Empty means no filter
+  const [filterType, setFilterType] = useState(""); // 空字串表示不篩選
+  const [userCoins, setUserCoins] = useState(0); // 用來儲存用戶硬幣數量
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
 
   useEffect(() => {
+    const fetchUserCoins = async () => {
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+          setUserCoins(userDoc.data().coins || 0); // 讀取用戶的硬幣數量
+        }
+      }
+    };
+
     const fetchTransactions = async () => {
       if (!user) return;
 
       try {
-        // Fetch transactions where the userId matches the logged-in user
         const transactionsRef = collection(db, "transactions");
         const q = query(
           transactionsRef,
@@ -43,7 +55,7 @@ const Transactions = () => {
             ...data,
           });
 
-          total += data.amount; // Sum up the total coins for the user
+          total += data.amount; // 計算總硬幣數量
         });
 
         setTransactions(fetchedTransactions);
@@ -53,12 +65,19 @@ const Transactions = () => {
       }
     };
 
-    fetchTransactions();
+    fetchUserCoins(); // 加載用戶硬幣數
+    fetchTransactions(); // 加載交易紀錄
   }, [db, user]);
 
-  const filteredTransactions = transactions.filter((transaction) =>
-    filterType === "income" ? transaction.amount > 0 : transaction.amount < 0
-  );
+  // 根據選擇的篩選條件過濾交易
+  const filteredTransactions = filterType
+    ? transactions.filter((transaction) =>
+        filterType === "income"
+          ? transaction.amount > 0
+          : transaction.amount < 0
+      )
+    : transactions;
+
   return (
     <div className="bg-darkBlue min-h-screen p-8 flex flex-col">
       <div className="ml-24 text-2xl font-bold text-cream mb-6 mt-16">
@@ -69,9 +88,7 @@ const Transactions = () => {
         <div className="flex items-center space-x-4">
           <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
             <img src={coinspng} alt="Coins" className="w-8 h-8 mr-2" />
-            <span className="text-xl text-darkBlue font-bold">
-              {totalCoins}
-            </span>
+            <span className="text-xl text-darkBlue font-bold">{userCoins}</span>
           </div>
 
           <div className="ml-4 flex">
@@ -80,21 +97,17 @@ const Transactions = () => {
                 filterType === "income"
                   ? "bg-lightBlue text-white"
                   : "bg-gray-300 text-darkBlue"
-              } rounded-l-lg${
-                filterType === "income"
-                  ? "bg-lightBlue text-white"
-                  : "bg-gray-300"
-              }`}
+              } rounded-l-lg`}
               onClick={() => setFilterType("income")}
             >
               收入
             </button>
             <button
-              className={`px-4 py-2 font-bold  ${
+              className={`px-4 py-2 font-bold ${
                 filterType === "expense"
                   ? "bg-lightBlue text-white"
-                  : "bg-gray-300"
-              }`}
+                  : "bg-gray-300 text-darkBlue"
+              } rounded-r-lg`}
               onClick={() => setFilterType("expense")}
             >
               支出
@@ -104,7 +117,7 @@ const Transactions = () => {
       </div>
 
       <div className="ml-24 flex flex-col w-4/5">
-        {transactions.length === 0 ? (
+        {filteredTransactions.length === 0 ? (
           <p className="text-white">目前沒有交易紀錄。</p>
         ) : (
           filteredTransactions.map((transaction) => (
@@ -127,8 +140,14 @@ const Transactions = () => {
                 </p>
               </div>
 
-              <div className="text-xl font-bold text-darkBlue">
-                {transaction.amount}
+              <div
+                className={`text-xl font-bold ${
+                  transaction.amount > 0 ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                {transaction.amount > 0
+                  ? `+${transaction.amount}`
+                  : transaction.amount}
               </div>
             </div>
           ))
