@@ -158,11 +158,23 @@ const Chat = () => {
     try {
       // 增加圓夢者的 coins
       const userDocRef = doc(db, "users", dreamerId);
-      await updateDoc(userDocRef, {
-        coins: increment(50),
-      });
+      const userDoc = await getDoc(userDocRef);
 
-      // 更新願望狀態為 "fulfilled"
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+
+        // 如果 user 沒有 completedDreamsCount 欄位，初始化為 1；如果有，就加 1
+        const newsupportedDreams =
+          userData.supportedDreams !== undefined ? increment(1) : 1;
+
+        // 更新圓夢者的 coins 和 completedDreamsCount
+        await updateDoc(userDocRef, {
+          coins: increment(50),
+          supportedDreams: newsupportedDreams,
+        });
+      }
+
+      // 更新願望和圓夢狀態為 "fulfilled"
       const wishDocRef = doc(db, "wishes", wishId);
       await updateDoc(wishDocRef, {
         status: "fulfilled",
@@ -172,6 +184,7 @@ const Chat = () => {
       await updateDoc(dreamDocRef, {
         status: "fulfilled",
       });
+
       const messageRef = doc(db, "chats", chatId, "messages", messageId);
       await updateDoc(messageRef, {
         approved: true, // 標記為已核可
