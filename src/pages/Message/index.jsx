@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import {
   getFirestore,
   collection,
@@ -9,15 +9,50 @@ import {
   getDoc,
   orderBy,
   limit,
+  onSnapshot,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import angel from "./angel-stand.png"; // 系統通知頭像
 
+const initialState = {
+  chats: [],
+  chatInfo: {},
+  loading: true,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_CHATS": {
+      return { ...state, chats: action.payload, loading: false };
+    }
+    case "UPDATE_CHAT_INFO": {
+      const updatedChatInfo = { ...state.chatInfo, ...action.payload };
+
+      // 創建新的數組副本並基於時間戳排序
+      const sortedChats = [...state.chats].sort((a, b) => {
+        const lastMessageATime = new Date(
+          updatedChatInfo[a.id]?.lastMessage.timestamp || 0
+        ).getTime();
+        const lastMessageBTime = new Date(
+          updatedChatInfo[b.id]?.lastMessage.timestamp || 0
+        ).getTime();
+        return lastMessageBTime - lastMessageATime; // 最新訊息排在最上面
+      });
+
+      return { ...state, chatInfo: updatedChatInfo, chats: sortedChats };
+    }
+    case "SET_LOADING": {
+      return { ...state, loading: action.payload };
+    }
+    default:
+      return state;
+  }
+};
+
 const Messages = () => {
-  const [chats, setChats] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [chatInfo, setChatInfo] = useState({});
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { chats, chatInfo, loading } = state;
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -26,7 +61,7 @@ const Messages = () => {
   useEffect(() => {
     const fetchChats = async () => {
       if (!user) {
-        setLoading(false);
+        dispatch({ type: "SET_LOADING", payload: false });
         return;
       }
 
@@ -36,103 +71,112 @@ const Messages = () => {
           chatsRef,
           where("participants", "array-contains", user.uid)
         );
-        const querySnapshot = await getDocs(q);
+        const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+          const fetchedChats = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
 
-        const fetchedChats = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+          dispatch({ type: "SET_CHATS", payload: fetchedChats });
 
-        setChats(fetchedChats);
-
-        // 並行查詢所有參與者的資訊和最後一條訊息
-        const chatInfoMap = {};
-        const fetchPromises = fetchedChats.map(async (chat) => {
-          const otherParticipantId = chat.participants.find(
-            (participant) => participant !== user.uid
-          );
-
-          // 獲取參與者信息
-          let userInfo = { userName: "Unknown", avatarUrl: "" };
-          if (otherParticipantId === "system") {
-            userInfo = {
-              userName: "系統通知",
-              avatarUrl: angel,
-            }; // 系統頭像
-          } else {
-            const userRef = doc(db, "users", otherParticipantId);
-            const userDoc = await getDoc(userRef);
-            if (userDoc.exists()) {
-              userInfo = {
-                userName: userDoc.data().userName || "Unknown",
-                avatarUrl:
-                  userDoc.data().avatarUrl || "https://via.placeholder.com/40",
-              };
-            }
-          }
-
-          // 獲取最後一條訊息
-          const messagesRef = collection(db, "chats", chat.id, "messages");
-          const lastMessageQuery = query(
-            messagesRef,
-            orderBy("timestamp", "desc"),
-            limit(1)
-          );
-          const lastMessageSnapshot = await getDocs(lastMessageQuery);
-
-          let lastMessage = { content: "無訊息", timestamp: null };
-          if (!lastMessageSnapshot.empty) {
-            const lastMessageDoc = lastMessageSnapshot.docs[0];
-            lastMessage = {
-              content: lastMessageDoc.data().content,
-              timestamp:
-                lastMessageDoc.data().timestamp?.toDate().toLocaleString() ||
-                "",
-            };
-          }
-          const unreadMessagesQuery = query(
-            messagesRef,
-            orderBy("timestamp", "asc") // 根據需要排序
-          );
-
-          const allMessagesSnapshot = await getDocs(unreadMessagesQuery);
-          const unreadMessages = allMessagesSnapshot.docs.filter((doc) => {
-            const messageData = doc.data();
-
-            // 自己發送的訊息不計算為未讀
-            if (messageData.senderId === user.uid) {
-              return false;
-            }
-
-            // 如果是對方發送的訊息，並且 readBy 不包含對方的 ID
-            return (
-              !messageData.readBy || !messageData.readBy.includes(user.uid)
+          // 並行查詢所有參與者的資訊和最後一條訊息
+          const fetchPromises = fetchedChats.map(async (chat) => {
+            const otherParticipantId = chat.participants.find(
+              (participant) => participant !== user.uid
             );
+
+            // 獲取參與者信息
+            let userInfo = { userName: "Unknown", avatarUrl: "" };
+            if (otherParticipantId === "system") {
+              userInfo = {
+                userName: "系統通知",
+                avatarUrl: angel,
+              }; // 系統頭像
+            } else {
+              const userRef = doc(db, "users", otherParticipantId);
+              const userDoc = await getDoc(userRef);
+              if (userDoc.exists()) {
+                userInfo = {
+                  userName: userDoc.data().userName || "Unknown",
+                  avatarUrl:
+                    userDoc.data().avatarUrl ||
+                    "https://via.placeholder.com/40",
+                };
+              }
+            }
+
+            // 監聽訊息變化
+            const messagesRef = collection(db, "chats", chat.id, "messages");
+            const lastMessageQuery = query(
+              messagesRef,
+              orderBy("timestamp", "desc"),
+              limit(1)
+            );
+
+            const unsubscribeMessages = onSnapshot(
+              lastMessageQuery,
+              async (snapshot) => {
+                let lastMessage = { content: "無訊息", timestamp: null };
+                if (!snapshot.empty) {
+                  const lastMessageDoc = snapshot.docs[0];
+                  lastMessage = {
+                    content: lastMessageDoc.data().content,
+                    timestamp:
+                      lastMessageDoc.data().timestamp?.toDate().getTime() || 0,
+                  };
+                }
+
+                // 獲取未讀訊息
+                const unreadMessagesQuery = query(
+                  messagesRef,
+                  orderBy("timestamp", "asc") // 根據需要排序
+                );
+
+                const allMessagesSnapshot = await getDocs(unreadMessagesQuery);
+                const unreadMessages = allMessagesSnapshot.docs.filter(
+                  (doc) => {
+                    const messageData = doc.data();
+
+                    // 自己發送的訊息不計算為未讀
+                    if (messageData.senderId === user.uid) {
+                      return false;
+                    }
+
+                    // 如果是對方發送的訊息，並且 readBy 不包含自己的 ID
+                    return (
+                      !messageData.readBy ||
+                      !messageData.readBy.includes(user.uid)
+                    );
+                  }
+                );
+
+                const unreadCount = unreadMessages.length; // 記錄未讀訊息數
+
+                // 更新 chatInfo
+                dispatch({
+                  type: "UPDATE_CHAT_INFO",
+                  payload: {
+                    [chat.id]: {
+                      userInfo,
+                      lastMessage,
+                      unreadCount,
+                    },
+                  },
+                });
+              }
+            );
+
+            return () => unsubscribeMessages(); // 清除訊息監聽
           });
 
-          const unreadCount = unreadMessages.length; // 記錄未讀訊息數
-          // 存儲參與者信息和最後一條訊息
-          chatInfoMap[chat.id] = {
-            userInfo,
-            lastMessage,
-            unreadCount,
-          };
+          // 等待所有參與者和訊息資訊查詢完成
+          await Promise.all(fetchPromises);
         });
 
-        await Promise.all(fetchPromises);
-        const sortedChats = fetchedChats.sort((a, b) => {
-          const lastMessageA = chatInfoMap[a.id]?.lastMessage.timestamp || 0;
-          const lastMessageB = chatInfoMap[b.id]?.lastMessage.timestamp || 0;
-          return lastMessageB.localeCompare(lastMessageA); // 最新訊息排在前面
-        });
-
-        setChats(sortedChats);
-        setChatInfo(chatInfoMap);
+        return () => unsubscribe(); // 清除聊天監聽
       } catch (error) {
         console.error("Error fetching chats:", error);
       }
-
-      setLoading(false);
     };
 
     fetchChats();

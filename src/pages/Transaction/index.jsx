@@ -14,7 +14,6 @@ import coinspng from "./coin.png"; // 系統通知頭像
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
-  const [totalCoins, setTotalCoins] = useState(0);
   const [filterType, setFilterType] = useState(""); // 空字串表示不篩選
   const [userCoins, setUserCoins] = useState(0); // 用來儲存用戶硬幣數量
   const db = getFirestore();
@@ -45,7 +44,6 @@ const Transactions = () => {
         const querySnapshot = await getDocs(q);
 
         const fetchedTransactions = [];
-        let total = 0;
 
         querySnapshot.forEach((docSnapshot) => {
           const data = docSnapshot.data();
@@ -54,12 +52,9 @@ const Transactions = () => {
             id: docSnapshot.id,
             ...data,
           });
-
-          total += data.amount; // 計算總硬幣數量
         });
 
         setTransactions(fetchedTransactions);
-        setTotalCoins(total);
       } catch (error) {
         console.error("Error fetching transactions:", error);
       }
