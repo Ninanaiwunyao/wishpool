@@ -187,7 +187,7 @@ const Messages = () => {
   }
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8">
+    <div className="bg-darkBlue min-h-screen p-8 ml-48">
       <h2 className="text-2xl font-bold text-cream mb-6 mt-32 ml-24">聊天室</h2>
       {chats.length > 0 ? (
         <div className="flex flex-col w-4/5 ml-24">

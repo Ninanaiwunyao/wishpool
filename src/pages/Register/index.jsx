@@ -1,7 +1,17 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  addDoc,
+  collection,
+  serverTimestamp,
+  getDoc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "@/firebase/firebaseConfig";
 
@@ -12,11 +22,11 @@ const Register = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const [invitationCode, setInvitationCode] = useState("");
 
   const handleRegister = async (data) => {
     const auth = getAuth();
     const storage = getStorage();
-
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -32,16 +42,60 @@ const Register = () => {
         avatarUrl = await getDownloadURL(avatarRef);
       }
 
-      await setDoc(doc(db, "users", user.uid), {
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
         userName: data.userName,
         avatarUrl: avatarUrl,
-        coins: 0,
+        coins: 30,
         level: 1,
         achievements: [],
         completedWishes: 0,
         supportedDreams: 0,
         reputation: 0,
       });
+      await addDoc(collection(db, "transactions"), {
+        userId: user.uid,
+        amount: 30,
+        type: "registration-bonus",
+        timestamp: serverTimestamp(),
+      });
+      if (invitationCode) {
+        const inviterRef = doc(db, "users", invitationCode);
+        const inviterDoc = await getDoc(inviterRef);
+
+        if (inviterDoc.exists()) {
+          // 更新邀請者和新註冊者的金幣數量
+          await updateDoc(inviterRef, {
+            coins: increment(100), // 邀請者增加 100 金幣
+          });
+
+          await updateDoc(userRef, {
+            coins: increment(100), // 新註冊者也增加 100 金幣
+          });
+
+          // 記錄邀請者的交易
+          await addDoc(collection(db, "transactions"), {
+            userId: invitationCode,
+            amount: 100,
+            type: "invitation-bonus", // 交易類型為邀請獎勵
+            timestamp: serverTimestamp(),
+            invitedUserId: user.uid, // 記錄被邀請者的 UID
+          });
+
+          // 記錄新註冊者的交易
+          await addDoc(collection(db, "transactions"), {
+            userId: user.uid,
+            amount: 100,
+            type: "invitation-bonus", // 交易類型為註冊獎勵
+            timestamp: serverTimestamp(),
+            inviterId: invitationCode, // 記錄邀請者的 UID
+          });
+
+          console.log("註冊成功，邀請者和新註冊者各獲得 100 金幣，並記錄交易");
+        } else {
+          console.log("無效的邀請碼");
+        }
+      }
 
       navigate("/");
     } catch (err) {
@@ -95,6 +149,16 @@ const Register = () => {
             <input
               type="file"
               {...register("avatar")}
+              className="w-full p-2 rounded border border-gray-300"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">邀請碼（可選）</label>
+            <input
+              type="text"
+              placeholder="請輸入邀請碼"
+              value={invitationCode}
+              onChange={(e) => setInvitationCode(e.target.value)} // 保存用戶輸入的邀請碼
               className="w-full p-2 rounded border border-gray-300"
             />
           </div>
