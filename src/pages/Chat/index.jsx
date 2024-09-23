@@ -156,6 +156,15 @@ const Chat = () => {
   };
   const handleApprove = async (dreamId, wishId, dreamerId, messageId) => {
     try {
+      const wishDocRef = doc(db, "wishes", wishId);
+      const wishDoc = await getDoc(wishDocRef);
+
+      if (!wishDoc.exists()) {
+        throw new Error("願望文檔不存在");
+      }
+
+      const wishData = wishDoc.data();
+      const amount = wishData.amount || 0; // 如果文檔中沒有 amount，默認為 0
       // 增加圓夢者的 coins
       const userDocRef = doc(db, "users", dreamerId);
       const userDoc = await getDoc(userDocRef);
@@ -169,13 +178,12 @@ const Chat = () => {
 
         // 更新圓夢者的 coins 和 completedDreamsCount
         await updateDoc(userDocRef, {
-          coins: increment(50),
+          coins: increment(amount),
           supportedDreams: newsupportedDreams,
         });
       }
 
       // 更新願望和圓夢狀態為 "fulfilled"
-      const wishDocRef = doc(db, "wishes", wishId);
       await updateDoc(wishDocRef, {
         status: "fulfilled",
       });
@@ -196,14 +204,14 @@ const Chat = () => {
       // 記錄交易
       await addDoc(collection(db, "transactions"), {
         userId: dreamerId,
-        amount: 50,
+        amount: amount,
         type: "dream-completion",
         timestamp: serverTimestamp(),
         relatedId: dreamId,
       });
       await sendSystemNotification(
         dreamerId,
-        `硬幣交易通知：您已獲得 50 個硬幣`
+        `硬幣交易通知：您已獲得 ${amount} 個硬幣`
       );
 
       alert("核可成功！");
