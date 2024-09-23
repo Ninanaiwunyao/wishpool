@@ -125,7 +125,8 @@ const WishCardDetail = () => {
   };
   const handleToggleFavorite = async () => {
     const userRef = doc(db, "users", user.uid);
-    const wishRef = doc(db, "wishes", wish.id); // 取得 wish 文檔的引用
+    const wishRef = doc(db, "wishes", wish.id);
+    const creatorRef = doc(db, "users", wish.creatorId);
 
     try {
       const userDoc = await getDoc(userRef);
@@ -141,6 +142,9 @@ const WishCardDetail = () => {
           await updateDoc(wishRef, {
             likeCount: increment(-1), // 減少 likeCount
           });
+          await updateDoc(creatorRef, {
+            reputation: increment(-5), // 減少創建者的 reputation
+          });
           setIsFavorited(false);
         } else {
           // 如果未收藏，則添加收藏，並增加 likeCount
@@ -149,6 +153,9 @@ const WishCardDetail = () => {
           });
           await updateDoc(wishRef, {
             likeCount: increment(1), // 增加 likeCount
+          });
+          await updateDoc(creatorRef, {
+            reputation: increment(5), // 增加創建者的 reputation
           });
           setIsFavorited(true);
         }

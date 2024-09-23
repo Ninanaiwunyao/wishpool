@@ -72,7 +72,7 @@ const Progress = () => {
   };
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8">
+    <div className="bg-darkBlue min-h-screen p-8 ml-48">
       <h2 className="text-2xl font-bold text-cream mb-6 mt-32">圓夢進度</h2>
       {inProgressDreams.length > 0 ? (
         <div className="space-y-6">
@@ -84,7 +84,7 @@ const Progress = () => {
             return (
               <div
                 key={dream.id}
-                className="p-6 rounded-lg w-full flex flex-row justify-between items-center"
+                className="p-6 rounded-lg w-11/12 flex flex-row items-center"
               >
                 {/* 願望卡片 */}
                 <div className="flex-shrink-0">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   getFirestore,
   doc,
@@ -31,7 +31,12 @@ const Profile = () => {
   const auth = getAuth();
   const storage = getStorage();
   const user = auth.currentUser;
-
+  const resetForm = useCallback(
+    (data) => {
+      reset(data);
+    },
+    [reset]
+  );
   useEffect(() => {
     const fetchUserWishes = async () => {
       if (!user) return;
@@ -53,6 +58,7 @@ const Profile = () => {
 
     fetchUserWishes();
   }, [user, db]);
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) return;
@@ -61,14 +67,28 @@ const Profile = () => {
       const userDoc = await getDoc(userRef);
 
       if (userDoc.exists()) {
-        setUserData(userDoc.data());
-        reset(userDoc.data()); // 初始化表單的數據
+        const userData = userDoc.data();
+        const { coins, reputation } = userData;
+
+        // 計算新的等級
+        const calculatedLevel = Math.floor(coins / 100 + reputation / 50);
+
+        // 如果等級有變化，更新資料庫
+        if (userData.level !== calculatedLevel) {
+          await updateDoc(userRef, {
+            level: calculatedLevel,
+          });
+        }
+
+        // 更新狀態並重置表單
+        setUserData({ ...userData, level: calculatedLevel });
+        resetForm({ ...userData, level: calculatedLevel }); // 使用封裝的 reset 函數
       }
       setLoading(false);
     };
 
     fetchUserData();
-  }, [user, db, reset]);
+  }, [user, db, resetForm]);
 
   const handleAvatarChange = (e) => {
     if (e.target.files[0]) {
@@ -122,25 +142,35 @@ const Profile = () => {
     return <div>Loading...</div>;
   }
 
+  const currentPoints = userData.coins / 100 + userData.reputation / 50;
+  const nextLevel = userData.level + 1;
+  const nextLevelPoints = nextLevel * 100; // 設置每個等級需要 100 分的假設
+
+  // 計算進度條百分比
+  const progressPercentage = Math.min(
+    (currentPoints / nextLevelPoints) * 100,
+    100
+  );
+
   return (
     <div className="bg-darkBlue min-h-screen p-8 flex flex-col items-center">
       {/* 頂部導航 */}
       <div className="flex w-4/5 justify-between items-center mb-6 mt-32">
-        <h2 className="text-2xl text-cream flex items-center">個人檔案</h2>
+        <h2 className="text-2xl text-cream">個人檔案</h2>
         <button
           onClick={() => setIsEditing(!isEditing)}
-          className="bg-lightBlue text-white py-2 px-4 rounded-full hover:bg-blue-400 "
+          className="bg-lightBlue text-white py-2 px-4 rounded-full hover:bg-blue-400"
         >
           {isEditing ? "取消編輯" : "編輯個人資料"}
         </button>
       </div>
 
       {/* 中間內容區域 */}
-      <div className="bg-white p-8 rounded-xl shadow-lg flex w-4/5 space-x-8">
+      <div className="bg-white p-8 rounded-xl shadow-lg flex w-4/5 justify-between">
         {/* 檔案區 */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-start space-y-4 w "
+          className="flex flex-col items-start space-y-4 w-1/3"
         >
           <img
             src={userData.avatarUrl}
@@ -164,7 +194,7 @@ const Profile = () => {
           ) : (
             <p className="text-lg mt-2">{userData.userName}</p>
           )}
-
+          <p className="text-lg mt-2">邀請碼：{user.uid}</p>
           {isEditing && (
             <button
               type="submit"
@@ -176,47 +206,42 @@ const Profile = () => {
         </form>
 
         {/* 數據區 */}
-        <div className="flex flex-col items-start px-4 m-0">
+        <div className="flex flex-col items-start space-y-4 w-1/3">
           <div>
             <h3 className="font-bold text-darkBlue">硬幣數量</h3>
             <p className="text-darkBlue">{userData.coins} Coins</p>
+          </div>
+          <div>
             <h3 className="font-bold text-darkBlue">信譽分數</h3>
             <p className="text-darkBlue">{userData.reputation} Reputation</p>
           </div>
         </div>
 
         {/* 等級區 */}
-        <div className="flex flex-col items-start">
-          <div className="bg-lightBlue p-6 rounded-xl shadow-lg flex flex-col justify-center w-96">
+        <div className="w-1/3 flex flex-col items-start">
+          <div className="bg-lightBlue p-6 rounded-xl shadow-lg flex flex-col justify-center w-full">
             <h3 className="font-bold text-darkBlue">Level {userData.level}</h3>
             <p className="text-darkBlue">
-              {6000 - userData.coins - userData.reputation} points to next level
+              {nextLevelPoints - currentPoints} points to next level
             </p>
             <div className="w-full border-2 border-yellow-500 rounded-full h-4 mt-4 relative">
               <div
                 className="bg-yellow h-full rounded-full"
                 style={{
-                  width: `${Math.min(
-                    ((userData.coins + userData.reputation) / 6000) * 100,
-                    100
-                  )}%`,
+                  width: `${progressPercentage}%`,
                   transition: "width 0.5s ease-in-out",
                 }}
               ></div>
             </div>
             <p className="text-darkBlue mt-2">
-              {Math.min(
-                ((userData.coins + userData.reputation) / 6000) * 100,
-                100
-              ).toFixed(2)}
-              % Completed
+              {progressPercentage.toFixed(2)}% Completed
             </p>
           </div>
         </div>
       </div>
 
       {/* 許願記錄 */}
-      <div className="w-4/5 mt-8 flex flex-col items-start">
+      <div className="w-4/5 mt-8">
         <h3 className="text-cream text-2xl mb-4">許願記錄</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {userWishes.map((wish) => (

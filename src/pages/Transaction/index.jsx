@@ -74,7 +74,7 @@ const Transactions = () => {
     : transactions;
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8 flex flex-col">
+    <div className="bg-darkBlue min-h-screen p-8 flex flex-col ml-48">
       <div className="ml-24 text-2xl font-bold text-cream mb-6 mt-16">
         硬幣紀錄
       </div>
@@ -88,7 +88,7 @@ const Transactions = () => {
 
           <div className="ml-4 flex">
             <button
-              className={`px-4 py-2 ${
+              className={`px-4 py-2 font-bold ${
                 filterType === "income"
                   ? "bg-lightBlue text-white"
                   : "bg-gray-300 text-darkBlue"
@@ -126,6 +126,10 @@ const Transactions = () => {
                     ? "圓夢"
                     : transaction.type === "make-wish"
                     ? "許願"
+                    : transaction.type === "registration-bonus"
+                    ? "註冊禮"
+                    : transaction.type === "invitation-bonus"
+                    ? "邀請獎勵"
                     : transaction.type}
                 </p>
                 <p className="text-gray-500">

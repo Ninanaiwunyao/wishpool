@@ -164,10 +164,12 @@ const Chat = () => {
       }
 
       const wishData = wishDoc.data();
+      const wishOwnerId = wishData.creatorId; // 許願者 ID
       const amount = wishData.amount || 0; // 如果文檔中沒有 amount，默認為 0
       // 增加圓夢者的 coins
       const userDocRef = doc(db, "users", dreamerId);
       const userDoc = await getDoc(userDocRef);
+      const wishOwnerDocRef = doc(db, "users", wishOwnerId); // 許願者
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
@@ -180,6 +182,15 @@ const Chat = () => {
         await updateDoc(userDocRef, {
           coins: increment(amount),
           supportedDreams: newsupportedDreams,
+          reputation: increment(50),
+        });
+      }
+      // 確認許願者文檔存在
+      const wishOwnerDoc = await getDoc(wishOwnerDocRef);
+      if (wishOwnerDoc.exists()) {
+        // 增加許願者的 reputation
+        await updateDoc(wishOwnerDocRef, {
+          reputation: increment(10), // 許願者增加 10 聲望
         });
       }
 
@@ -265,7 +276,7 @@ const Chat = () => {
   }, [chatId, user, db]); // 添加 chatId 和 user 到依賴項數組中
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8 flex flex-col">
+    <div className="bg-darkBlue min-h-screen p-8 flex flex-col ml-48">
       <h2 className="ml-24 text-2xl font-bold text-cream mb-6 mt-16">聊天室</h2>
       <div className="ml-24 w-4/5 flex flex-col flex-grow bg-white p-4 rounded-lg shadow-lg overflow-y-auto mb-4">
         {messages.map((message) => (

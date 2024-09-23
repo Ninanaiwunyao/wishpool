@@ -6,6 +6,7 @@ import {
   query,
   orderBy,
   limit,
+  where,
 } from "firebase/firestore";
 import WishCard from "@/components/WishCard";
 
@@ -17,7 +18,12 @@ const RankingPage = () => {
   useEffect(() => {
     const fetchTopWishes = async () => {
       const wishesRef = collection(db, "wishes");
-      const q = query(wishesRef, orderBy("likeCount", "desc"), limit(10)); // 按 likeCount 降序排列，取前 10
+      const q = query(
+        wishesRef,
+        where("likeCount", ">", 0),
+        orderBy("likeCount", "desc"),
+        limit(10)
+      ); // 按 likeCount 降序排列，取前 10
       const querySnapshot = await getDocs(q);
       const wishes = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -28,7 +34,12 @@ const RankingPage = () => {
 
     const fetchTopDreamers = async () => {
       const usersRef = collection(db, "users");
-      const q = query(usersRef, orderBy("supportedDreams", "desc"), limit(10)); // 按完成夢想次數降序排列，取前 10
+      const q = query(
+        usersRef,
+        where("supportedDreams", ">", 0),
+        orderBy("supportedDreams", "desc"),
+        limit(10)
+      ); // 按完成夢想次數降序排列，取前 10
       const querySnapshot = await getDocs(q);
       const dreamers = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -42,7 +53,7 @@ const RankingPage = () => {
   }, [db]);
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8 flex justify-center flex-col items-center">
+    <div className="bg-darkBlue min-h-screen p-8 flex flex-col items-center">
       <div className="w-3/5 mt-24">
         <h2 className="text-3xl font-bold text-cream mb-6">排行榜</h2>
 

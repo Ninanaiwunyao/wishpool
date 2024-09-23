@@ -3,7 +3,7 @@ import { Outlet, NavLink } from "react-router-dom";
 const MemberPage = () => {
   return (
     <div className="flex min-h-screen bg-darkBlue items-center">
-      <nav className="bg-lightBlue h-64 w-48 p-4 flex flex-col justify-center items-center rounded-r-3xl shadow-lg">
+      <nav className="fixed bg-lightBlue h-64 w-48 p-4 flex flex-col justify-center items-center rounded-r-3xl shadow-lg">
         <ul className="space-y-4 text-xl">
           <li>
             <NavLink

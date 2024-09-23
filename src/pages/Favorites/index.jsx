@@ -46,7 +46,7 @@ const Favorites = () => {
   }
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8">
+    <div className="bg-darkBlue min-h-screen p-8 ml-48">
       <h2 className="text-2xl font-bold text-cream mb-6 mt-32">我的收藏</h2>
       {favoriteWishes.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
