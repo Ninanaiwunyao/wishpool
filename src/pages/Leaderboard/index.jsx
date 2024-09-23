@@ -52,13 +52,16 @@ const RankingPage = () => {
             最多收藏的願望
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {topWishes.map((wish) => (
-              <WishCard
-                key={wish.id}
-                wish={wish} // 傳入 wish 物件作為 prop
-                showFavoriteButton={false} // 根據需求可以選擇顯示或隱藏收藏按鈕
-              />
-            ))}
+            {topWishes.map(
+              (wish) =>
+                wish.status == "open" && (
+                  <WishCard
+                    key={wish.id}
+                    wish={wish} // 傳入 wish 物件作為 prop
+                    showFavoriteButton={false} // 根據需求可以選擇顯示或隱藏收藏按鈕
+                  />
+                )
+            )}
           </div>
         </section>
         {/* 圓夢次數排行 */}

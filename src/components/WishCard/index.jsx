@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import coinpng from "./coin.png";
 
 const WishCard = ({ wish }) => {
   const navigate = useNavigate();
@@ -33,13 +34,17 @@ const WishCard = ({ wish }) => {
   };
 
   return (
-    <div className="overflow-hidden w-64 h-80 flex flex-col items-center text-2xl font-sans bg-white rounded-3xl shadow-lg transform transition-transform duration-300 hover:scale-105">
+    <div className="overflow-hidden w-64 h-96 flex flex-col justify-center items-center text-2xl font-sans bg-white rounded-3xl shadow-lg transform transition-transform duration-300 hover:scale-105">
       <div className="w-full h-[160px] flex  justify-center">
         <img
           src={wish.imageUrl}
           alt={wish.title}
           className="max-h-full max-w-full object-cover"
         />
+      </div>
+      <div className="flex flex-row justify-center">
+        <img src={coinpng} alt="coins" className="w-16" />
+        <p className="mt-4">{wish.amount}</p>
       </div>
       <p className="text-gray-600 mb-4 mt-2">{wish.title}</p>
       <div className="flex space-x-2 mb-4">
@@ -67,6 +72,7 @@ WishCard.propTypes = {
   wish: PropTypes.shape({
     id: PropTypes.string.isRequired,
     title: PropTypes.string,
+    amount: PropTypes.number,
     imageUrl: PropTypes.string,
     tags: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
