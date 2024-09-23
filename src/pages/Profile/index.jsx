@@ -19,6 +19,8 @@ import {
 } from "firebase/storage";
 import { useForm } from "react-hook-form";
 import WishCard from "@/components/WishCard";
+import coinsIcon from "./coinsIcon.png";
+import reputationIcon from "./reputationIcon.png";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -37,6 +39,17 @@ const Profile = () => {
     },
     [reset]
   );
+  const handleInviteClick = () => {
+    const inviteMessage = `https://appworks-school-wishpool.web.app/ 邀請您加入許願池！使用我的邀請碼${user.uid}立即獲得100枚硬幣！`;
+    navigator.clipboard
+      .writeText(inviteMessage)
+      .then(() => {
+        alert("邀請碼已複製到剪貼板，您可以分享給朋友！");
+      })
+      .catch(() => {
+        alert("無法複製邀請碼，請手動複製。");
+      });
+  };
   useEffect(() => {
     const fetchUserWishes = async () => {
       if (!user) return;
@@ -142,18 +155,28 @@ const Profile = () => {
     return <div>Loading...</div>;
   }
 
-  const currentPoints = userData.coins / 100 + userData.reputation / 50;
-  const nextLevel = userData.level + 1;
-  const nextLevelPoints = nextLevel * 100; // 設置每個等級需要 100 分的假設
+  // 每個等級的硬幣和信譽點數需求
+  const coinsForLevelUp = 100;
+  const reputationForLevelUp = 50;
+
+  const totalPointsForLevelUp = coinsForLevelUp + reputationForLevelUp;
+
+  // 計算當前等級累積的硬幣和信譽分數
+  const currentLevelPoints =
+    (userData.coins % coinsForLevelUp) +
+    (userData.reputation % reputationForLevelUp);
+
+  // 下一等級需要的分數
+  const nextLevelPoints = totalPointsForLevelUp;
 
   // 計算進度條百分比
   const progressPercentage = Math.min(
-    (currentPoints / nextLevelPoints) * 100,
+    (currentLevelPoints / nextLevelPoints) * 100,
     100
   );
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8 flex flex-col items-center">
+    <div className="bg-darkBlue flex flex-col ml-96 mr-24 mb-16">
       {/* 頂部導航 */}
       <div className="flex w-4/5 justify-between items-center mb-6 mt-32">
         <h2 className="text-2xl text-cream">個人檔案</h2>
@@ -166,11 +189,11 @@ const Profile = () => {
       </div>
 
       {/* 中間內容區域 */}
-      <div className="bg-white p-8 rounded-xl shadow-lg flex w-4/5 justify-between">
+      <div className="bg-white p-8 rounded-xl shadow-lg flex w-4/5 justify-between space-x-8">
         {/* 檔案區 */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-start space-y-4 w-1/3"
+          className="flex flex-col items-start space-y-4 w-1/8"
         >
           <img
             src={userData.avatarUrl}
@@ -194,7 +217,13 @@ const Profile = () => {
           ) : (
             <p className="text-lg mt-2">{userData.userName}</p>
           )}
-          <p className="text-lg mt-2">邀請碼：{user.uid}</p>
+          <button
+            type="button"
+            className="bg-lightBlue text-white py-2 px-4 rounded-full hover:bg-blue-400 mt-4"
+            onClick={handleInviteClick}
+          >
+            複製邀請碼
+          </button>
           {isEditing && (
             <button
               type="submit"
@@ -206,23 +235,45 @@ const Profile = () => {
         </form>
 
         {/* 數據區 */}
-        <div className="flex flex-col items-start space-y-4 w-1/3">
-          <div>
-            <h3 className="font-bold text-darkBlue">硬幣數量</h3>
-            <p className="text-darkBlue">{userData.coins} Coins</p>
+        <div className="flex flex-col items-start space-y-8 w-1/3 justify-center">
+          <div className="bg-lightBlue p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-darkBlue">硬幣數量</h3>
+              <div className="flex items-center text-2xl">
+                <img
+                  src={coinsIcon}
+                  alt="Coins Icon"
+                  className="w-6 h-6 mr-2"
+                />
+                <span className="text-cream font-bold">
+                  {userData.coins} 枚
+                </span>
+              </div>
+            </div>
           </div>
-          <div>
-            <h3 className="font-bold text-darkBlue">信譽分數</h3>
-            <p className="text-darkBlue">{userData.reputation} Reputation</p>
+          <div className="bg-lightBlue p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-darkBlue">信譽分數</h3>
+              <div className="flex items-center text-2xl">
+                <img
+                  src={reputationIcon}
+                  alt="Reputation Icon"
+                  className="w-6 h-6 mr-2"
+                />
+                <span className="text-cream font-bold">
+                  {userData.reputation} 分
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* 等級區 */}
-        <div className="w-1/3 flex flex-col items-start">
+        <div className="w-2/5 flex flex-col items-start justify-center">
           <div className="bg-lightBlue p-6 rounded-xl shadow-lg flex flex-col justify-center w-full">
             <h3 className="font-bold text-darkBlue">Level {userData.level}</h3>
             <p className="text-darkBlue">
-              {nextLevelPoints - currentPoints} points to next level
+              離升級還差 {nextLevelPoints - currentLevelPoints} 分
             </p>
             <div className="w-full border-2 border-yellow-500 rounded-full h-4 mt-4 relative">
               <div
@@ -234,7 +285,7 @@ const Profile = () => {
               ></div>
             </div>
             <p className="text-darkBlue mt-2">
-              {progressPercentage.toFixed(2)}% Completed
+              {progressPercentage.toFixed(2)}% 完成
             </p>
           </div>
         </div>

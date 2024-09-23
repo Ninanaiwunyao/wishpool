@@ -105,7 +105,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-darkBlue flex items-center justify-center">
-      <div className="bg-lightBlue p-8 rounded-lg shadow-md w-80">
+      <div className="bg-lightBlue p-8 shadow-md w-[500px] rounded-2xl">
         <h2 className="text-2xl font-bold mb-6 text-center">註冊新帳號</h2>
         <form onSubmit={handleSubmit(handleRegister)}>
           <div className="mb-4">
@@ -162,12 +162,14 @@ const Register = () => {
               className="w-full p-2 rounded border border-gray-300"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-yellow-400 text-white py-2 rounded-full font-bold hover:bg-yellow-500"
-          >
-            註冊
-          </button>
+          <div className="flex justify-center mt-10">
+            <button
+              type="submit"
+              className="w-1/2 bg-yellow text-lightBlue py-2 rounded-full font-bold hover:bg-darkBlue "
+            >
+              註冊
+            </button>
+          </div>
         </form>
         <p className="text-center mt-4">
           已有帳號？{" "}

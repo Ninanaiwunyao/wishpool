@@ -74,7 +74,7 @@ const Transactions = () => {
     : transactions;
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8 flex flex-col ml-48">
+    <div className="bg-darkBlue p-8 flex flex-col ml-48">
       <div className="ml-24 text-2xl font-bold text-cream mb-6 mt-16">
         硬幣紀錄
       </div>

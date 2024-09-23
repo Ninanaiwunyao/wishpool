@@ -72,8 +72,8 @@ const Progress = () => {
   };
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8 ml-48">
-      <h2 className="text-2xl font-bold text-cream mb-6 mt-32">圓夢進度</h2>
+    <div className="bg-darkBlue ml-80 w-4/5">
+      <h2 className="text-2xl font-bold text-cream mb-6 ">圓夢進度</h2>
       {inProgressDreams.length > 0 ? (
         <div className="space-y-6">
           {inProgressDreams.map((dream) => {
