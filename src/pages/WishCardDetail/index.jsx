@@ -253,10 +253,10 @@ const WishCardDetail = () => {
   };
 
   return (
-    <div className="bg-darkblue min-h-screen flex flex-col items-center p-8 mt-32">
+    <div className="bg-darkBlue min-h-[calc(100vh-144px)] flex flex-col items-center p-8 ">
       <div
         key={wish.id}
-        className="bg-gray-800 rounded-xl shadow-lg mt-10 p-8 w-full max-w-2xl flex"
+        className="bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-2xl flex mt-32"
       >
         <div className="flex-shrink-0">
           <img

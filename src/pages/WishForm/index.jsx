@@ -95,18 +95,20 @@ const WishForm = () => {
   };
 
   return (
-    <div className="bg-darkblue min-h-screen flex flex-col items-center p-8 mt-24">
+    <div className="bg-darkBlue min-h-[calc(100vh-144px)] flex flex-col items-center p-8 ">
       <form
-        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl"
+        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl mt-48"
         onSubmit={handleSubmit(onSubmit)}
       >
         <h2 className="text-center text-2xl font-bold mb-6">願望單</h2>
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2">輸入投入金額</label>
+          <label className="block text-sm font-bold mb-2">
+            請決定要投入多少硬幣
+          </label>
           <input
             type="number"
-            placeholder="輸入投入金額"
+            placeholder="輸入投入硬幣數"
             className="w-full p-2 border rounded"
             {...register("amount", { required: true })}
           />
@@ -114,7 +116,9 @@ const WishForm = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2">輸入願望主旨</label>
+          <label className="block text-sm font-bold mb-2">
+            幫你的願望取個名字吧！
+          </label>
           <input
             type="text"
             placeholder="輸入願望主旨"
@@ -125,7 +129,9 @@ const WishForm = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2">輸入願望內容</label>
+          <label className="block text-sm font-bold mb-2">
+            詳細說說你的願望
+          </label>
           <textarea
             placeholder="輸入願望內容"
             className="w-full p-2 border rounded"
@@ -137,7 +143,7 @@ const WishForm = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2">選擇願望標籤</label>
+          <label className="block text-sm font-bold mb-2">幫你的願望歸類</label>
           <select
             className="w-full p-2 border rounded mb-2"
             {...register("tag1")}
@@ -182,7 +188,9 @@ const WishForm = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2">上傳圖片</label>
+          <label className="block text-sm font-bold mb-2">
+            上傳一張關於願望的圖片
+          </label>
           <input
             type="file"
             className="w-full p-2 border rounded"

@@ -276,7 +276,7 @@ const Chat = () => {
   }, [chatId, user, db]); // 添加 chatId 和 user 到依賴項數組中
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8 flex flex-col ml-48">
+    <div className="bg-darkBlue min-h-[calc(100vh-144px)] p-8 flex flex-col ml-48">
       <h2 className="ml-24 text-2xl font-bold text-cream mb-6 mt-16">聊天室</h2>
       <div className="ml-24 w-4/5 flex flex-col flex-grow bg-white p-4 rounded-lg shadow-lg overflow-y-auto mb-4">
         {messages.map((message) => (
