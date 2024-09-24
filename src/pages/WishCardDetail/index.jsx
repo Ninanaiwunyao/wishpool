@@ -253,7 +253,7 @@ const WishCardDetail = () => {
   };
 
   return (
-    <div className="bg-darkBlue min-h-[calc(100vh-144px)] flex flex-col items-center p-8 ">
+    <div className="bg-darkBlue min-h-[calc(100vh-64px)] flex flex-col items-center p-8 ">
       <div
         key={wish.id}
         className="bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-2xl flex mt-32"

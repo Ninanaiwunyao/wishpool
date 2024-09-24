@@ -95,9 +95,9 @@ const WishForm = () => {
   };
 
   return (
-    <div className="bg-darkBlue min-h-[calc(100vh-144px)] flex flex-col items-center p-8 ">
+    <div className="bg-darkBlue min-h-[calc(100vh-64px)] flex flex-col items-center p-8 ">
       <form
-        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl mt-48"
+        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl mt-24 mb-8"
         onSubmit={handleSubmit(onSubmit)}
       >
         <h2 className="text-center text-2xl font-bold mb-6">願望單</h2>

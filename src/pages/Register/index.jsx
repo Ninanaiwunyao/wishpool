@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "@/firebase/firebaseConfig";
+import backgroundImage from "./logInBg.png";
 
 const Register = () => {
   const {
@@ -104,7 +105,15 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-darkBlue flex items-center justify-center">
+    <div
+      className="min-h-screen bg-darkBlue flex items-center justify-center"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center -90px",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="bg-lightBlue p-8 shadow-md w-[500px] rounded-2xl">
         <h2 className="text-2xl font-bold mb-6 text-center">註冊新帳號</h2>
         <form onSubmit={handleSubmit(handleRegister)}>
@@ -165,7 +174,7 @@ const Register = () => {
           <div className="flex justify-center mt-10">
             <button
               type="submit"
-              className="w-1/2 bg-yellow text-lightBlue py-2 rounded-full font-bold hover:bg-darkBlue "
+              className="w-1/2 bg-yellow text-lightBlue py-2 rounded-full font-bold hover:bg-darkYellow "
             >
               註冊
             </button>

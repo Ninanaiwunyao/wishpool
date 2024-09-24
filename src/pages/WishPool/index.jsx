@@ -22,14 +22,14 @@ const WishPool = () => {
 
   return (
     <div
-      className="bg-darkBlue relative w-full min-h-[calc(100vh-144px)] flex items-center justify-center"
+      className="bg-darkBlue relative w-full min-h-[calc(100vh-64px)] flex items-center justify-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Slider {...settings} className="w-full max-w-4xl">
+      <Slider {...settings} className="w-full max-w-4xl mt-24">
         {filteredWishes.map((wish) => (
           <div key={wish.id} className="px-4">
             <WishCard wish={wish} />
