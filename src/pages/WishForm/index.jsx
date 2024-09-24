@@ -13,6 +13,9 @@ import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/firebase/firebaseConfig";
+import backgroundImage from "./starBackground.png";
+import angelSit from "./angel-sit.png";
+import angelStand from "./angel-stand.png";
 
 const WishForm = () => {
   const {
@@ -95,9 +98,17 @@ const WishForm = () => {
   };
 
   return (
-    <div className="bg-darkBlue min-h-[calc(100vh-64px)] flex flex-col items-center p-8 ">
+    <div
+      className="bg-darkBlue min-h-[calc(100vh-64px)] flex flex-col items-center p-8"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center -90px",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <form
-        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl mt-24 mb-8"
+        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl mt-24 mb-8 relative"
         onSubmit={handleSubmit(onSubmit)}
       >
         <h2 className="text-center text-2xl font-bold mb-6">願望單</h2>
@@ -205,6 +216,16 @@ const WishForm = () => {
         >
           投入許願池
         </button>
+        <img
+          src={angelSit}
+          alt="angel sitting"
+          className="absolute bottom-0 right-[-80px] h-48"
+        />
+        <img
+          src={angelStand}
+          alt="angel standing"
+          className="absolute bottom-[-50px] left-[-100px] h-48"
+        />
       </form>
     </div>
   );
