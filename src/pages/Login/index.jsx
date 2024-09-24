@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { useEffect } from "react";
+import backgroundImage from "./logInBg.png";
 
 const Login = () => {
   const {
@@ -39,7 +40,15 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-darkBlue flex items-center justify-center">
+    <div
+      className="min-h-screen bg-darkBlue flex items-center justify-center"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center -90px",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="bg-lightBlue p-8 shadow-md rounded-2xl w-[500px]">
         <h2 className="text-2xl font-bold mb-6 text-center">歡迎回到許願池</h2>
         <form onSubmit={handleSubmit(handleLogin)}>
@@ -70,7 +79,7 @@ const Login = () => {
           <div className="flex justify-center mt-10">
             <button
               type="submit"
-              className="w-1/2 bg-yellow text-lightBlue py-2 rounded-full font-bold hover:bg-darkBlue "
+              className="w-1/2 bg-yellow text-lightBlue py-2 rounded-full font-bold hover:bg-darkYellow "
             >
               入池
             </button>

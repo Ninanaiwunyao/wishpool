@@ -176,9 +176,9 @@ const Profile = () => {
   );
 
   return (
-    <div className="bg-darkBlue flex flex-col ml-96 mr-24 mb-16">
+    <div className="bg-darkBlue flex flex-col ml-48 mr-24 h-full justify-center items-center">
       {/* 頂部導航 */}
-      <div className="flex w-4/5 justify-between items-center mb-6 mt-32">
+      <div className="flex w-4/5 justify-between items-center mb-6 mt-24">
         <h2 className="text-2xl text-cream">個人檔案</h2>
         <button
           onClick={() => setIsEditing(!isEditing)}
@@ -292,8 +292,8 @@ const Profile = () => {
       </div>
 
       {/* 許願記錄 */}
-      <div className="w-4/5 mt-8">
-        <h3 className="text-cream text-2xl mb-4">許願記錄</h3>
+      <div className="w-4/5 mt-8 mb-16">
+        <h3 className="text-cream text-2xl mb-6">許願記錄</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {userWishes.map((wish) => (
             <WishCard key={wish.id} wish={wish} />
