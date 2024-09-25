@@ -187,7 +187,7 @@ const Messages = () => {
   }
 
   return (
-    <div className="bg-darkBlue p-8 ml-48 ">
+    <div className="bg-darkBlue p-8 ml-48">
       <h2 className="text-2xl font-bold text-cream mb-6 ml-24 ">聊天室</h2>
       {chats.length > 0 ? (
         <div className="flex flex-col w-4/5 ml-24">
@@ -238,7 +238,7 @@ const Messages = () => {
           })}
         </div>
       ) : (
-        <p className="text-white">目前沒有聊天室。</p>
+        <p className="text-white ml-24">目前沒有聊天室。</p>
       )}
     </div>
   );
