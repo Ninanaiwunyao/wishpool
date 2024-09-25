@@ -262,7 +262,7 @@ const WishCardDetail = () => {
           <img
             src={wish.imageUrl}
             alt={`${wish.title} image`}
-            className="w-40 h-40 rounded-lg object-cover"
+            className="h-48 rounded-lg object-cover"
           />
         </div>
 
