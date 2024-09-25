@@ -72,8 +72,8 @@ const Progress = () => {
   };
 
   return (
-    <div className="bg-darkBlue ml-80 w-4/5">
-      <h2 className="text-2xl font-bold text-cream mb-6 ">圓夢進度</h2>
+    <div className="bg-darkBlue w-4/5">
+      <h2 className="text-2xl font-bold text-cream mb-6 ml-80">圓夢進度</h2>
       {inProgressDreams.length > 0 ? (
         <div className="space-y-6">
           {inProgressDreams.map((dream) => {
@@ -84,7 +84,7 @@ const Progress = () => {
             return (
               <div
                 key={dream.id}
-                className="p-6 rounded-lg w-11/12 flex flex-row items-center"
+                className="p-6 rounded-lg flex flex-row items-center ml-64 w-11/12"
               >
                 {/* 願望卡片 */}
                 <div className="flex-shrink-0">
@@ -131,7 +131,7 @@ const Progress = () => {
           })}
         </div>
       ) : (
-        <p className="text-white">目前沒有正在進行的圓夢。</p>
+        <p className="text-white ml-80">目前沒有正在進行的圓夢。</p>
       )}
       {showUploadModal && selectedDream && (
         <ProofUploadModal
