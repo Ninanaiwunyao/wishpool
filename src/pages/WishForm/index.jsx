@@ -99,7 +99,7 @@ const WishForm = () => {
 
   return (
     <div
-      className="bg-darkBlue min-h-[calc(100vh-64px)] flex flex-col items-center p-8"
+      className="bg-darkBlue min-h-screen flex flex-col items-center p-8"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",

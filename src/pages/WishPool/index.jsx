@@ -22,7 +22,7 @@ const WishPool = () => {
 
   return (
     <div
-      className="bg-darkBlue relative w-full min-h-[calc(100vh-64px)] flex items-center justify-center"
+      className="bg-darkBlue relative w-full min-h-screen flex items-center justify-center"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",

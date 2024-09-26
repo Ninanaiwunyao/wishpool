@@ -15,6 +15,11 @@ export default {
         jet: "#343434",
         cream: "#F7FFF7",
       },
+      screens: {
+        sm: "641px",
+        md: "1245px",
+        lg: "1921px",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

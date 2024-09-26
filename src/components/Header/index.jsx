@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import { useState } from "react";
 
 const Header = () => {
   const auth = getAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -12,29 +14,40 @@ const Header = () => {
       console.error("登出失敗:", err.message);
     }
   };
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   return (
-    <header className="z-10 fixed top-0 left-0 right-0 flex justify-between items-center bg-yellow p-4 w-4/5 mt-6 mx-auto rounded-full">
-      <div>
+    <header className="md:h-14 h-10 z-10 fixed top-0 left-0 right-0 flex justify-between items-center bg-yellow p-4 w-4/5 mt-6 mx-auto rounded-full">
+      <button
+        onClick={toggleMenu}
+        className="block sm:hidden ml-10 text-xl text-lightBlue font-semibold"
+      >
+        選單
+      </button>
+      <div className="hidden sm:flex">
         <Link to="/" className="text-lightBlue font-semibold ml-10 text-xl">
           首頁
         </Link>
       </div>
-      <div className="flex space-x-20">
-        <Link to="/wishpool" className="text-lightBlue font-semibold text-xl">
-          許願池
-        </Link>
-        <Link
-          to="/memberpage/profile"
-          className="text-lightBlue font-semibold text-xl"
-        >
-          會員
-        </Link>
-        <Link
-          to="/leaderboard"
-          className="text-lightBlue font-semibold text-xl"
-        >
-          排行榜
-        </Link>
+      <div className="hidden md:flex space-x-20 items-center justify-center flex-grow">
+        <div className="flex space-x-20 ">
+          <Link to="/wishpool" className="text-lightBlue font-semibold text-xl">
+            許願池
+          </Link>
+          <Link
+            to="/memberpage/profile"
+            className="text-lightBlue font-semibold text-xl"
+          >
+            會員
+          </Link>
+          <Link
+            to="/leaderboard"
+            className="text-lightBlue font-semibold text-xl"
+          >
+            排行榜
+          </Link>
+        </div>
       </div>
       <div>
         <Link
@@ -45,6 +58,38 @@ const Header = () => {
           登出
         </Link>
       </div>
+      {isMenuOpen && (
+        <div className="absolute top-10 left-4 w-1/8 bg-lightBlue rounded-lg shadow-lg p-4 space-y-4 sm:hidden">
+          <Link
+            to="/"
+            className="text-yellow font-semibold text-lg block"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            首頁
+          </Link>
+          <Link
+            to="/wishpool"
+            className="text-yellow font-semibold text-lg block"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            許願池
+          </Link>
+          <Link
+            to="/memberpage/profile"
+            className="text-yellow font-semibold text-lg block"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            會員
+          </Link>
+          <Link
+            to="/leaderboard"
+            className="text-yellow font-semibold text-lg block"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            排行榜
+          </Link>
+        </div>
+      )}
     </header>
   );
 };

@@ -46,17 +46,21 @@ const Favorites = () => {
   }
 
   return (
-    <div className="bg-darkBlue p-8 ml-80">
-      <h2 className="text-2xl font-bold text-cream mb-6">我的收藏</h2>
-      {favoriteWishes.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {favoriteWishes.map((wish) => (
-            <WishCard key={wish.id} wish={wish} />
-          ))}
-        </div>
-      ) : (
-        <p className="text-white">沒有收藏的願望卡片。</p>
-      )}
+    <div className="bg-darkBlue p-8 md:mt-24 mt-16 md:ml-80 min-h-screen">
+      <h2 className="text-2xl font-bold text-cream mb-6 ml-12 md:ml-0">
+        我的收藏
+      </h2>
+      <div className="h-fit flex-grow flex items-start md:justify-start justify-center mt-12 md:mt-0">
+        {favoriteWishes.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-center justify-center">
+            {favoriteWishes.map((wish) => (
+              <WishCard key={wish.id} wish={wish} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-white">沒有收藏的願望卡片。</p>
+        )}
+      </div>
     </div>
   );
 };
