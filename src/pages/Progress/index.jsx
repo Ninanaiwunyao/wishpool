@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProofUploadModal from "@/components/ProofUploadModal";
-
 import {
   getFirestore,
   collection,
@@ -72,10 +71,12 @@ const Progress = () => {
   };
 
   return (
-    <div className="bg-darkBlue w-4/5">
-      <h2 className="text-2xl font-bold text-cream mb-6 ml-80">圓夢進度</h2>
+    <div className="bg-darkBlue md:w-4/5 h-fit mt-36">
+      <h2 className="text-2xl font-bold text-cream mb-6 ml-12 md:ml-80">
+        圓夢進度
+      </h2>
       {inProgressDreams.length > 0 ? (
-        <div className="space-y-6">
+        <div className="space-y-6 flex flex-col justify-center items-center md:items-start">
           {inProgressDreams.map((dream) => {
             const { daysRemaining, progress } = calculateProgress(
               dream.startDate,
@@ -84,14 +85,14 @@ const Progress = () => {
             return (
               <div
                 key={dream.id}
-                className="p-6 rounded-lg flex flex-row items-center ml-64 w-11/12"
+                className="p-6 rounded-lg flex flex-col md:flex-row items-center md:ml-64 w-11/12 gap-6 md:gap-0"
               >
                 {/* 願望卡片 */}
                 <div className="flex-shrink-0">
                   <WishCardWithId wishId={dream.wishId} />
                 </div>
                 {/* 進度條和截止日期 */}
-                <div className="flex flex-col items-center justify-center w-1/2 mx-auto bg-white h-[200px] rounded-xl">
+                <div className="flex flex-col items-center justify-center w-full md:w-1/2 mx-auto bg-white h-[200px] rounded-xl">
                   <p className="text-darkBlue mb-4">
                     截止日期:{" "}
                     {moment(dream.endDate.toDate()).format("YYYY-MM-DD")}
@@ -131,7 +132,7 @@ const Progress = () => {
           })}
         </div>
       ) : (
-        <p className="text-white ml-80">目前沒有正在進行的圓夢。</p>
+        <p className="text-white ml-12 md:ml-80">目前沒有正在進行的圓夢。</p>
       )}
       {showUploadModal && selectedDream && (
         <ProofUploadModal
