@@ -5,7 +5,7 @@ import gifImage from "./pool.gif";
 const Home = () => {
   return (
     <div
-      className="h-[calc(100vh-64px)] relative flex items-center justify-center min-h-[calc(100vh-64px)] bg-darkBlue"
+      className="h-screen relative flex items-center justify-center min-h-screen bg-darkBlue"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",

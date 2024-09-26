@@ -15,9 +15,18 @@
 }
 
 #root {
-  @apply h-screen relative;
+  @apply h-fit relative box-border;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  min-height: 100vh;
+}
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

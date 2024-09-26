@@ -176,10 +176,10 @@ const Profile = () => {
   );
 
   return (
-    <div className="bg-darkBlue flex flex-col ml-48 mr-24 h-full justify-center items-center">
+    <div className="bg-darkBlue flex flex-col h-full justify-center items-center md:ml-48 md:mr-24">
       {/* 頂部導航 */}
       <div className="flex w-4/5 justify-between items-center mb-6 mt-24">
-        <h2 className="text-2xl text-cream">個人檔案</h2>
+        <h2 className="text-2xl text-cream font-bold">個人檔案</h2>
         <button
           onClick={() => setIsEditing(!isEditing)}
           className="bg-lightBlue text-white py-2 px-4 rounded-full hover:bg-blue-400"
@@ -189,11 +189,11 @@ const Profile = () => {
       </div>
 
       {/* 中間內容區域 */}
-      <div className="bg-white p-8 rounded-xl shadow-lg flex w-4/5 justify-between space-x-8">
+      <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col w-4/5 items-center md:justify-between md:flex-row">
         {/* 檔案區 */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-start space-y-4 w-1/8"
+          className="flex flex-col md:items-start space-y-4 w-1/8 items-center"
         >
           <img
             src={userData.avatarUrl}
@@ -235,7 +235,7 @@ const Profile = () => {
         </form>
 
         {/* 數據區 */}
-        <div className="flex flex-col items-start space-y-8 w-1/3 justify-center">
+        <div className="ml-0  flex flex-col items-start space-y-8 md:w-1/3 w-4/5 justify-center mt-8 md:mt-0">
           <div className="bg-lightBlue p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-darkBlue">硬幣數量</h3>
@@ -269,7 +269,7 @@ const Profile = () => {
         </div>
 
         {/* 等級區 */}
-        <div className="w-2/5 flex flex-col items-start justify-center">
+        <div className="w-4/5 md:w-2/5 flex flex-col items-start justify-center mt-8 md:m-0">
           <div className="bg-lightBlue p-6 rounded-xl shadow-lg flex flex-col justify-center w-full">
             <h3 className="font-bold text-darkBlue">Level {userData.level}</h3>
             <p className="text-darkBlue">
@@ -294,7 +294,7 @@ const Profile = () => {
       {/* 許願記錄 */}
       <div className="w-4/5 mt-8 mb-16">
         <h3 className="text-cream text-2xl mb-6">許願記錄</h3>
-        <div className="flex justify-between">
+        <div className="flex flex-row flex-wrap md:justify-between gap-16 justify-center">
           {userWishes.map((wish) => (
             <WishCard key={wish.id} wish={wish} />
           ))}
