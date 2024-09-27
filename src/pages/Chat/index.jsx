@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import angel from "./angel-stand.png";
+import memberIcon from "./noIcon.jpg";
 
 const Chat = () => {
   const { id: chatId } = useParams();
@@ -291,7 +292,7 @@ const Chat = () => {
             {/* 顯示發送者的頭像，放在訊息框的外側 */}
             {message.senderId !== user.uid && (
               <img
-                src={message.avatarUrl || "https://via.placeholder.com/40"} // 如果頭像不存在顯示佔位圖
+                src={message.avatarUrl || memberIcon} // 如果頭像不存在顯示佔位圖
                 alt="頭像"
                 className="w-10 h-10 rounded-full mr-4"
               />
@@ -351,7 +352,7 @@ const Chat = () => {
             {/* 發送者的頭像在訊息框外側 */}
             {message.senderId === user.uid && (
               <img
-                src={message.avatarUrl || "https://via.placeholder.com/40"}
+                src={message.avatarUrl || memberIcon}
                 alt="頭像"
                 className="w-10 h-10 rounded-full ml-4"
               />

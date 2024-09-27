@@ -49,7 +49,7 @@ const Login = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="bg-lightBlue p-8 shadow-md rounded-2xl w-[500px]">
+      <div className="bg-lightBlue p-8 shadow-md rounded-2xl md:w-[500px]">
         <h2 className="text-2xl font-bold mb-6 text-center">歡迎回到許願池</h2>
         <form onSubmit={handleSubmit(handleLogin)}>
           <div className="mb-4">

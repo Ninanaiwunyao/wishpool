@@ -62,7 +62,7 @@ const RankingPage = () => {
           <h3 className="text-2xl font-semibold text-cream mb-4">
             最多收藏的願望
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex gap-12 flex-wrap justify-between">
             {topWishes.map(
               (wish) =>
                 wish.status == "open" && (
@@ -80,11 +80,11 @@ const RankingPage = () => {
           <h3 className="text-2xl font-semibold text-cream mb-4">
             圓夢次數最多的用戶
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col gap-6">
             {topDreamers.map((dreamer) => (
               <div
                 key={dreamer.id}
-                className="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg"
+                className="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg w-full"
               >
                 <img
                   src={dreamer.avatarUrl || "https://via.placeholder.com/100"}
