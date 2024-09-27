@@ -34,12 +34,12 @@ const WishCard = ({ wish }) => {
   };
 
   return (
-    <div className="overflow-hidden w-64 h-96 flex flex-col justify-center items-center text-2xl font-sans bg-white rounded-3xl shadow-lg transform transition-transform duration-300 hover:scale-105">
+    <div className="overflow-hidden w-64 h-96 flex flex-col justify-between items-center pb-4 text-2xl font-sans bg-white rounded-3xl shadow-lg transform transition-transform duration-300 hover:scale-105">
       <div className="w-full h-[160px] flex  justify-center">
         <img
           src={wish.imageUrl}
           alt={wish.title}
-          className="max-h-full max-w-full object-cover"
+          className="h-full w-full object-cover"
         />
       </div>
       <div className="flex flex-row justify-center">
