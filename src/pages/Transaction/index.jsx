@@ -111,7 +111,7 @@ const Transactions = () => {
         </div>
       </div>
 
-      <div className="ml-6 md:ml-24 flex flex-col md:w-4/5">
+      <div className="ml-6 md:ml-24 flex flex-col md:w-4/5 h-screen">
         {filteredTransactions.length === 0 ? (
           <p className="text-white">目前沒有交易紀錄。</p>
         ) : (

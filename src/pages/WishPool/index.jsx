@@ -11,7 +11,6 @@ const WishPool = () => {
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0]);
   const [visibleCount, setVisibleCount] = useState(3);
   useEffect(() => {
-    // 监听窗口大小变化
     const updateVisibleCount = () => {
       const width = window.innerWidth;
       if (width <= 630) {
@@ -23,10 +22,10 @@ const WishPool = () => {
       }
     };
 
-    updateVisibleCount(); // 初始化
-    window.addEventListener("resize", updateVisibleCount); // 监听窗口变化
+    updateVisibleCount();
+    window.addEventListener("resize", updateVisibleCount);
 
-    return () => window.removeEventListener("resize", updateVisibleCount); // 清除监听器
+    return () => window.removeEventListener("resize", updateVisibleCount);
   }, []);
 
   if (loading) {
@@ -47,12 +46,12 @@ const WishPool = () => {
   };
   const handleDragEnd = (event, info) => {
     const dragDistance = info.offset.x;
-    const threshold = 100; // 拖动超过 100px 切换
+    const threshold = 100;
 
     if (dragDistance > threshold) {
-      handleClick(-1); // 向右拖动，切换到前一个
+      handleClick(-1);
     } else if (dragDistance < -threshold) {
-      handleClick(1); // 向左拖动，切换到下一个
+      handleClick(1);
     }
   };
 
@@ -99,9 +98,9 @@ const WishPool = () => {
             animate="center"
             exit="exit"
             transition={{ duration: 1 }}
-            drag="x" // 允许横向拖拽
-            dragConstraints={{ left: 0, right: 0 }} // 限制拖动方向
-            onDragEnd={handleDragEnd} // 拖动结束后触发事件
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            onDragEnd={handleDragEnd}
           >
             <WishCard wish={wish} />
           </motion.div>
