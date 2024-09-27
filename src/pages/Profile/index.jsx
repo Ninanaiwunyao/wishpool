@@ -236,31 +236,35 @@ const Profile = () => {
 
         {/* 數據區 */}
         <div className="ml-0  flex flex-col items-start space-y-8 md:w-1/3 w-4/5 justify-center mt-8 md:mt-0">
-          <div className="bg-lightBlue p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
+          <div className="bg-lightBlue p-4 md:p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-darkBlue">硬幣數量</h3>
-              <div className="flex items-center text-2xl">
+              <h3 className="font-bold text-darkBlue md:text-2xl text-sm">
+                硬幣數量
+              </h3>
+              <div className="flex items-center md:text-2xl text-sm">
                 <img
                   src={coinsIcon}
                   alt="Coins Icon"
                   className="w-6 h-6 mr-2"
                 />
-                <span className="text-cream font-bold">
+                <span className="text-cream font-bold md:text-2xl text-sm">
                   {userData.coins} 枚
                 </span>
               </div>
             </div>
           </div>
-          <div className="bg-lightBlue p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
+          <div className="bg-lightBlue p-4 md:p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-darkBlue">信譽分數</h3>
-              <div className="flex items-center text-2xl">
+              <h3 className="font-bold text-darkBlue md:text-2xl text-sm">
+                信譽分數
+              </h3>
+              <div className="flex items-center md:text-2xl text-sm">
                 <img
                   src={reputationIcon}
                   alt="Reputation Icon"
                   className="w-6 h-6 mr-2"
                 />
-                <span className="text-cream font-bold">
+                <span className="text-cream font-bold md:text-2xl text-sm">
                   {userData.reputation} 分
                 </span>
               </div>
