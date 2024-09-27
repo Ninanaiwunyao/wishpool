@@ -2,6 +2,8 @@ import Slider from "react-slick";
 import { WishesProvider, useWishes } from "@/WishesContext";
 import WishCard from "@/components/WishCard";
 import backgroundImage from "./homeBackground.png";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const WishPool = () => {
   const { wishes, loading } = useWishes();
@@ -18,6 +20,20 @@ const WishPool = () => {
     slidesToShow: 3,
     speed: 500,
     focusOnSelect: true,
+    responsive: [
+      {
+        breakpoint: 950, // 屏幕小于950时，显示2张卡片
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 640, // 屏幕小于640时，显示1张卡片
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
 
   return (
@@ -29,9 +45,9 @@ const WishPool = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Slider {...settings} className="w-full max-w-4xl mt-24">
+      <Slider {...settings} className="md:w-full w-4/5 max-w-4xl mt-24">
         {filteredWishes.map((wish) => (
-          <div key={wish.id} className="px-4">
+          <div key={wish.id} className="px-4 ">
             <WishCard wish={wish} />
           </div>
         ))}
