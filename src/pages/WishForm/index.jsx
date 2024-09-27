@@ -108,7 +108,7 @@ const WishForm = () => {
       }}
     >
       <form
-        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl mt-24 mb-8 relative"
+        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl mt-16 md:mt-24 mb-8 relative"
         onSubmit={handleSubmit(onSubmit)}
       >
         <h2 className="text-center text-2xl font-bold mb-6">願望單</h2>
@@ -219,12 +219,12 @@ const WishForm = () => {
         <img
           src={angelSit}
           alt="angel sitting"
-          className="absolute bottom-0 right-[-80px] h-48"
+          className="hidden md:block absolute bottom-0 right-[-80px] h-48"
         />
         <img
           src={angelStand}
           alt="angel standing"
-          className="absolute bottom-[-50px] left-[-100px] h-48"
+          className="hidden md:block absolute bottom-[-50px] left-[-100px] h-48"
         />
       </form>
     </div>
