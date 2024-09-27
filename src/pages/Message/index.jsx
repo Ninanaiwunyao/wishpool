@@ -14,6 +14,7 @@ import {
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import angel from "./angel-stand.png"; // 系統通知頭像
+import memberIcon from "./noIcon.jpg";
 
 const initialState = {
   chats: [],
@@ -98,9 +99,7 @@ const Messages = () => {
               if (userDoc.exists()) {
                 userInfo = {
                   userName: userDoc.data().userName || "Unknown",
-                  avatarUrl:
-                    userDoc.data().avatarUrl ||
-                    "https://via.placeholder.com/40",
+                  avatarUrl: userDoc.data().avatarUrl || memberIcon,
                 };
               }
             }
@@ -219,7 +218,17 @@ const Messages = () => {
                               : chatDetails.lastMessage.content}
                           </p>
                           <p className="text-xs text-gray-400">
-                            {chatDetails.lastMessage.timestamp}
+                            {new Date(
+                              chatDetails.lastMessage.timestamp
+                            ).toLocaleString("zh-TW", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                              hour12: false, // 24小时制
+                            })}
                           </p>
                         </div>
                       </>

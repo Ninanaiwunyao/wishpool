@@ -4,6 +4,7 @@ import backgroundImage from "./homeBackground.png";
 import gifImage from "./pool.gif";
 import angelSit from "./angel-sit.png";
 import angelStand from "./angel-stand.png";
+import mobileBG from "./mobileBG.png";
 
 const Home = () => {
   const [isMdOrAbove, setIsMdOrAbove] = useState(window.innerWidth >= 1245);
@@ -24,9 +25,11 @@ const Home = () => {
     <div
       className="h-screen relative flex items-center justify-center min-h-screen bg-darkBlue"
       style={{
-        backgroundImage: isMdOrAbove ? `url(${backgroundImage})` : "none", // 在 md 以上显示背景图
+        backgroundImage: isMdOrAbove
+          ? `url(${backgroundImage})`
+          : `url(${mobileBG})`, // 在 md 以上显示背景图
         backgroundSize: "cover",
-        backgroundPosition: "center -90px",
+        backgroundPosition: isMdOrAbove ? "center -90px" : "",
         backgroundRepeat: "no-repeat",
       }}
     >

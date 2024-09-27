@@ -256,7 +256,7 @@ const WishCardDetail = () => {
     <div className="bg-darkBlue min-h-screen flex flex-col items-center p-8 ">
       <div
         key={wish.id}
-        className="bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-2xl flex mt-32"
+        className="bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-2xl flex flex-col md:flex-row mt-32"
       >
         <div className="flex-shrink-0">
           <img
@@ -266,7 +266,7 @@ const WishCardDetail = () => {
           />
         </div>
 
-        <div className="text-white ml-6">
+        <div className="text-white ml-6 md:mt-0 mt-6">
           <h3 className="text-xl font-bold mb-4">願望主旨</h3>
           <p className="mb-6">{wish.title}</p>
 
@@ -288,7 +288,7 @@ const WishCardDetail = () => {
           <div className="flex items-center space-x-4">
             {!isOwner && openStatus && (
               <button
-                className="bg-yellow-300 text-primaryBlue font-semibold rounded-full px-6 py-2 hover:bg-yellow-400"
+                className="bg-yellow text-lightBlue font-semibold rounded-full px-6 py-2 hover:bg-yellow-400"
                 onClick={handleDreamClick}
               >
                 圓夢

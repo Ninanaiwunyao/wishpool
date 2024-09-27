@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import WishCard from "@/components/WishCard";
 import coinsIcon from "./coinsIcon.png";
 import reputationIcon from "./reputationIcon.png";
+import memberIcon from "./noIcon.jpg";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -196,7 +197,7 @@ const Profile = () => {
           className="flex flex-col md:items-start space-y-4 w-1/8 items-center"
         >
           <img
-            src={userData.avatarUrl}
+            src={userData.avatarUrl ? userData.avatarUrl : memberIcon}
             alt="頭像"
             className="w-32 h-32 rounded-full object-cover mb-4 border-4"
           />

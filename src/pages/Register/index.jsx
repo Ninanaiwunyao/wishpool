@@ -114,8 +114,10 @@ const Register = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="bg-lightBlue p-8 shadow-md w-[500px] rounded-2xl">
-        <h2 className="text-2xl font-bold mb-6 text-center">註冊新帳號</h2>
+      <div className="bg-lightBlue p-8 shadow-md md:w-[500px] w-4/5 rounded-2xl">
+        <h2 className="text-2xl font-bold mb-6 text-center text-cream">
+          註冊新帳號
+        </h2>
         <form onSubmit={handleSubmit(handleRegister)}>
           <div className="mb-4">
             <label className="block mb-2">名稱</label>
