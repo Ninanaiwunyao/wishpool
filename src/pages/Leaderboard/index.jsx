@@ -53,7 +53,7 @@ const RankingPage = () => {
   }, [db]);
 
   return (
-    <div className="bg-darkBlue min-h-screen p-8 flex flex-col items-center">
+    <div className="bg-darkBlue min-h-screen py-8 flex flex-col items-center">
       <div className="w-3/5 mt-24">
         <h2 className="text-3xl font-bold text-cream mb-6">排行榜</h2>
 
