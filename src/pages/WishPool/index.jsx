@@ -1,6 +1,7 @@
 import { WishesProvider, useWishes } from "@/WishesContext";
 import WishCard from "@/components/WishCard";
-import backgroundImage from "./homeBackground.png";
+import backgroundImage from "./wishpoolBG.png";
+import mobileBackgroundImage from "./mobileWishpoolBG.png";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { AnimatePresence, motion } from "framer-motion";
@@ -10,6 +11,19 @@ const WishPool = () => {
   const { wishes, loading } = useWishes();
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0]);
   const [visibleCount, setVisibleCount] = useState(3);
+  const [isMdOrAbove, setIsMdOrAbove] = useState(window.innerWidth >= 630);
+
+  // 当窗口大小变化时，更新状态以控制背景图片显示
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMdOrAbove(window.innerWidth >= 630);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   useEffect(() => {
     const updateVisibleCount = () => {
       const width = window.innerWidth;
@@ -59,7 +73,9 @@ const WishPool = () => {
     <div
       className="bg-darkBlue relative w-full min-h-screen flex items-center justify-center"
       style={{
-        backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: isMdOrAbove
+          ? `url(${backgroundImage})`
+          : `url(${mobileBackgroundImage})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}

@@ -33,16 +33,16 @@ const Home = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="h-full relative md:mt-64 md:ml-12 flex flex-col justify-center items-center gap-7 md:h-96">
+      <div className="h-full relative md:mt-64 md:ml-12 flex flex-col md:justify-center items-center gap-7 md:h-96 mt-48">
         <img
           src={angelSit}
           alt="angelSit"
-          className="absolute bottom-0 right-2 h-36 md:hidden"
+          className="absolute bottom-36 right-2 h-36 md:hidden"
         />
         <img
           src={angelStand}
           alt="angelStand"
-          className="absolute bottom-0 left-2 h-36 md:hidden"
+          className="absolute bottom-36 left-2 h-36 md:hidden"
         />
         <img src={gifImage} alt="wishpool" className="w-[700px] h-auto" />
         <Link

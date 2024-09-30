@@ -122,9 +122,17 @@ const Profile = () => {
         const oldAvatarRef = ref(storage, `avatars/${user.uid}`);
         const newAvatarRef = ref(storage, `avatars/${user.uid}`);
 
-        // 刪除舊頭像
+        // 刪除舊頭像，如果存在
         if (userData.avatarUrl) {
-          await deleteObject(oldAvatarRef);
+          try {
+            await deleteObject(oldAvatarRef);
+          } catch (error) {
+            if (error.code === "storage/object-not-found") {
+              console.warn("舊頭像文件不存在，無需刪除。");
+            } else {
+              throw error; // 其他錯誤繼續拋出
+            }
+          }
         }
 
         // 上傳新頭像

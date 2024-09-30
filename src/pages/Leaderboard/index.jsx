@@ -9,6 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 import WishCard from "@/components/WishCard";
+import memberIcon from "./noIcon.jpg";
 
 const RankingPage = () => {
   const [topWishes, setTopWishes] = useState([]);
@@ -87,7 +88,7 @@ const RankingPage = () => {
                 className="bg-white p-4 rounded-lg shadow-md flex items-center hover:shadow-lg w-full"
               >
                 <img
-                  src={dreamer.avatarUrl || "https://via.placeholder.com/100"}
+                  src={dreamer.avatarUrl || memberIcon}
                   alt={dreamer.userName}
                   className="w-16 h-16 rounded-full mr-4"
                 />

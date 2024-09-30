@@ -74,7 +74,7 @@ const Transactions = () => {
     : transactions;
 
   return (
-    <div className="bg-darkBlue p-8 flex flex-col md:ml-48 ">
+    <div className="bg-darkBlue p-8 flex flex-col md:ml-48 h-fit ">
       <div className="ml-6 md:ml-24 text-2xl font-bold text-cream mb-6 mt-16">
         硬幣紀錄
       </div>
@@ -111,7 +111,7 @@ const Transactions = () => {
         </div>
       </div>
 
-      <div className="ml-6 md:ml-24 flex flex-col md:w-4/5 h-screen">
+      <div className="ml-6 md:ml-24 flex flex-col md:w-4/5 h-fit">
         {filteredTransactions.length === 0 ? (
           <p className="text-white">目前沒有交易紀錄。</p>
         ) : (
