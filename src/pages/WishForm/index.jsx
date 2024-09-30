@@ -121,9 +121,19 @@ const WishForm = () => {
             type="number"
             placeholder="輸入投入硬幣數"
             className="w-full p-2 border rounded"
-            {...register("amount", { required: true })}
+            min="5"
+            step="5"
+            {...register("amount", {
+              required: "此欄位為必填項。",
+              validate: {
+                isMultipleOfFive: (value) =>
+                  value % 5 === 0 || "必須是 5 的倍數。",
+              },
+            })}
           />
-          {errors.amount && <p className="text-red-500">此欄位為必填項。</p>}
+          {errors.amount && (
+            <p className="text-red-500">{errors.amount.message}</p>
+          )}
         </div>
 
         <div className="mb-4">
