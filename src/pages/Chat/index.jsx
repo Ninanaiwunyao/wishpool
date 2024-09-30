@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   getFirestore,
   collection,
@@ -28,6 +28,7 @@ const Chat = () => {
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -136,6 +137,11 @@ const Chat = () => {
       console.error("查找或创建聊天时出错：", error);
     }
   };
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -359,6 +365,7 @@ const Chat = () => {
             )}
           </div>
         ))}
+        <div ref={bottomRef} />
       </div>
 
       <form
