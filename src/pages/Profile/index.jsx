@@ -307,9 +307,9 @@ const Profile = () => {
       {/* 許願記錄 */}
       <div className="w-4/5 mt-8 mb-16">
         <h3 className="text-cream text-2xl mb-6">許願記錄</h3>
-        <div className="flex flex-row flex-wrap md:justify-between justify-center">
+        <div className="flex flex-row flex-wrap md:justify-between justify-center gap-12">
           {userWishes.map((wish) => (
-            <WishCard key={wish.id} wish={wish} />
+            <WishCard key={wish.id} wish={wish} className=" mb-16" />
           ))}
         </div>
       </div>
