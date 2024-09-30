@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import coinpng from "./coin.png";
+import planeIcon from "./plane.png";
+import woodBG from "./wood.jpg";
 
 const WishCard = ({ wish }) => {
   const navigate = useNavigate();
@@ -34,7 +36,15 @@ const WishCard = ({ wish }) => {
   };
 
   return (
-    <div className="overflow-hidden w-64 h-96 flex flex-col justify-between items-center pb-4 text-2xl font-sans bg-white rounded-3xl shadow-lg transform transition-transform duration-300 hover:scale-105">
+    <div
+      className="overflow-hidden w-64 h-96 flex flex-col justify-between items-center pb-4 text-2xl font-sans bg-white rounded-3xl shadow-lg transform transition-transform duration-300 hover:scale-105"
+      style={{
+        backgroundImage: `url(${woodBG}`, // 在 md 以上显示背景图
+        backgroundSize: "cover",
+        backgroundPosition: "",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="w-full h-[160px] flex  justify-center">
         <img
           src={wish.imageUrl}
@@ -46,7 +56,7 @@ const WishCard = ({ wish }) => {
         <img src={coinpng} alt="coins" className="w-16" />
         <p className="mt-4">{wish.amount}</p>
       </div>
-      <p className="text-gray-600 mb-4 mt-2">{wish.title}</p>
+      <p className="text-gray-600 mb-4 mt-2 font-bold">{wish.title}</p>
       <div className="flex space-x-2 mb-4">
         {wish.tags.map((tag, index) => (
           <span
@@ -59,9 +69,10 @@ const WishCard = ({ wish }) => {
         ))}
       </div>
       <button
-        className="bg-black text-white px-4 py-2 rounded hover:bg-gray-700"
+        className="flex flex-row h-12 text-lg text-darkBlue px-4 py-2 rounded hover:bg-gray-700 hover:text-cream"
         onClick={handleViewDetails}
       >
+        <img src={planeIcon} alt="" className="h-10" />
         查看
       </button>
     </div>

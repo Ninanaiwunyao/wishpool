@@ -46,7 +46,7 @@ const Favorites = () => {
   }
 
   return (
-    <div className="bg-darkBlue p-8 md:mt-24 mt-16 md:ml-80 min-h-screen">
+    <div className="bg-darkBlue p-8 md:mt-28 mt-16 md:ml-72 min-h-screen">
       <h2 className="text-2xl font-bold text-cream mb-6 ml-12 md:ml-0">
         我的收藏
       </h2>

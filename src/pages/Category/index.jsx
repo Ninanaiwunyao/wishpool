@@ -29,7 +29,7 @@ const Category = () => {
       <h2 className="text-2xl font-bold text-cream mb-4">
         {category}的所有願望
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 h-screen mb-24">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 h-fit mb-24">
         {filteredWishes.length > 0 ? (
           filteredWishes.map((wish) => <WishCard key={wish.id} wish={wish} />)
         ) : (
