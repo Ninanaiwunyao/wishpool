@@ -61,7 +61,7 @@ const LandingPage = () => {
           }}
           initial={{ top: "-10%" }} // 元素從螢幕上方掉下來
           animate={{
-            top: "99%", // 掉到螢幕下方
+            top: "95%", // 掉到螢幕下方
           }}
           transition={{
             duration: element.duration, // 掉落時間（加大範圍，使掉落更平滑）
