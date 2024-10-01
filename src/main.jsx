@@ -16,6 +16,7 @@ import Progress from "./pages/Progress";
 import Message from "./pages/Message";
 import Chat from "./pages/Chat";
 import Transaction from "./pages/Transaction";
+import LandingPage from "./pages/LandingPage";
 import { WishesProvider } from "./WishesContext.jsx";
 import PrivateRoute from "./components/PrivateRoute";
 import "./index.css";
@@ -27,7 +28,7 @@ root.render(
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-
+        <Route path="landingPage" element={<LandingPage />} />
         <Route
           path="/"
           element={
