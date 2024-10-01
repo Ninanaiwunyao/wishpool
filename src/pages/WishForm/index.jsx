@@ -108,7 +108,7 @@ const WishForm = () => {
       }}
     >
       <form
-        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl mt-16 md:mt-24 mb-8 relative"
+        className="bg-white rounded-xl shadow-lg p-8 w-full h-screen-2xl mt-16 md:mt-24 mb-8 relative"
         onSubmit={handleSubmit(onSubmit)}
       >
         <h2 className="text-center text-2xl font-bold mb-6">願望單</h2>
