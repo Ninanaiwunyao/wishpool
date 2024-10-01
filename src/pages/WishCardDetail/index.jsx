@@ -288,7 +288,7 @@ const WishCardDetail = () => {
           <div className="flex items-center space-x-4">
             {!isOwner && openStatus && (
               <button
-                className="bg-yellow text-lightBlue font-semibold rounded-full px-6 py-2 hover:bg-yellow-400"
+                className="bg-yellow text-lightBlue font-semibold rounded-full px-6 py-2 hover:bg-darkYellow"
                 onClick={handleDreamClick}
               >
                 圓夢
