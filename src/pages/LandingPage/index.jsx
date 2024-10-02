@@ -59,7 +59,7 @@ const LandingPage = () => {
       />
       <Link
         to="/login"
-        className="flex justify-center items-center bg-yellow text-lightBlue font-semibold text-[10px]  rounded-full hover:bg-darkYellow absolute top-[160px] sm:top-80 right-24 sm:right-52 md:top-[680px] md:right-[480px] lg:top-[900px] lg:right-[600px] w-16 h-6 sm:h-12 sm:w-24 md:h-24 md:w-48 sm:text-sm md:text-2xl"
+        className="flex justify-center items-center bg-yellow text-lightBlue font-semibold text-[10px]  rounded-full hover:bg-darkYellow absolute top-[160px] sm:top-80 right-24 sm:right-52 md:top-[600px] md:right-[430px] lg:top-[900px] lg:right-[680px] w-16 h-6 sm:h-12 sm:w-24 md:h-20 md:w-40 sm:text-sm md:text-2xl"
       >
         立即入池
       </Link>
