@@ -19,12 +19,14 @@ import {
 import { getAuth } from "firebase/auth";
 import angel from "./angel-stand.png";
 import memberIcon from "./noIcon.jpg";
+import CustomAlert from "@/components/CustomAlert";
 
 const Chat = () => {
   const { id: chatId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isSystemChat, setIsSystemChat] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(null);
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -232,7 +234,7 @@ const Chat = () => {
         `硬幣交易通知：您已獲得 ${amount} 個硬幣`
       );
 
-      alert("核可成功！");
+      setAlertMessage("核可成功！");
     } catch (error) {
       console.error("核可失敗：", error);
     }
@@ -255,7 +257,7 @@ const Chat = () => {
         readBy: [],
       });
 
-      alert("不核可操作已執行");
+      setAlertMessage("不核可操作已執行");
     } catch (error) {
       console.error("不核可操作失敗：", error);
     }
@@ -389,6 +391,12 @@ const Chat = () => {
           </button>
         )}
       </form>
+      {alertMessage && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => setAlertMessage(null)}
+        />
+      )}
     </div>
   );
 };

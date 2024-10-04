@@ -5,8 +5,9 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import backgroundImage from "./logInBg.png";
+import CustomAlert from "@/components/CustomAlert";
 
 const Login = () => {
   const {
@@ -14,6 +15,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const [alertMessage, setAlertMessage] = useState(null);
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -35,7 +37,7 @@ const Login = () => {
       // 在這裡不需要導航，因為 `onAuthStateChanged` 會自動處理
     } catch (err) {
       console.error("登入失敗:", err.message);
-      alert("登入失敗，請檢查您的電子郵件和密碼");
+      setAlertMessage("登入失敗，請檢查您的電子郵件和密碼");
     }
   };
 
@@ -92,6 +94,12 @@ const Login = () => {
           </Link>
         </p>
       </div>
+      {alertMessage && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => setAlertMessage(null)}
+        />
+      )}
     </div>
   );
 };

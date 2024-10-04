@@ -12,11 +12,14 @@ import {
 import { getAuth } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
+import CustomAlert from "@/components/CustomAlert";
 
 const ProofUploadModal = ({ onClose, dreamId, wishOwnerId, wishId }) => {
   const [proofText, setProofText] = useState("");
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false); // 上傳狀態
+  const [alertMessage, setAlertMessage] = useState(null);
+
   const db = getFirestore();
   const storage = getStorage();
   const auth = getAuth();
@@ -99,11 +102,10 @@ const ProofUploadModal = ({ onClose, dreamId, wishOwnerId, wishId }) => {
         readBy: [],
       });
 
-      alert("證明上傳成功，已通知許願者！");
-      onClose();
+      setAlertMessage("證明上傳成功，已通知許願者！");
     } catch (error) {
       console.error("上傳證明失敗", error);
-      alert("證明上傳失敗");
+      setAlertMessage("證明上傳失敗");
     } finally {
       setIsUploading(false); // 上傳結束
     }
@@ -129,13 +131,13 @@ const ProofUploadModal = ({ onClose, dreamId, wishOwnerId, wishId }) => {
             <button
               type="button"
               onClick={onClose}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-red-600"
             >
               取消
             </button>
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-lightBlue text-white px-4 py-2 rounded hover:bg-darkBlue"
               disabled={isUploading}
             >
               {isUploading ? "上傳中..." : "上傳"}
@@ -143,6 +145,15 @@ const ProofUploadModal = ({ onClose, dreamId, wishOwnerId, wishId }) => {
           </div>
         </form>
       </div>
+      {alertMessage && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => {
+            setAlertMessage(null);
+            onClose(); // 在提示框確認後再關閉整個 Modal
+          }}
+        />
+      )}
     </div>
   );
 };

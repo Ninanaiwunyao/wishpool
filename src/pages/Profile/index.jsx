@@ -22,6 +22,7 @@ import WishCard from "@/components/WishCard";
 import coinsIcon from "./coinsIcon.png";
 import reputationIcon from "./reputationIcon.png";
 import memberIcon from "./noIcon.jpg";
+import CustomAlert from "@/components/CustomAlert";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -29,6 +30,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false); // 控制編輯模式
   const [newAvatarFile, setNewAvatarFile] = useState(null); // 控制新的頭像文件
   const [userWishes, setUserWishes] = useState([]); // 用於儲存當前用戶的願望卡
+  const [alertMessage, setAlertMessage] = useState(null);
   const { register, handleSubmit, reset } = useForm();
   const db = getFirestore();
   const auth = getAuth();
@@ -45,10 +47,10 @@ const Profile = () => {
     navigator.clipboard
       .writeText(inviteMessage)
       .then(() => {
-        alert("邀請碼已複製到剪貼板，您可以分享給朋友！");
+        setAlertMessage("邀請碼已複製到剪貼板，您可以分享給朋友！");
       })
       .catch(() => {
-        alert("無法複製邀請碼，請手動複製。");
+        setAlertMessage("無法複製邀請碼，請手動複製。");
       });
   };
   useEffect(() => {
@@ -153,10 +155,10 @@ const Profile = () => {
       });
       setIsEditing(false); // 退出編輯模式
       setNewAvatarFile(null); // 清除文件選擇
-      alert("資料更新成功！");
+      setAlertMessage("資料更新成功！");
     } catch (error) {
       console.error("更新失敗：", error);
-      alert("資料更新失敗！");
+      setAlertMessage("資料更新失敗！");
     }
   };
 
@@ -185,9 +187,9 @@ const Profile = () => {
   );
 
   return (
-    <div className="bg-darkBlue flex flex-col h-full justify-center items-center md:ml-48 md:mr-24">
+    <div className="bg-darkBlue flex flex-col h-fit items-center md:ml-48 md:mr-24 min-h-screen">
       {/* 頂部導航 */}
-      <div className="flex w-4/5 justify-between items-center mb-6 mt-24">
+      <div className="flex w-4/5 justify-between items-center mb-6 mt-36">
         <h2 className="text-2xl text-cream font-bold">個人檔案</h2>
         <button
           onClick={() => setIsEditing(!isEditing)}
@@ -306,13 +308,19 @@ const Profile = () => {
 
       {/* 許願記錄 */}
       <div className="w-4/5 mt-8 mb-16">
-        <h3 className="text-cream text-2xl mb-6">許願記錄</h3>
+        <h3 className="text-cream text-2xl mb-6 font-bold">許願記錄</h3>
         <div className="flex flex-row flex-wrap md:justify-between justify-center gap-12">
           {userWishes.map((wish) => (
             <WishCard key={wish.id} wish={wish} className=" mb-16" />
           ))}
         </div>
       </div>
+      {alertMessage && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => setAlertMessage(null)}
+        />
+      )}
     </div>
   );
 };
