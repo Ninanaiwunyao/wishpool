@@ -19,6 +19,7 @@ import {
   increment,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import CustomAlert from "@/components/CustomAlert";
 
 const WishCardDetail = () => {
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ const WishCardDetail = () => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [endDate, setEndDate] = useState("");
+  const [alertMessage, setAlertMessage] = useState(null);
+
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -194,7 +197,7 @@ const WishCardDetail = () => {
     today.setHours(0, 0, 0, 0); // 確保時間部分被設定為午夜（避免時區或小時的問題）
     const selectedEndDate = new Date(endDate);
     if (selectedEndDate < today) {
-      alert("截止日期不能早於今天！");
+      setAlertMessage("截止日期不能早於今天！");
       return;
     }
     try {
@@ -240,15 +243,14 @@ const WishCardDetail = () => {
         readBy: [],
       });
 
-      // 導航到聊天室頁面
-      navigate(`/memberPage/chat/${chatDocRef.id}`);
-      // 設置自動刪除功能：根據截止日期設定一個時間，在截止日期後刪除聊天室
-
-      alert("圓夢已開始，聊天室已建立！");
+      setAlertMessage("圓夢已開始，聊天室已建立！");
       setShowForm(false); // 隱藏表單
+      setTimeout(() => {
+        navigate(`/memberPage/chat/${chatDocRef.id}`);
+      }, 2000);
     } catch (error) {
       console.error("無法創建 dream：", error);
-      alert("圓夢創建失敗！");
+      setAlertMessage("圓夢創建失敗！");
     }
   };
 
@@ -304,7 +306,7 @@ const WishCardDetail = () => {
         </div>
       </div>
       {showForm && (
-        <div className="bg-white p-4 rounded shadow-lg mt-4">
+        <div className="bg-white p-4 rounded shadow-lg mt-4 w-64 flex flex-col justify-center items-center">
           <h3 className="text-lg font-bold mb-2">選擇截止時間</h3>
           <form onSubmit={handleFormSubmit}>
             <input
@@ -314,21 +316,29 @@ const WishCardDetail = () => {
               required
               className="border p-2 rounded mb-4"
             />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded"
-            >
-              確認
-            </button>
-            <button
-              type="button"
-              className="ml-2 bg-red-500 text-white py-2 px-4 rounded"
-              onClick={() => setShowForm(false)}
-            >
-              取消
-            </button>
+            <div>
+              <button
+                type="submit"
+                className="bg-lightBlue text-white py-2 px-4 rounded"
+              >
+                確認
+              </button>
+              <button
+                type="button"
+                className="ml-2 bg-orange-500 text-white py-2 px-4 rounded"
+                onClick={() => setShowForm(false)}
+              >
+                取消
+              </button>
+            </div>
           </form>
         </div>
+      )}
+      {alertMessage && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => setAlertMessage(null)}
+        />
       )}
     </div>
   );

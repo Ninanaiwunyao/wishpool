@@ -23,7 +23,7 @@ const Home = () => {
 
   return (
     <div
-      className="h-screen relative flex items-center justify-center min-h-screen bg-darkBlue"
+      className="h-hit relative pb-6 flex items-center justify-center min-h-screen bg-darkBlue"
       style={{
         backgroundImage: isMdOrAbove
           ? `url(${backgroundImage})`
@@ -37,12 +37,12 @@ const Home = () => {
         <img
           src={angelSit}
           alt="angelSit"
-          className="absolute bottom-36 right-2 h-36 md:hidden"
+          className="absolute bottom-0 right-2 h-36 md:hidden"
         />
         <img
           src={angelStand}
           alt="angelStand"
-          className="absolute bottom-36 left-2 h-36 md:hidden"
+          className="absolute bottom-0 left-2 h-36 md:hidden"
         />
         <img src={gifImage} alt="wishpool" className="w-[700px] h-auto" />
         <Link

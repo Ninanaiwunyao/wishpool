@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { useState } from "react";
+import starIcon from "./starIcon.png";
 
 const Header = () => {
   const auth = getAuth();
@@ -25,69 +26,119 @@ const Header = () => {
       >
         選單
       </button>
-      <div className="hidden sm:flex">
-        <Link to="/" className="text-lightBlue font-semibold ml-10 text-xl">
-          首頁
-        </Link>
+      <div className="hidden sm:flex sm:flex-row ">
+        <NavLink
+          to="/"
+          className="text-lightBlue font-semibold ml-10 text-xl relative"
+        >
+          {({ isActive }) => (
+            <>
+              {isActive && (
+                <img
+                  src={starIcon}
+                  alt="Active Indicator"
+                  className="absolute right-10 w-6 h-6"
+                />
+              )}
+              首頁
+            </>
+          )}
+        </NavLink>
       </div>
       <div className="hidden md:flex space-x-20 items-center justify-center flex-grow">
         <div className="flex space-x-20 ">
-          <Link to="/wishpool" className="text-lightBlue font-semibold text-xl">
-            許願池
-          </Link>
-          <Link
+          <NavLink
+            to="/wishpool"
+            className="text-lightBlue font-semibold text-xl relative"
+          >
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <img
+                    src={starIcon}
+                    alt="Active Indicator"
+                    className="w-6 h-6 absolute right-16"
+                  />
+                )}
+                許願池
+              </>
+            )}
+          </NavLink>
+          <NavLink
             to="/memberpage/profile"
-            className="text-lightBlue font-semibold text-xl"
+            className="text-lightBlue font-semibold text-xl relative"
           >
-            會員
-          </Link>
-          <Link
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <img
+                    src={starIcon}
+                    alt="Active Indicator"
+                    className="absolute right-10 w-6 h-6"
+                  />
+                )}
+                會員
+              </>
+            )}
+          </NavLink>
+          <NavLink
             to="/leaderboard"
-            className="text-lightBlue font-semibold text-xl"
+            className="text-lightBlue font-semibold text-xl relative"
           >
-            排行榜
-          </Link>
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <img
+                    src={starIcon}
+                    alt="Active Indicator"
+                    className="absolute right-16 w-6 h-6"
+                  />
+                )}
+                排行榜
+              </>
+            )}
+          </NavLink>
         </div>
       </div>
       <div>
-        <Link
+        <NavLink
           to="/"
           className="text-lightBlue font-semibold mr-10 text-xl"
           onClick={handleLogout}
         >
           登出
-        </Link>
+        </NavLink>
       </div>
       {isMenuOpen && (
         <div className="absolute top-10 left-4 w-1/8 bg-lightBlue rounded-lg shadow-lg p-4 space-y-4 sm:hidden">
-          <Link
+          <NavLink
             to="/"
             className="text-yellow font-semibold text-lg block"
             onClick={() => setIsMenuOpen(false)}
           >
             首頁
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/wishpool"
             className="text-yellow font-semibold text-lg block"
             onClick={() => setIsMenuOpen(false)}
           >
             許願池
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/memberpage/profile"
             className="text-yellow font-semibold text-lg block"
             onClick={() => setIsMenuOpen(false)}
           >
             會員
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/leaderboard"
             className="text-yellow font-semibold text-lg block"
             onClick={() => setIsMenuOpen(false)}
           >
             排行榜
-          </Link>
+          </NavLink>
         </div>
       )}
     </header>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   collection,
@@ -16,6 +17,7 @@ import { storage } from "@/firebase/firebaseConfig";
 import backgroundImage from "./starBackground.png";
 import angelSit from "./angel-sit.png";
 import angelStand from "./angel-stand.png";
+import CustomAlert from "@/components/CustomAlert";
 
 const WishForm = () => {
   const {
@@ -24,7 +26,7 @@ const WishForm = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-
+  const [alertMessage, setAlertMessage] = useState(null);
   const onSubmit = async (data) => {
     const db = getFirestore();
     const auth = getAuth();
@@ -48,7 +50,7 @@ const WishForm = () => {
     const amount = parseInt(data.amount);
 
     if (currentCoins < amount) {
-      alert("你的硬幣不足以許願");
+      setAlertMessage("你的硬幣不足以許願");
       return;
     }
 
@@ -90,7 +92,7 @@ const WishForm = () => {
         relatedId: wishDocRef.id, // 記錄相關的願望 ID
       });
 
-      alert("願望已成功提交！");
+      setAlertMessage("願望已成功提交！");
       navigate("/wishPool");
     } catch (error) {
       console.error("Error adding document: ", error);
@@ -237,6 +239,12 @@ const WishForm = () => {
           className="hidden md:block absolute bottom-[-50px] left-[-100px] h-48"
         />
       </form>
+      {alertMessage && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => setAlertMessage(null)}
+        />
+      )}
     </div>
   );
 };
