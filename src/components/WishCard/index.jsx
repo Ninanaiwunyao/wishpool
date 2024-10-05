@@ -72,7 +72,7 @@ const WishCard = ({ wish }) => {
         className="flex flex-row h-12 text-lg text-darkBlue px-4 py-2 rounded hover:bg-gray-700 hover:text-cream"
         onClick={handleViewDetails}
       >
-        <img src={planeIcon} alt="" className="h-10" />
+        <img src={planeIcon} alt="" className="h-7" />
         查看
       </button>
     </div>

@@ -27,7 +27,7 @@ import CustomAlert from "@/components/CustomAlert";
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false); // 控制編輯模式
+  const [isEditingName, setIsEditingName] = useState(false); // 控制名字編輯模式
   const [newAvatarFile, setNewAvatarFile] = useState(null); // 控制新的頭像文件
   const [userWishes, setUserWishes] = useState([]); // 用於儲存當前用戶的願望卡
   const [alertMessage, setAlertMessage] = useState(null);
@@ -153,7 +153,7 @@ const Profile = () => {
         userName: data.userName,
         avatarUrl: newAvatarUrl,
       });
-      setIsEditing(false); // 退出編輯模式
+      setIsEditingName(false); // 退出編輯模式
       setNewAvatarFile(null); // 清除文件選擇
       setAlertMessage("資料更新成功！");
     } catch (error) {
@@ -188,45 +188,66 @@ const Profile = () => {
 
   return (
     <div className="bg-darkBlue flex flex-col h-fit items-center md:ml-48 md:mr-24 min-h-screen">
-      {/* 頂部導航 */}
       <div className="flex w-4/5 justify-between items-center mb-6 mt-36">
         <h2 className="text-2xl text-cream font-bold">個人檔案</h2>
-        <button
-          onClick={() => setIsEditing(!isEditing)}
-          className="bg-lightBlue text-white py-2 px-4 rounded-full hover:bg-blue-400"
-        >
-          {isEditing ? "取消編輯" : "編輯個人資料"}
-        </button>
       </div>
 
-      {/* 中間內容區域 */}
       <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col w-4/5 items-center md:justify-between md:flex-row">
-        {/* 檔案區 */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col md:items-start space-y-4 w-1/8 items-center"
+          className="flex flex-col space-y-4 w-1/8 items-center"
         >
-          <img
-            src={userData.avatarUrl ? userData.avatarUrl : memberIcon}
-            alt="頭像"
-            className="w-32 h-32 rounded-full object-cover mb-4 border-4"
-          />
-          {isEditing && (
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              className="mt-2 text-sm"
+          <div className="relative group">
+            <img
+              src={userData.avatarUrl ? userData.avatarUrl : memberIcon}
+              alt="頭像"
+              className="w-32 h-32 rounded-full object-cover mb-4 border-4"
             />
-          )}
-          {isEditing ? (
-            <input
-              {...register("userName")}
-              defaultValue={userData.userName}
-              className="border-solid border-2 border-darkBlue rounded mt-2"
-            />
+            <div className="w-32 h-32 rounded-full absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <label className="cursor-pointer text-white text-sm">
+                編輯頭像
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
+          </div>
+          {isEditingName ? (
+            <div className="flex items-center">
+              <input
+                {...register("userName")}
+                defaultValue={userData.userName}
+                className="border-solid border-2 border-darkBlue rounded mt-2"
+              />
+              <button
+                type="submit"
+                className="ml-2 bg-lightBlue text-white py-1 px-3 rounded-full hover:bg-blue-400"
+              >
+                保存
+              </button>
+            </div>
           ) : (
-            <p className="text-lg mt-2">{userData.userName}</p>
+            <div className="flex items-center justify-center">
+              <p className="text-lg">{userData.userName}</p>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6 ml-2 text-darkBlue cursor-pointer hover:text-lightBlue"
+                onClick={() => setIsEditingName(true)}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                />
+              </svg>
+            </div>
           )}
           <button
             type="button"
@@ -235,18 +256,9 @@ const Profile = () => {
           >
             複製邀請碼
           </button>
-          {isEditing && (
-            <button
-              type="submit"
-              className="bg-lightBlue text-white py-2 px-4 rounded-full hover:bg-blue-400 mt-4"
-            >
-              保存
-            </button>
-          )}
         </form>
 
-        {/* 數據區 */}
-        <div className="ml-0  flex flex-col items-start space-y-8 md:w-1/3 w-4/5 justify-center mt-8 md:mt-0">
+        <div className="ml-0 flex flex-col items-start space-y-8 md:w-1/3 w-4/5 justify-center mt-8 md:mt-0">
           <div className="bg-lightBlue p-4 md:p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-darkBlue md:text-2xl text-sm">
@@ -283,7 +295,6 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* 等級區 */}
         <div className="w-4/5 md:w-2/5 flex flex-col items-start justify-center mt-8 md:m-0">
           <div className="bg-lightBlue p-6 rounded-xl shadow-lg flex flex-col justify-center w-full">
             <h3 className="font-bold text-darkBlue">Level {userData.level}</h3>
@@ -306,7 +317,6 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* 許願記錄 */}
       <div className="w-4/5 mt-8 mb-16">
         <h3 className="text-cream text-2xl mb-6 font-bold">許願記錄</h3>
         <div className="flex flex-row flex-wrap md:justify-between justify-center gap-12">

@@ -22,14 +22,14 @@ const Header = () => {
     <header className="md:h-14 h-10 z-10 fixed top-0 left-0 right-0 flex justify-between items-center bg-yellow p-4 w-4/5 mt-6 mx-auto rounded-full">
       <button
         onClick={toggleMenu}
-        className="block sm:hidden ml-10 text-xl text-lightBlue font-semibold"
+        className="block md:hidden ml-10 text-xl text-lightBlue font-semibold"
       >
         選單
       </button>
       <div className="hidden sm:flex sm:flex-row ">
         <NavLink
           to="/"
-          className="text-lightBlue font-semibold ml-10 text-xl relative"
+          className="hidden md:block text-lightBlue font-semibold ml-10 text-xl relative"
         >
           {({ isActive }) => (
             <>
@@ -110,7 +110,7 @@ const Header = () => {
         </NavLink>
       </div>
       {isMenuOpen && (
-        <div className="absolute top-10 left-4 w-1/8 bg-lightBlue rounded-lg shadow-lg p-4 space-y-4 sm:hidden">
+        <div className="absolute top-10 left-4 w-1/8 bg-lightBlue rounded-lg shadow-lg p-4 space-y-4 md:hidden">
           <NavLink
             to="/"
             className="text-yellow font-semibold text-lg block"
