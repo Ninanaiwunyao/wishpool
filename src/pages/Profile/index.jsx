@@ -45,7 +45,7 @@ const Profile = () => {
     [reset]
   );
   const handleInviteClick = () => {
-    const inviteMessage = `https://appworks-school-wishpool.web.app/ 邀請您加入許願池！使用我的邀請碼${user.uid}立即獲得100枚硬幣！`;
+    const inviteMessage = `https://appworks-school-wishpool.web.app/register?inviteCode=${user.uid} 邀請您加入許願池！使用我的邀請碼立即獲得100枚硬幣！`;
     navigator.clipboard
       .writeText(inviteMessage)
       .then(() => {
