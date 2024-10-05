@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProofUploadModal from "@/components/ProofUploadModal";
+import ProofDisplayModal from "@/components/ProofDisplayModal";
 import {
   getFirestore,
   collection,
@@ -16,6 +17,7 @@ const Progress = () => {
   const [inProgressDreams, setInProgressDreams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showProofModal, setShowProofModal] = useState(false);
   const [selectedDream, setSelectedDream] = useState(null);
   const db = getFirestore();
   const auth = getAuth();
@@ -69,6 +71,17 @@ const Progress = () => {
     setSelectedDream(dream);
     setShowUploadModal(true); // 顯示彈出視窗
   };
+  const handleViewProof = (dream) => {
+    setSelectedDream(dream);
+    setShowProofModal(true);
+  };
+  const handleProofUploadSuccess = (proof) => {
+    // 更新當前夢想的 proof 信息
+    setInProgressDreams((prevDreams) =>
+      prevDreams.map((d) => (d.id === selectedDream.id ? { ...d, proof } : d))
+    );
+    setShowUploadModal(false); // 關閉上傳窗口
+  };
 
   return (
     <div className="bg-darkBlue md:w-4/5 h-fit min-h-screen mt-36">
@@ -120,12 +133,21 @@ const Progress = () => {
                   >
                     聯絡許願卡主人
                   </button>
-                  <button
-                    className="bg-lightBlue text-white py-2 px-4 rounded mt-4"
-                    onClick={() => handleUploadProof(dream)}
-                  >
-                    上傳圓夢證明
-                  </button>
+                  {dream.proof ? (
+                    <button
+                      className="bg-lightBlue text-white py-2 px-4 rounded mt-4"
+                      onClick={() => handleViewProof(dream)}
+                    >
+                      查看圓夢證明
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-lightBlue text-white py-2 px-4 rounded mt-4"
+                      onClick={() => handleUploadProof(dream)}
+                    >
+                      上傳圓夢證明
+                    </button>
+                  )}
                 </div>
               </div>
             );
@@ -140,6 +162,13 @@ const Progress = () => {
           dreamId={selectedDream.id}
           wishId={selectedDream.wishId}
           wishOwnerId={selectedDream.wishOwnerId}
+          onUploadSuccess={handleProofUploadSuccess} // 上傳成功的回調
+        />
+      )}
+      {showProofModal && selectedDream && (
+        <ProofDisplayModal
+          proof={selectedDream.proof}
+          onClose={() => setShowProofModal(false)}
         />
       )}
     </div>

@@ -240,22 +240,26 @@ const Chat = () => {
     }
   };
 
-  const handleReject = async (messageId) => {
+  const handleReject = async (messageId, dreamerId) => {
+    console.log("handleReject called with:", { chatId, messageId });
     try {
+      if (!chatId || !messageId) {
+        throw new Error("缺少聊天 ID 或訊息 ID");
+      }
       const messageRef = doc(db, "chats", chatId, "messages", messageId);
+      const messageDoc = await getDoc(messageRef);
+
+      if (!messageDoc.exists()) {
+        throw new Error("訊息文檔不存在");
+      }
       await updateDoc(messageRef, {
         approved: false, // 標記為不核可
       });
 
-      // 發送通知到聊天室
-      const messagesRef = collection(db, "chats", chatId, "messages");
-      await addDoc(messagesRef, {
-        senderId: "system",
-        content: "您的圓夢證明未被核可，請重新上傳。",
-        timestamp: serverTimestamp(),
-        messageType: "text",
-        readBy: [],
-      });
+      await sendSystemNotification(
+        dreamerId,
+        "您的圓夢證明未被核可，請重新上傳。"
+      );
 
       setAlertMessage("不核可操作已執行");
     } catch (error) {
@@ -347,7 +351,9 @@ const Chat = () => {
                         </button>
                         <button
                           className="bg-red-500 text-white px-4 py-2 rounded"
-                          onClick={() => handleReject(message.dreamerId)}
+                          onClick={() =>
+                            handleReject(message.id, message.dreamerId)
+                          }
                         >
                           不核可
                         </button>

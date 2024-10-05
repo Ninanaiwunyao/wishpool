@@ -14,7 +14,13 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
 import CustomAlert from "@/components/CustomAlert";
 
-const ProofUploadModal = ({ onClose, dreamId, wishOwnerId, wishId }) => {
+const ProofUploadModal = ({
+  onClose,
+  dreamId,
+  wishOwnerId,
+  wishId,
+  onUploadSuccess,
+}) => {
   const [proofText, setProofText] = useState("");
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false); // 上傳狀態
@@ -45,6 +51,7 @@ const ProofUploadModal = ({ onClose, dreamId, wishOwnerId, wishId }) => {
         timestamp: serverTimestamp(),
         uploaderId: user.uid || "unknown",
       };
+      onUploadSuccess(proofData);
 
       // 向 Firebase 添加證據記錄
       const proofRef = collection(db, "proofs");
@@ -162,6 +169,7 @@ ProofUploadModal.propTypes = {
   dreamId: PropTypes.string.isRequired,
   wishOwnerId: PropTypes.string.isRequired,
   wishId: PropTypes.string.isRequired,
+  onUploadSuccess: PropTypes.func.isRequired,
 };
 
 export default ProofUploadModal;
