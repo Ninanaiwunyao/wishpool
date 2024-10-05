@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
@@ -24,6 +24,14 @@ const Register = () => {
   } = useForm();
   const navigate = useNavigate();
   const [invitationCode, setInvitationCode] = useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("inviteCode");
+    if (code) {
+      setInvitationCode(code);
+    }
+  }, []);
 
   const handleRegister = async (data) => {
     const auth = getAuth();
