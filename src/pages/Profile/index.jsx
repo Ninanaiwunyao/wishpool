@@ -23,6 +23,7 @@ import coinsIcon from "./coinsIcon.png";
 import reputationIcon from "./reputationIcon.png";
 import memberIcon from "./noIcon.jpg";
 import CustomAlert from "@/components/CustomAlert";
+import AvatarEditor from "react-avatar-edit";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -31,6 +32,7 @@ const Profile = () => {
   const [newAvatarFile, setNewAvatarFile] = useState(null); // 控制新的頭像文件
   const [userWishes, setUserWishes] = useState([]); // 用於儲存當前用戶的願望卡
   const [alertMessage, setAlertMessage] = useState(null);
+  const [newAvatarPreview, setNewAvatarPreview] = useState(null); // 保存裁剪後的頭像預覽
   const { register, handleSubmit, reset } = useForm();
   const db = getFirestore();
   const auth = getAuth();
@@ -106,9 +108,50 @@ const Profile = () => {
     fetchUserData();
   }, [user, db, resetForm]);
 
-  const handleAvatarChange = (e) => {
-    if (e.target.files[0]) {
-      setNewAvatarFile(e.target.files[0]); // 保存新上傳的頭像文件
+  const handleAvatarSave = async () => {
+    if (!user) return;
+
+    const userRef = doc(db, "users", user.uid);
+    let newAvatarUrl = userData.avatarUrl;
+
+    try {
+      if (newAvatarPreview) {
+        const oldAvatarRef = ref(storage, `avatars/${user.uid}`);
+        const newAvatarRef = ref(storage, `avatars/${user.uid}`);
+
+        if (userData.avatarUrl) {
+          try {
+            await deleteObject(oldAvatarRef);
+          } catch (error) {
+            if (error.code === "storage/object-not-found") {
+              console.warn("舊頭像文件不存在，無需刪除。");
+            } else {
+              throw error;
+            }
+          }
+        }
+
+        const response = await fetch(newAvatarPreview);
+        const blob = await response.blob();
+
+        await uploadBytes(newAvatarRef, blob);
+        newAvatarUrl = await getDownloadURL(newAvatarRef);
+      }
+
+      await updateDoc(userRef, {
+        avatarUrl: newAvatarUrl,
+      });
+
+      setUserData({
+        ...userData,
+        avatarUrl: newAvatarUrl,
+      });
+
+      setNewAvatarPreview(null);
+      setAlertMessage("資料更新成功！");
+    } catch (error) {
+      console.error("更新失敗：", error);
+      setAlertMessage("資料更新失敗！");
     }
   };
 
@@ -204,17 +247,26 @@ const Profile = () => {
               className="w-32 h-32 rounded-full object-cover mb-4 border-4"
             />
             <div className="w-32 h-32 rounded-full absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <label className="cursor-pointer text-white text-sm">
-                編輯頭像
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarChange}
-                  className="hidden"
-                />
-              </label>
+              <AvatarEditor
+                width={150}
+                height={150}
+                label="編輯"
+                onCrop={(preview) => setNewAvatarPreview(preview)}
+                onClose={() => setNewAvatarPreview(null)}
+                imageWidth={150}
+                imageHeight={150}
+              />
             </div>
           </div>
+          {newAvatarPreview && (
+            <button
+              type="button"
+              className="ml-2 bg-lightBlue text-white py-1 px-3 rounded-full hover:bg-blue-400"
+              onClick={handleAvatarSave}
+            >
+              儲存圖片
+            </button>
+          )}
           {isEditingName ? (
             <div className="flex items-center">
               <input
