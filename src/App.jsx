@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -25,7 +26,27 @@ function App() {
   }, [navigate]);
 
   if (!isAuthenticated) {
-    return <p>正在驗證身份...</p>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-darkBlue">
+        <div className="flex flex-col items-center space-y-6">
+          <motion.div
+            className="flex space-x-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-6 h-6 bg-yellow rounded-full animate-bounce"></div>
+            <div className="w-6 h-6 bg-lightBlue rounded-full animate-bounce delay-100"></div>
+            <div className="w-6 h-6 bg-cream rounded-full animate-bounce delay-200"></div>
+          </motion.div>
+
+          {/* Loading Message */}
+          <p className="text-cream text-2xl font-bold">
+            正在驗證身份，請稍候...
+          </p>
+        </div>
+      </div>
+    );
   }
   return (
     <>
