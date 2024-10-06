@@ -268,15 +268,15 @@ const Profile = () => {
             </button>
           )}
           {isEditingName ? (
-            <div className="flex items-center">
+            <div className="flex flex-col items-center justify-center mt-0">
               <input
                 {...register("userName")}
                 defaultValue={userData.userName}
-                className="border-solid border-2 border-darkBlue rounded mt-2"
+                className="border-solid border-2 border-darkBlue rounded"
               />
               <button
                 type="submit"
-                className="ml-2 bg-lightBlue text-white py-1 px-3 rounded-full hover:bg-blue-400"
+                className=" bg-lightBlue text-white py-1 px-3 rounded-full hover:bg-blue-400 mt-4"
               >
                 保存
               </button>
