@@ -53,7 +53,7 @@ const WishCard = ({ wish }) => {
         />
       </div>
       <div className="flex flex-row justify-center">
-        <img src={coinpng} alt="coins" className="w-16" />
+        <img src={coinpng} alt="coins" className="mt-4 w-6" />
         <p className="mt-4">{wish.amount}</p>
       </div>
       <p className="text-gray-600 mb-4 mt-2 font-bold">{wish.title}</p>
