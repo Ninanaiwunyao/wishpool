@@ -289,7 +289,7 @@ const Chat = () => {
   }, [chatId, user, db]); // 添加 chatId 和 user 到依賴項數組中
 
   return (
-    <div className="bg-darkBlue h-screen p-8 flex flex-col md:ml-48">
+    <div className=" h-screen p-8 flex flex-col md:ml-48">
       <h2 className="md:ml-24 text-2xl font-bold text-white mb-6 mt-16">
         聊天室
       </h2>

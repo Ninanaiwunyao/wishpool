@@ -63,7 +63,9 @@ const WishPool = () => {
       </div>
     );
   }
-  const filteredWishes = wishes.filter((wish) => wish.status === "open");
+  const filteredWishes = wishes
+    .filter((wish) => wish.status === "open")
+    .sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate());
 
   const indexInArrayScope =
     ((activeIndex % filteredWishes.length) + filteredWishes.length) %

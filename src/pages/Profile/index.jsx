@@ -25,6 +25,7 @@ import memberIcon from "./noIcon.jpg";
 import CustomAlert from "@/components/CustomAlert";
 import AvatarEditor from "react-avatar-edit";
 import { motion } from "framer-motion";
+import anelpng from "./angel-moon.png";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -249,7 +250,8 @@ const Profile = () => {
   );
 
   return (
-    <div className="bg-darkBlue flex flex-col h-fit items-center md:ml-40 md:mr-24 min-h-screen">
+    <div className=" flex flex-col h-fit items-center md:ml-40 md:mr-24 min-h-screen relative">
+      <img src={anelpng} alt="" className="absolute right-0 h-72 top-6" />
       <div className="flex w-4/5 justify-between items-center mb-6 mt-36">
         <h2 className="text-2xl text-white font-bold">個人檔案</h2>
       </div>
@@ -274,7 +276,6 @@ const Profile = () => {
                 onClose={() => setNewAvatarPreview(null)}
                 imageWidth={150}
                 imageHeight={150}
-                className="text-white"
               />
             </div>
           </div>

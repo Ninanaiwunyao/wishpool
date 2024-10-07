@@ -56,7 +56,6 @@ const Favorites = () => {
             <div className="w-6 h-6 bg-white rounded-full animate-bounce delay-200"></div>
           </motion.div>
 
-          {/* Loading Message */}
           <p className="text-white text-2xl font-bold">Loading...</p>
         </div>
       </div>
@@ -64,7 +63,7 @@ const Favorites = () => {
   }
 
   return (
-    <div className="bg-darkBlue p-8 md:mt-28 mt-16 md:ml-64 min-h-screen">
+    <div className="p-8 md:mt-28 mt-16 md:ml-64 min-h-screen">
       <h2 className="text-2xl font-bold text-white mb-6 ml-12 md:ml-0">
         我的收藏
       </h2>

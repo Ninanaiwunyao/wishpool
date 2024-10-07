@@ -1,6 +1,7 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { useState } from "react";
 import arrowicon from "./311747.svg";
+import backgroundImage from "./starBG.png";
 
 const MemberPage = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -9,7 +10,15 @@ const MemberPage = () => {
     setIsNavOpen(!isNavOpen);
   };
   return (
-    <div className="flex bg-darkBlue items-center h-full md:min-h-screen ">
+    <div
+      className="flex bg-darkBlue items-center h-fit md:min-h-screen "
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "contain",
+        backgroundPosition: "",
+        backgroundRepeat: "repeat",
+      }}
+    >
       <button
         onClick={toggleNav}
         className="fixed left-0 top-64 z-20 p-2 bg-yellow text-darkBlue rounded-r-3xl md:hidden"
