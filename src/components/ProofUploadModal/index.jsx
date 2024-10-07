@@ -120,7 +120,7 @@ const ProofUploadModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+      <div className="bg-cream p-8 rounded-lg shadow-lg max-w-lg w-full">
         <h3 className="text-xl font-bold mb-4">上傳圓夢證明</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <textarea
@@ -138,13 +138,13 @@ const ProofUploadModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              className="bg-orange-500 text-cream px-4 py-2 rounded hover:bg-red-600"
             >
               取消
             </button>
             <button
               type="submit"
-              className="bg-lightBlue text-white px-4 py-2 rounded hover:bg-darkBlue"
+              className="bg-lightBlue text-cream px-4 py-2 rounded hover:bg-darkBlue"
               disabled={isUploading}
             >
               {isUploading ? "上傳中..." : "上傳"}

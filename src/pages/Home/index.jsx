@@ -47,7 +47,7 @@ const Home = () => {
         <img src={gifImage} alt="wishpool" className="w-[700px] h-auto" />
         <Link
           to="/wishform"
-          className="cursor-pointer flex items-center justify-center text-xl rounded-3xl h-16 w-32 md:absolute md:left-[-200px] md:bottom-20 md:mb-4 md:ml-4 bg-cream text-jet font-bold py-2 px-4 shadow-lg hover:bg-gray-200"
+          className="cursor-pointer flex items-center justify-center text-xl rounded-3xl h-16 w-32 md:absolute md:left-[-200px] md:bottom-20 md:mb-4 md:ml-4 bg-white text-jet font-bold py-2 px-4 shadow-lg hover:bg-gray-200"
           style={{
             boxShadow: "inset 0px 4px 8px rgba(0, 0, 0, 0.5)",
           }}
@@ -57,7 +57,7 @@ const Home = () => {
 
         <Link
           to="/wishpool"
-          className="cursor-pointer flex items-center justify-center text-xl rounded-3xl h-16 w-32 md:absolute md:right-[-200px] md:bottom-20 md:mb-4 md:mr-4 bg-cream text-jet font-bold py-2 px-4 shadow-lg hover:bg-gray-200"
+          className="cursor-pointer flex items-center justify-center text-xl rounded-3xl h-16 w-32 md:absolute md:right-[-200px] md:bottom-20 md:mb-4 md:mr-4 bg-white text-jet font-bold py-2 px-4 shadow-lg hover:bg-gray-200"
           style={{
             boxShadow: "inset 0px 4px 8px rgba(0, 0, 0, 0.5)",
           }}

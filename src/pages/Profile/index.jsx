@@ -24,6 +24,7 @@ import reputationIcon from "./reputationIcon.png";
 import memberIcon from "./noIcon.jpg";
 import CustomAlert from "@/components/CustomAlert";
 import AvatarEditor from "react-avatar-edit";
+import { motion } from "framer-motion";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -206,7 +207,25 @@ const Profile = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-darkBlue">
+        <div className="flex flex-col items-center space-y-6">
+          <motion.div
+            className="flex space-x-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-6 h-6 bg-yellow rounded-full animate-bounce"></div>
+            <div className="w-6 h-6 bg-lightBlue rounded-full animate-bounce delay-100"></div>
+            <div className="w-6 h-6 bg-white rounded-full animate-bounce delay-200"></div>
+          </motion.div>
+
+          {/* Loading Message */}
+          <p className="text-white text-2xl font-bold">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   // 每個等級的硬幣和信譽點數需求
@@ -230,9 +249,9 @@ const Profile = () => {
   );
 
   return (
-    <div className="bg-darkBlue flex flex-col h-fit items-center md:ml-48 md:mr-24 min-h-screen">
+    <div className="bg-darkBlue flex flex-col h-fit items-center md:ml-40 md:mr-24 min-h-screen">
       <div className="flex w-4/5 justify-between items-center mb-6 mt-36">
-        <h2 className="text-2xl text-cream font-bold">個人檔案</h2>
+        <h2 className="text-2xl text-white font-bold">個人檔案</h2>
       </div>
 
       <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col w-4/5 items-center md:justify-between md:flex-row">
@@ -255,6 +274,7 @@ const Profile = () => {
                 onClose={() => setNewAvatarPreview(null)}
                 imageWidth={150}
                 imageHeight={150}
+                className="text-white"
               />
             </div>
           </div>
@@ -322,7 +342,7 @@ const Profile = () => {
                   alt="Coins Icon"
                   className="w-6 h-6 mr-2"
                 />
-                <span className="text-cream font-bold md:text-2xl text-sm">
+                <span className="text-white font-bold md:text-2xl text-sm">
                   {userData.coins} 枚
                 </span>
               </div>
@@ -339,7 +359,7 @@ const Profile = () => {
                   alt="Reputation Icon"
                   className="w-6 h-6 mr-2"
                 />
-                <span className="text-cream font-bold md:text-2xl text-sm">
+                <span className="text-white font-bold md:text-2xl text-sm">
                   {userData.reputation} 分
                 </span>
               </div>
@@ -370,7 +390,7 @@ const Profile = () => {
       </div>
 
       <div className="w-4/5 mt-8 mb-16">
-        <h3 className="text-cream text-2xl mb-6 font-bold">許願記錄</h3>
+        <h3 className="text-white text-2xl mb-6 font-bold">許願記錄</h3>
         <div className="flex flex-row flex-wrap md:justify-between justify-center gap-12">
           {userWishes.map((wish) => (
             <WishCard key={wish.id} wish={wish} className=" mb-16" />

@@ -15,6 +15,7 @@ import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import angel from "./angel-stand.png"; // 系統通知頭像
 import memberIcon from "./noIcon.jpg";
+import { motion } from "framer-motion";
 
 const initialState = {
   chats: [],
@@ -182,12 +183,30 @@ const Messages = () => {
   }, [user, db]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-darkBlue">
+        <div className="flex flex-col items-center space-y-6">
+          <motion.div
+            className="flex space-x-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-6 h-6 bg-yellow rounded-full animate-bounce"></div>
+            <div className="w-6 h-6 bg-lightBlue rounded-full animate-bounce delay-100"></div>
+            <div className="w-6 h-6 bg-white rounded-full animate-bounce delay-200"></div>
+          </motion.div>
+
+          {/* Loading Message */}
+          <p className="text-white text-2xl font-bold">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="bg-darkBlue p-8 md:ml-48 h-screen mt-28">
-      <h2 className="text-2xl font-bold text-cream mb-6 md:ml-24 ">聊天室</h2>
+    <div className="bg-darkBlue p-8 md:ml-40 h-screen mt-28">
+      <h2 className="text-2xl font-bold text-white mb-6 md:ml-24 ">聊天室</h2>
       {chats.length > 0 ? (
         <div className="flex flex-col md:w-4/5 w-full md:ml-24">
           {chats.map((chat) => {
@@ -195,7 +214,7 @@ const Messages = () => {
             return (
               <div
                 key={chat.id}
-                className="bg-white p-4 rounded-lg shadow-md cursor-pointer border-b-4"
+                className="bg-white p-4 shadow-md cursor-pointer border-b-4"
                 onClick={() => navigate(`/memberpage/chat/${chat.id}`)}
               >
                 <div className="flex items-center justify-between">
