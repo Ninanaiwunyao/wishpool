@@ -3,6 +3,8 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import WishCard from "@/components/WishCard";
 import { motion } from "framer-motion";
+import angelBird from "./angel-bird.png";
+
 const Favorites = () => {
   const [favoriteWishes, setFavoriteWishes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +65,7 @@ const Favorites = () => {
   }
 
   return (
-    <div className="p-8 md:mt-28 mt-16 md:ml-64 min-h-screen">
+    <div className="p-8 md:mt-28 mt-16 md:ml-64 min-h-screen relative">
       <h2 className="text-2xl font-bold text-white mb-6 ml-12 md:ml-0">
         我的收藏
       </h2>
@@ -78,6 +80,14 @@ const Favorites = () => {
           <p className="text-white">沒有收藏的願望卡片。</p>
         )}
       </div>
+      <motion.div
+        initial={{ top: "-20%" }}
+        animate={{ top: "50%" }}
+        transition={{ duration: 5, ease: "easeInOut" }}
+        className="absolute top-0 right-0 h-72"
+      >
+        <img src={angelBird} alt="" className="h-full" />
+      </motion.div>
     </div>
   );
 };

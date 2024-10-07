@@ -17,6 +17,7 @@ import {
   deleteObject,
   getDownloadURL,
 } from "firebase/storage";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import WishCard from "@/components/WishCard";
 import coinsIcon from "./coinsIcon.png";
@@ -25,7 +26,8 @@ import memberIcon from "./noIcon.jpg";
 import CustomAlert from "@/components/CustomAlert";
 import AvatarEditor from "react-avatar-edit";
 import { motion } from "framer-motion";
-import anelpng from "./angel-moon.png";
+import angelMoon from "./angel-moon.png";
+import angelBird from "./angel-bird.png";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -251,11 +253,10 @@ const Profile = () => {
 
   return (
     <div className=" flex flex-col h-fit items-center md:ml-40 md:mr-24 min-h-screen relative">
-      <img src={anelpng} alt="" className="absolute right-0 h-72 top-6" />
+      <img src={angelMoon} alt="" className="absolute right-0 h-72 top-6" />
       <div className="flex w-4/5 justify-between items-center mb-6 mt-36">
         <h2 className="text-2xl text-white font-bold">個人檔案</h2>
       </div>
-
       <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col w-4/5 items-center md:justify-between md:flex-row">
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -334,7 +335,7 @@ const Profile = () => {
         <div className="ml-0 flex flex-col items-start space-y-8 md:w-1/3 w-4/5 justify-center mt-8 md:mt-0">
           <div className="bg-lightBlue p-4 md:p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-darkBlue md:text-2xl text-sm">
+              <h3 className="font-bold text-cream md:text-2xl text-sm">
                 硬幣數量
               </h3>
               <div className="flex items-center md:text-2xl text-sm">
@@ -351,7 +352,7 @@ const Profile = () => {
           </div>
           <div className="bg-lightBlue p-4 md:p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-darkBlue md:text-2xl text-sm">
+              <h3 className="font-bold text-cream md:text-2xl text-sm">
                 信譽分數
               </h3>
               <div className="flex items-center md:text-2xl text-sm">
@@ -389,14 +390,22 @@ const Profile = () => {
           </div>
         </div>
       </div>
-
       <div className="w-4/5 mt-8 mb-16">
         <h3 className="text-white text-2xl mb-6 font-bold">許願記錄</h3>
-        <div className="flex flex-row flex-wrap md:justify-between justify-center gap-12">
-          {userWishes.map((wish) => (
-            <WishCard key={wish.id} wish={wish} className=" mb-16" />
-          ))}
-        </div>
+        {userWishes.length > 0 ? (
+          <div className="flex flex-row flex-wrap md:justify-between justify-center gap-12">
+            {userWishes.map((wish) => (
+              <WishCard key={wish.id} wish={wish} className=" mb-16" />
+            ))}
+          </div>
+        ) : (
+          <Link
+            to="/wishForm"
+            className="w-64 h-16 p-4 flex justify-center items-center bg-yellow text-lightBlue font-semibold text-xl rounded-full hover:bg-darkYellow"
+          >
+            立即許下第一個心願
+          </Link>
+        )}
       </div>
       {alertMessage && (
         <CustomAlert
@@ -404,6 +413,15 @@ const Profile = () => {
           onClose={() => setAlertMessage(null)}
         />
       )}
+      <motion.div
+        initial={{ right: "-20%" }}
+        animate={{ left: -100 }}
+        transition={{ duration: 5, ease: "easeInOut" }}
+        className="absolute bottom-0 h-72"
+        style={{ right: 0 }}
+      >
+        <img src={angelBird} alt="" className="h-full" />
+      </motion.div>
     </div>
   );
 };
