@@ -15,7 +15,7 @@ const MemberPage = () => {
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "contain",
-        backgroundPosition: "",
+        backgroundPosition: "center",
         backgroundRepeat: "repeat",
       }}
     >
