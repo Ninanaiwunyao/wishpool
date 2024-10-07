@@ -123,7 +123,7 @@ const Register = () => {
       }}
     >
       <div className="bg-lightBlue p-8 shadow-md md:w-[500px] w-4/5 rounded-2xl">
-        <h2 className="text-2xl font-bold mb-6 text-center text-cream">
+        <h2 className="text-2xl font-bold mb-6 text-center text-white">
           註冊新帳號
         </h2>
         <form onSubmit={handleSubmit(handleRegister)}>

@@ -12,6 +12,8 @@ import {
 import { getAuth } from "firebase/auth";
 import WishCardWithId from "@/components/WishCardWithId";
 import moment from "moment";
+import tapepng from "./tape.png";
+import { motion } from "framer-motion";
 
 const Progress = () => {
   const [inProgressDreams, setInProgressDreams] = useState([]);
@@ -51,7 +53,25 @@ const Progress = () => {
   }, [user, db]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-darkBlue">
+        <div className="flex flex-col items-center space-y-6">
+          <motion.div
+            className="flex space-x-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-6 h-6 bg-yellow rounded-full animate-bounce"></div>
+            <div className="w-6 h-6 bg-lightBlue rounded-full animate-bounce delay-100"></div>
+            <div className="w-6 h-6 bg-white rounded-full animate-bounce delay-200"></div>
+          </motion.div>
+
+          {/* Loading Message */}
+          <p className="text-white text-2xl font-bold">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   const calculateProgress = (startDate, endDate) => {
@@ -85,64 +105,72 @@ const Progress = () => {
 
   return (
     <div className="bg-darkBlue md:w-4/5 h-fit min-h-screen mt-36">
-      <h2 className="text-2xl font-bold text-cream mb-6 ml-12 md:ml-80">
+      <h2 className="text-2xl font-bold text-white mb-6 ml-12 md:ml-72">
         圓夢進度
       </h2>
+
       {inProgressDreams.length > 0 ? (
-        <div className="space-y-6 flex flex-col justify-center items-center md:items-start h-fit">
+        <div className="flex flex-wrap gap-6 w-11/12 ml-12 md:ml-72">
           {inProgressDreams.map((dream) => {
             const { daysRemaining, progress } = calculateProgress(
               dream.startDate,
               dream.endDate
             );
+
             return (
               <div
                 key={dream.id}
-                className="p-6 rounded-lg flex flex-col md:flex-row items-center md:ml-64 w-11/12 gap-6 md:gap-0"
+                className="bg-white rounded-3xl shadow-lg p-6 flex flex-col justify-between h-auto relative"
               >
+                <img
+                  src={tapepng}
+                  alt=""
+                  className="absolute z-10 w-32 top-[-55px] left-20"
+                />
                 {/* 願望卡片 */}
-                <div className="flex-shrink-0">
+                <div className="mb-6 flex justify-center">
                   <WishCardWithId wishId={dream.wishId} />
                 </div>
+
                 {/* 進度條和截止日期 */}
-                <div className="flex flex-col items-center justify-center w-full md:w-1/2 mx-auto bg-white h-[200px] rounded-xl">
-                  <p className="text-darkBlue mb-4">
+                <div className="bg-lightGray p-4 rounded-md">
+                  <p className="text-darkBlue font-medium mb-4 text-center">
                     截止日期:{" "}
                     {moment(dream.endDate.toDate()).format("YYYY-MM-DD")}
                   </p>
 
-                  <div className="w-3/4 bg-gray-300 h-4 rounded-full relative">
+                  <div className="w-full bg-gray-300 h-4 rounded-full overflow-hidden mb-4">
                     <div
-                      className="bg-yellow h-full rounded-full"
+                      className="bg-yellow h-full"
                       style={{ width: `${progress}%` }}
                     ></div>
                   </div>
 
-                  <p className="text-darkBlue mt-2">
-                    已經過 {progress.toFixed(2)}% , 剩餘{" "}
+                  <p className="text-darkBlue text-center">
+                    已經過 {progress.toFixed(2)}%，剩餘{" "}
                     {Math.ceil(daysRemaining)} 天
                   </p>
                 </div>
-                <div
-                  className="flex
-                flex-col"
-                >
+
+                {/* 操作按鈕區域 */}
+                <div className="mt-6 flex flex-col gap-4 items-center">
                   <button
-                    className="bg-lightBlue text-white py-2 px-4 rounded mt-4"
-                    onClick={() => navigate(`/memberpage/chat/${dream.chatId}`)} // 導航到聊天室頁面
+                    className="bg-lightBlue text-white py-2 px-6 rounded-3xl w-full"
+                    onClick={() => navigate(`/memberpage/chat/${dream.chatId}`)}
                   >
                     聯絡許願卡主人
                   </button>
+
                   {dream.proof ? (
                     <button
-                      className="bg-lightBlue text-white py-2 px-4 rounded mt-4"
+                      className="bg-lightBlue text-white py-2 px-6 rounded-3xl w-full"
                       onClick={() => handleViewProof(dream)}
                     >
                       查看圓夢證明
                     </button>
                   ) : (
                     <button
-                      className="bg-lightBlue text-white py-2 px-4 rounded mt-4"
+                      className="bg-lightBlue text-white py-2 px-6 rounded-3xl w-full"
                       onClick={() => handleUploadProof(dream)}
                     >
                       上傳圓夢證明
@@ -154,17 +182,21 @@ const Progress = () => {
           })}
         </div>
       ) : (
-        <p className="text-white ml-12 md:ml-80">目前沒有正在進行的圓夢。</p>
+        <p className="text-white text-center mt-16">目前沒有正在進行的圓夢。</p>
       )}
+
+      {/* 上傳證明的彈出視窗 */}
       {showUploadModal && selectedDream && (
         <ProofUploadModal
           onClose={() => setShowUploadModal(false)}
           dreamId={selectedDream.id}
           wishId={selectedDream.wishId}
           wishOwnerId={selectedDream.wishOwnerId}
-          onUploadSuccess={handleProofUploadSuccess} // 上傳成功的回調
+          onUploadSuccess={handleProofUploadSuccess}
         />
       )}
+
+      {/* 查看證明的彈出視窗 */}
       {showProofModal && selectedDream && (
         <ProofDisplayModal
           proof={selectedDream.proof}
@@ -174,5 +206,4 @@ const Progress = () => {
     </div>
   );
 };
-
 export default Progress;

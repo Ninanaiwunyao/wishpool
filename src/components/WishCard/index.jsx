@@ -69,7 +69,7 @@ const WishCard = ({ wish }) => {
         ))}
       </div>
       <button
-        className="flex flex-row h-12 text-lg text-darkBlue px-4 py-2 rounded hover:bg-gray-700 hover:text-cream"
+        className="flex flex-row h-12 text-lg text-darkBlue px-4 py-2 rounded hover:bg-gray-700 hover:text-white"
         onClick={handleViewDetails}
       >
         <img src={planeIcon} alt="" className="h-7" />

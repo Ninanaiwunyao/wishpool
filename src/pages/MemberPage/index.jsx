@@ -32,7 +32,7 @@ const MemberPage = () => {
             <NavLink
               to="/memberpage/profile"
               className={({ isActive }) =>
-                isActive ? "text-yellow" : "text-cream hover:text-yellow"
+                isActive ? "text-yellow" : "text-white hover:text-yellow"
               }
               onClick={() => setIsNavOpen(false)}
             >
@@ -43,7 +43,7 @@ const MemberPage = () => {
             <NavLink
               to="/memberpage/favorites"
               className={({ isActive }) =>
-                isActive ? "text-yellow" : "text-cream hover:text-yellow"
+                isActive ? "text-yellow" : "text-white hover:text-yellow"
               }
               onClick={() => setIsNavOpen(false)}
             >
@@ -54,7 +54,7 @@ const MemberPage = () => {
             <NavLink
               to="/memberpage/progress"
               className={({ isActive }) =>
-                isActive ? "text-yellow" : "text-cream hover:text-yellow"
+                isActive ? "text-yellow" : "text-white hover:text-yellow"
               }
               onClick={() => setIsNavOpen(false)}
             >
@@ -65,7 +65,7 @@ const MemberPage = () => {
             <NavLink
               to="/memberpage/message"
               className={({ isActive }) =>
-                isActive ? "text-yellow" : "text-cream hover:text-yellow"
+                isActive ? "text-yellow" : "text-white hover:text-yellow"
               }
               onClick={() => setIsNavOpen(false)}
             >
@@ -76,7 +76,7 @@ const MemberPage = () => {
             <NavLink
               to="/memberpage/transaction"
               className={({ isActive }) =>
-                isActive ? "text-yellow" : "text-cream hover:text-yellow"
+                isActive ? "text-yellow" : "text-white hover:text-yellow"
               }
               onClick={() => setIsNavOpen(false)}
             >

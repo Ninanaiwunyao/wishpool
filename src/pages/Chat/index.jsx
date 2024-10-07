@@ -290,7 +290,7 @@ const Chat = () => {
 
   return (
     <div className="bg-darkBlue h-screen p-8 flex flex-col md:ml-48">
-      <h2 className="md:ml-24 text-2xl font-bold text-cream mb-6 mt-16">
+      <h2 className="md:ml-24 text-2xl font-bold text-white mb-6 mt-16">
         聊天室
       </h2>
       <div className="md:ml-24 w-full md:w-4/5 flex flex-col flex-grow bg-white p-4 rounded-lg shadow-lg overflow-y-auto mb-4">

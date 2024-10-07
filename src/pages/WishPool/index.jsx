@@ -43,7 +43,25 @@ const WishPool = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-darkBlue">
+        <div className="flex flex-col items-center space-y-6">
+          <motion.div
+            className="flex space-x-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-6 h-6 bg-yellow rounded-full animate-bounce"></div>
+            <div className="w-6 h-6 bg-lightBlue rounded-full animate-bounce delay-100"></div>
+            <div className="w-6 h-6 bg-white rounded-full animate-bounce delay-200"></div>
+          </motion.div>
+
+          {/* Loading Message */}
+          <p className="text-white text-2xl font-bold">Loading...</p>
+        </div>
+      </div>
+    );
   }
   const filteredWishes = wishes.filter((wish) => wish.status === "open");
 
@@ -83,7 +101,7 @@ const WishPool = () => {
       <motion.button
         whileTap={{ scale: 0.8 }}
         onClick={() => handleClick(-1)}
-        className="text-cream"
+        className="text-white"
       >
         ◀︎
       </motion.button>
@@ -126,7 +144,7 @@ const WishPool = () => {
       <motion.button
         whileTap={{ scale: 0.8 }}
         onClick={() => handleClick(1)}
-        className="text-cream"
+        className="text-white"
       >
         ▶︎
       </motion.button>

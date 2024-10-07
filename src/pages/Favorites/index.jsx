@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import WishCard from "@/components/WishCard";
-
+import { motion } from "framer-motion";
 const Favorites = () => {
   const [favoriteWishes, setFavoriteWishes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,12 +42,30 @@ const Favorites = () => {
   }, [user, db]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen bg-darkBlue">
+        <div className="flex flex-col items-center space-y-6">
+          <motion.div
+            className="flex space-x-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-6 h-6 bg-yellow rounded-full animate-bounce"></div>
+            <div className="w-6 h-6 bg-lightBlue rounded-full animate-bounce delay-100"></div>
+            <div className="w-6 h-6 bg-white rounded-full animate-bounce delay-200"></div>
+          </motion.div>
+
+          {/* Loading Message */}
+          <p className="text-white text-2xl font-bold">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="bg-darkBlue p-8 md:mt-28 mt-16 md:ml-72 min-h-screen">
-      <h2 className="text-2xl font-bold text-cream mb-6 ml-12 md:ml-0">
+    <div className="bg-darkBlue p-8 md:mt-28 mt-16 md:ml-64 min-h-screen">
+      <h2 className="text-2xl font-bold text-white mb-6 ml-12 md:ml-0">
         我的收藏
       </h2>
       <div className="h-fit flex-grow flex items-start md:justify-start justify-center mt-12 md:mt-0">

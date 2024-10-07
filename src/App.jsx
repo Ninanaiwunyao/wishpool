@@ -37,11 +37,11 @@ function App() {
           >
             <div className="w-6 h-6 bg-yellow rounded-full animate-bounce"></div>
             <div className="w-6 h-6 bg-lightBlue rounded-full animate-bounce delay-100"></div>
-            <div className="w-6 h-6 bg-cream rounded-full animate-bounce delay-200"></div>
+            <div className="w-6 h-6 bg-white rounded-full animate-bounce delay-200"></div>
           </motion.div>
 
           {/* Loading Message */}
-          <p className="text-cream text-2xl font-bold">
+          <p className="text-white text-2xl font-bold">
             正在驗證身份，請稍候...
           </p>
         </div>
