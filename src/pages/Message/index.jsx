@@ -184,7 +184,7 @@ const Messages = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-darkBlue">
+      <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col items-center space-y-6">
           <motion.div
             className="flex space-x-2"
@@ -205,7 +205,7 @@ const Messages = () => {
   }
 
   return (
-    <div className="bg-darkBlue p-8 md:ml-40 h-screen mt-28">
+    <div className=" p-8 md:ml-40 h-screen mt-28">
       <h2 className="text-2xl font-bold text-white mb-6 md:ml-24 ">聊天室</h2>
       {chats.length > 0 ? (
         <div className="flex flex-col md:w-4/5 w-full md:ml-24">

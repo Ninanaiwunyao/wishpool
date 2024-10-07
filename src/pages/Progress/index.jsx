@@ -104,7 +104,7 @@ const Progress = () => {
   };
 
   return (
-    <div className="bg-darkBlue md:w-4/5 h-fit min-h-screen mt-36">
+    <div className="md:w-4/5 h-fit min-h-screen mt-36">
       <h2 className="text-2xl font-bold text-white mb-6 ml-12 md:ml-72">
         圓夢進度
       </h2>

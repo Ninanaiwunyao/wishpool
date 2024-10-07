@@ -55,11 +55,11 @@ const LandingPage = () => {
       <img
         src={gifImage}
         alt="wishpool"
-        className=" max-w-[750px] w-[40vw] h-auto absolute top-[80px] sm:top-36 md:top-80 left-6 md:left-16 lg:top-[500px] lg:left-[200px]"
+        className=" max-w-[750px] w-[40vw] h-auto absolute top-[80px] sm:top-36 msm:top-48 md:top-80 left-6 md:left-16 lg:top-[500px] lg:left-[200px]"
       />
       <Link
         to="/login"
-        className="flex justify-center items-center bg-yellow text-lightBlue font-semibold text-[10px]  rounded-full hover:bg-darkYellow absolute top-[160px] sm:top-80 right-24 sm:right-52 md:top-[600px] md:right-[430px] lg:top-[900px] lg:right-[680px] w-16 h-6 sm:h-12 sm:w-24 md:h-20 md:w-40 sm:text-sm md:text-2xl"
+        className="flex justify-center items-center bg-yellow text-lightBlue font-semibold text-[10px]  rounded-full hover:bg-darkYellow absolute top-[20%] sm:top-80 right-[25%] sm:right-52 msm:top-[18%] md:right-[430px] lg:top-[900px] lg:right-[680px] w-16 h-6 sm:h-12 sm:w-24 md:h-20 md:w-40 sm:text-sm md:text-2xl"
       >
         立即入池
       </Link>
