@@ -1,11 +1,22 @@
 import { Outlet, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import arrowicon from "./311747.svg";
 import backgroundImage from "./starBG.png";
+import MobileBackgroundImage from "./MobileStarBG.png";
 
 const MemberPage = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isSmOrBelow, setIsSmOrBelow] = useState(window.innerWidth <= 641);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmOrBelow(window.innerWidth <= 641);
+    };
 
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
   };
@@ -13,7 +24,9 @@ const MemberPage = () => {
     <div
       className="flex bg-darkBlue items-center h-fit md:min-h-screen "
       style={{
-        backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: isSmOrBelow
+          ? `url(${MobileBackgroundImage})`
+          : `url(${backgroundImage})`,
         backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "repeat",
@@ -96,7 +109,7 @@ const MemberPage = () => {
       </nav>
 
       {/* 右側內容 */}
-      <div className="flex-1 p-0 md:p-8">
+      <div className="flex-1 p-0">
         <Outlet />
       </div>
     </div>

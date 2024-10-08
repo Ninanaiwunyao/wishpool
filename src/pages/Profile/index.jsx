@@ -27,7 +27,8 @@ import CustomAlert from "@/components/CustomAlert";
 import AvatarEditor from "react-avatar-edit";
 import { motion } from "framer-motion";
 import angelMoon from "./angel-moon.png";
-import angelBird from "./angel-bird.png";
+import BGLeft from "./galleryBGLeft.png";
+import BGRight from "./galleryBGRight.png";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -252,148 +253,156 @@ const Profile = () => {
   );
 
   return (
-    <div className=" flex flex-col h-fit items-center md:ml-40 md:mr-24 min-h-screen relative">
-      <img src={angelMoon} alt="" className="absolute right-0 h-72 top-6" />
-      <div className="flex w-4/5 justify-between items-center mb-6 mt-36">
-        <h2 className="text-2xl text-white font-bold">個人檔案</h2>
-      </div>
-      <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col w-4/5 items-center md:justify-between md:flex-row">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col space-y-4 w-1/8 items-center"
-        >
-          <div className="relative group">
-            <img
-              src={userData.avatarUrl ? userData.avatarUrl : memberIcon}
-              alt="頭像"
-              className="w-32 h-32 rounded-full object-cover mb-4 border-4"
-            />
-            <div className="w-32 h-32 rounded-full absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <AvatarEditor
-                width={150}
-                height={150}
-                label="編輯"
-                onCrop={(preview) => setNewAvatarPreview(preview)}
-                onClose={() => setNewAvatarPreview(null)}
-                imageWidth={150}
-                imageHeight={150}
+    <div className=" flex flex-col h-fit items-center  min-h-screen relative">
+      <img
+        src={angelMoon}
+        alt=""
+        className="hidden md:block absolute right-36 h-72 top-16 z-30"
+      />
+      <div className="flex-col flex w-4/5 items-center justify-start md:items-start mb-6 mt-36 md:ml-80 md:mr-24 z-20">
+        <div className="">
+          <h2 className="text-2xl text-white font-bold mb-6">個人檔案</h2>
+        </div>
+        <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col w-10/12 items-center justify-between md:flex-row ">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col space-y-4 w-1/8 items-center"
+          >
+            <div className="relative group">
+              <img
+                src={userData.avatarUrl ? userData.avatarUrl : memberIcon}
+                alt="頭像"
+                className="w-32 h-32 rounded-full object-cover mb-4 border-4"
               />
+              <div className="w-32 h-32 rounded-full absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <AvatarEditor
+                  width={150}
+                  height={150}
+                  label="編輯"
+                  onCrop={(preview) => setNewAvatarPreview(preview)}
+                  onClose={() => setNewAvatarPreview(null)}
+                  imageWidth={150}
+                  imageHeight={150}
+                />
+              </div>
             </div>
-          </div>
-          {newAvatarPreview && (
+            {newAvatarPreview && (
+              <button
+                type="button"
+                className="ml-2 bg-lightBlue text-white py-1 px-3 rounded-full hover:bg-blue-400"
+                onClick={handleAvatarSave}
+              >
+                儲存圖片
+              </button>
+            )}
+            {isEditingName ? (
+              <div className="flex flex-col items-center justify-center mt-0">
+                <input
+                  {...register("userName")}
+                  defaultValue={userData.userName}
+                  className="border-solid border-2 border-darkBlue rounded"
+                />
+                <button
+                  type="submit"
+                  className=" bg-lightBlue text-white py-1 px-3 rounded-full hover:bg-blue-400 mt-4"
+                >
+                  保存
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center">
+                <p className="text-lg">{userData.userName}</p>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6 ml-2 text-darkBlue cursor-pointer hover:text-lightBlue"
+                  onClick={() => setIsEditingName(true)}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                  />
+                </svg>
+              </div>
+            )}
             <button
               type="button"
-              className="ml-2 bg-lightBlue text-white py-1 px-3 rounded-full hover:bg-blue-400"
-              onClick={handleAvatarSave}
+              className="bg-lightBlue text-white py-2 px-4 rounded-full hover:bg-blue-400 mt-4"
+              onClick={handleInviteClick}
             >
-              儲存圖片
+              複製邀請碼
             </button>
-          )}
-          {isEditingName ? (
-            <div className="flex flex-col items-center justify-center mt-0">
-              <input
-                {...register("userName")}
-                defaultValue={userData.userName}
-                className="border-solid border-2 border-darkBlue rounded"
-              />
-              <button
-                type="submit"
-                className=" bg-lightBlue text-white py-1 px-3 rounded-full hover:bg-blue-400 mt-4"
-              >
-                保存
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center">
-              <p className="text-lg">{userData.userName}</p>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 ml-2 text-darkBlue cursor-pointer hover:text-lightBlue"
-                onClick={() => setIsEditingName(true)}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-                />
-              </svg>
-            </div>
-          )}
-          <button
-            type="button"
-            className="bg-lightBlue text-white py-2 px-4 rounded-full hover:bg-blue-400 mt-4"
-            onClick={handleInviteClick}
-          >
-            複製邀請碼
-          </button>
-        </form>
+          </form>
 
-        <div className="ml-0 flex flex-col items-start space-y-8 md:w-1/3 w-4/5 justify-center mt-8 md:mt-0">
-          <div className="bg-lightBlue p-4 md:p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
-            <div className="flex justify-between items-center">
-              <h3 className="font-bold text-cream md:text-2xl text-sm">
-                硬幣數量
-              </h3>
-              <div className="flex items-center md:text-2xl text-sm">
-                <img
-                  src={coinsIcon}
-                  alt="Coins Icon"
-                  className="w-6 h-6 mr-2"
-                />
-                <span className="text-white font-bold md:text-2xl text-sm">
-                  {userData.coins} 枚
-                </span>
+          <div className="ml-0 flex flex-col items-start space-y-8 md:w-1/3 w-4/5 justify-center mt-8 md:mt-0">
+            <div className="bg-lightBlue p-4 md:p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-cream md:text-2xl text-sm">
+                  硬幣數量
+                </h3>
+                <div className="flex items-center md:text-2xl text-sm">
+                  <img
+                    src={coinsIcon}
+                    alt="Coins Icon"
+                    className="w-6 h-6 mr-2"
+                  />
+                  <span className="text-white font-bold md:text-2xl text-sm">
+                    {userData.coins} 枚
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-lightBlue p-4 md:p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-cream md:text-2xl text-sm">
+                  信譽分數
+                </h3>
+                <div className="flex items-center md:text-2xl text-sm">
+                  <img
+                    src={reputationIcon}
+                    alt="Reputation Icon"
+                    className="w-6 h-6 mr-2"
+                  />
+                  <span className="text-white font-bold md:text-2xl text-sm">
+                    {userData.reputation} 分
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-          <div className="bg-lightBlue p-4 md:p-6 rounded-xl shadow-md w-full flex flex-col justify-center">
-            <div className="flex justify-between items-center">
-              <h3 className="font-bold text-cream md:text-2xl text-sm">
-                信譽分數
-              </h3>
-              <div className="flex items-center md:text-2xl text-sm">
-                <img
-                  src={reputationIcon}
-                  alt="Reputation Icon"
-                  className="w-6 h-6 mr-2"
-                />
-                <span className="text-white font-bold md:text-2xl text-sm">
-                  {userData.reputation} 分
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div className="w-4/5 md:w-2/5 flex flex-col items-start justify-center mt-8 md:m-0">
-          <div className="bg-lightBlue p-6 rounded-xl shadow-lg flex flex-col justify-center w-full">
-            <h3 className="font-bold text-darkBlue">Level {userData.level}</h3>
-            <p className="text-darkBlue">
-              離升級還差 {nextLevelPoints - currentLevelPoints} 分
-            </p>
-            <div className="w-full border-2 border-yellow-500 rounded-full h-4 mt-4 relative">
-              <div
-                className="bg-yellow h-full rounded-full"
-                style={{
-                  width: `${progressPercentage}%`,
-                  transition: "width 0.5s ease-in-out",
-                }}
-              ></div>
+          <div className="w-4/5 md:w-2/5 flex flex-col items-start justify-center mt-8 md:m-0">
+            <div className="bg-lightBlue p-6 rounded-xl shadow-lg flex flex-col justify-center w-full">
+              <h3 className="font-bold text-darkBlue">
+                Level {userData.level}
+              </h3>
+              <p className="text-darkBlue">
+                離升級還差 {nextLevelPoints - currentLevelPoints} 分
+              </p>
+              <div className="w-full border-2 border-yellow-500 rounded-full h-4 mt-4 relative">
+                <div
+                  className="bg-yellow h-full rounded-full"
+                  style={{
+                    width: `${progressPercentage}%`,
+                    transition: "width 0.5s ease-in-out",
+                  }}
+                ></div>
+              </div>
+              <p className="text-darkBlue mt-2">
+                {progressPercentage.toFixed(2)}% 完成
+              </p>
             </div>
-            <p className="text-darkBlue mt-2">
-              {progressPercentage.toFixed(2)}% 完成
-            </p>
           </div>
         </div>
       </div>
-      <div className="w-4/5 mt-8 mb-16">
+      <div className="w-4/5 mt-8 mb-16 md:ml-64 md:mr-8 flex flex-col items-center md:items-start z-20">
         <h3 className="text-white text-2xl mb-6 font-bold">許願記錄</h3>
         {userWishes.length > 0 ? (
-          <div className="flex flex-row flex-wrap md:justify-between justify-center gap-12">
+          <div className="flex flex-row flex-wrap md:justify-between justify-center gap-12 w-10/12">
             {userWishes.map((wish) => (
               <WishCard key={wish.id} wish={wish} className=" mb-16" />
             ))}
@@ -413,15 +422,8 @@ const Profile = () => {
           onClose={() => setAlertMessage(null)}
         />
       )}
-      <motion.div
-        initial={{ right: "-20%" }}
-        animate={{ left: -100 }}
-        transition={{ duration: 5, ease: "easeInOut" }}
-        className="absolute bottom-0 h-72"
-        style={{ right: 0 }}
-      >
-        <img src={angelBird} alt="" className="h-full" />
-      </motion.div>
+      <img src={BGLeft} alt="" className="absolute bottom-0 left-0 w-96" />
+      <img src={BGRight} alt="" className="absolute bottom-0 right-0 w-96" />
     </div>
   );
 };

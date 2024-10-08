@@ -14,6 +14,7 @@ import WishCardWithId from "@/components/WishCardWithId";
 import moment from "moment";
 import tapepng from "./tape.png";
 import { motion } from "framer-motion";
+import angelFly from "./angel-fly.png";
 
 const Progress = () => {
   const [inProgressDreams, setInProgressDreams] = useState([]);
@@ -54,7 +55,7 @@ const Progress = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-darkBlue">
+      <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col items-center space-y-6">
           <motion.div
             className="flex space-x-2"
@@ -104,13 +105,11 @@ const Progress = () => {
   };
 
   return (
-    <div className="md:w-4/5 h-fit min-h-screen mt-36">
-      <h2 className="text-2xl font-bold text-white mb-6 ml-12 md:ml-72">
-        圓夢進度
-      </h2>
+    <div className="flex-col flex justify-center items-center md:items-start md:justify-start md:w-4/5 h-fit min-h-screen mt-36 relative">
+      <h2 className="text-2xl font-bold text-white mb-6 md:ml-72">圓夢進度</h2>
 
       {inProgressDreams.length > 0 ? (
-        <div className="flex flex-wrap gap-6 w-11/12 ml-12 md:ml-72">
+        <div className="flex justify-center md:justify-start flex-wrap gap-6 w-11/12  md:ml-72">
           {inProgressDreams.map((dream) => {
             const { daysRemaining, progress } = calculateProgress(
               dream.startDate,
@@ -182,7 +181,9 @@ const Progress = () => {
           })}
         </div>
       ) : (
-        <p className="text-white text-center mt-16">目前沒有正在進行的圓夢。</p>
+        <p className="text-white text-center mt-2 md:ml-72">
+          目前沒有正在進行的圓夢。
+        </p>
       )}
 
       {/* 上傳證明的彈出視窗 */}
@@ -203,6 +204,18 @@ const Progress = () => {
           onClose={() => setShowProofModal(false)}
         />
       )}
+      <motion.div
+        animate={{ y: ["0%", "-10%", "0%"] }}
+        transition={{
+          duration: 2,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        className="hidden md:block absolute bottom-36 right-[-300px]"
+      >
+        <img src={angelFly} alt="" className="h-full" />
+      </motion.div>
     </div>
   );
 };
