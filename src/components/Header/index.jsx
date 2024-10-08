@@ -19,7 +19,7 @@ const Header = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   return (
-    <header className="md:h-14 h-10 z-20 fixed top-0 left-0 right-0 flex justify-between items-center bg-yellow p-4 w-4/5 mt-6 mx-auto rounded-full">
+    <header className="md:h-14 h-10 z-50 fixed top-0 left-0 right-0 flex justify-between items-center bg-yellow p-4 w-4/5 mt-6 mx-auto rounded-full">
       <button
         onClick={toggleMenu}
         className="block md:hidden ml-10 text-xl text-lightBlue font-semibold"

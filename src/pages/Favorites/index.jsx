@@ -81,10 +81,14 @@ const Favorites = () => {
         )}
       </div>
       <motion.div
-        initial={{ top: "-20%" }}
-        animate={{ top: "50%" }}
-        transition={{ duration: 5, ease: "easeInOut" }}
-        className="absolute top-0 right-0 h-72"
+        animate={{ y: ["0%", "-10%", "0%"] }}
+        transition={{
+          duration: 2,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        className="hidden md:block absolute bottom-36 right-0 h-72"
       >
         <img src={angelBird} alt="" className="h-full" />
       </motion.div>

@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import angel from "./angel-stand.png"; // 系統通知頭像
 import memberIcon from "./noIcon.jpg";
 import { motion } from "framer-motion";
+import angelMail from "./angel-mail.png"; // 系統通知頭像
 
 const initialState = {
   chats: [],
@@ -184,7 +185,7 @@ const Messages = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen relative">
         <div className="flex flex-col items-center space-y-6">
           <motion.div
             className="flex space-x-2"
@@ -268,6 +269,18 @@ const Messages = () => {
       ) : (
         <p className="text-white ml-24">目前沒有聊天室。</p>
       )}
+      <motion.div
+        animate={{ y: ["0%", "-10%", "0%"] }}
+        transition={{
+          duration: 2,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        className=" hidden md:block absolute bottom-36 right-0"
+      >
+        <img src={angelMail} alt="" className="h-full" />
+      </motion.div>
     </div>
   );
 };
