@@ -402,7 +402,7 @@ const Profile = () => {
       <div className="w-4/5 mt-8 mb-16 md:ml-64 md:mr-8 flex flex-col items-center md:items-start z-20">
         <h3 className="text-white text-2xl mb-6 font-bold">許願記錄</h3>
         {userWishes.length > 0 ? (
-          <div className="flex flex-row flex-wrap md:justify-between justify-center gap-12 w-10/12">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-12 w-11/12 justify-items-center md:justify-items-start">
             {userWishes.map((wish) => (
               <WishCard key={wish.id} wish={wish} className=" mb-16" />
             ))}
