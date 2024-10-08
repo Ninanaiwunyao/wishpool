@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 const ProofDisplayModal = ({ proof, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-cream p-6 rounded-lg shadow-lg max-w-lg w-full">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
         <h3 className="text-xl font-bold mb-4">圓夢證明</h3>
         <p>{proof.proofText}</p>
         {proof.fileUrl && (
@@ -15,7 +15,7 @@ const ProofDisplayModal = ({ proof, onClose }) => {
         )}
         <button
           onClick={onClose}
-          className="bg-lightBlue text-cream px-4 py-2 rounded mt-6"
+          className="bg-lightBlue text-white px-4 py-2 rounded mt-6"
         >
           關閉
         </button>
