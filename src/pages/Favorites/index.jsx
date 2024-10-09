@@ -45,7 +45,7 @@ const Favorites = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-darkBlue">
+      <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col items-center space-y-6">
           <motion.div
             className="flex space-x-2"
@@ -65,10 +65,8 @@ const Favorites = () => {
   }
 
   return (
-    <div className="p-8 md:mt-28 mt-16 md:ml-64 min-h-screen relative">
-      <h2 className="text-2xl font-bold text-white mb-6 ml-12 md:ml-0">
-        我的收藏
-      </h2>
+    <div className="p-8 md:mt-28 mt-16 md:ml-64 min-h-screen relative flex flex-col items-center md:items-start">
+      <h2 className="text-2xl font-bold text-white md:mb-6 ">我的收藏</h2>
       <div className="h-fit flex-grow flex items-start md:justify-start justify-center mt-12 md:mt-0">
         {favoriteWishes.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-center justify-center">
