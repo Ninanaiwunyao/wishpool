@@ -45,7 +45,7 @@ const MemberPage = () => {
       </button>
 
       <nav
-        className={`fixed left-0 top-64 bg-lightBlue h-64 w-48 p-4 flex flex-col justify-center items-center rounded-r-3xl shadow-lg z-10 transform transition-transform duration-300 ${
+        className={`fixed left-0 top-64 bg-lightBlue h-64 w-48 p-4 flex flex-col justify-center items-center rounded-r-3xl shadow-lg transform transition-transform duration-300 z-50 ${
           isNavOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:flex`}
       >
