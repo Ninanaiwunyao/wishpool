@@ -70,11 +70,7 @@ const WishPool = () => {
     >
       <Slider {...settings} className="w-full max-w-4xl mt-24">
         {filteredWishes.map((wish) => (
-          <div
-            key={wish.id}
-            className="px-4 flex justify-center"
-            style={{ display: "flex !important" }}
-          >
+          <div key={wish.id} className="px-4 !flex justify-center">
             <WishCard wish={wish} />
           </div>
         ))}
