@@ -8,6 +8,8 @@ import {
   query,
   where,
   getDocs,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import WishCardWithId from "@/components/WishCardWithId";
@@ -15,8 +17,10 @@ import moment from "moment";
 import tapepng from "./tape.png";
 import { motion } from "framer-motion";
 import angelFly from "./angel-fly.png";
+import CustomAlert from "@/components/CustomAlert";
 
 const Progress = () => {
+  const [alertMessage, setAlertMessage] = useState(null);
   const [inProgressDreams, setInProgressDreams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -68,7 +72,6 @@ const Progress = () => {
             <div className="w-6 h-6 bg-white rounded-full animate-bounce delay-200"></div>
           </motion.div>
 
-          {/* Loading Message */}
           <p className="text-white text-2xl font-bold">Loading...</p>
         </div>
       </div>
@@ -77,31 +80,44 @@ const Progress = () => {
 
   const calculateProgress = (startDate, endDate) => {
     const now = moment();
-    const start = moment(startDate.toDate()); // 將 startDate 轉換為 Date
-    const end = moment(endDate.toDate()); // 將 endDate 轉換為 Date
-    const totalDays = moment.duration(end.diff(start)).asDays(); // 總天數
-    const daysRemaining = moment.duration(end.diff(now)).asDays(); // 剩餘天數
+    const start = moment(startDate.toDate());
+    const end = moment(endDate.toDate());
+    const totalDays = moment.duration(end.diff(start)).asDays();
+    const daysRemaining = moment.duration(end.diff(now)).asDays();
     const progress = Math.max(
       0,
       Math.min(100, ((totalDays - daysRemaining) / totalDays) * 100)
-    ); // 百分比進度
+    );
 
     return { daysRemaining, progress };
   };
+
   const handleUploadProof = (dream) => {
     setSelectedDream(dream);
-    setShowUploadModal(true); // 顯示彈出視窗
+    setShowUploadModal(true);
   };
+
   const handleViewProof = (dream) => {
     setSelectedDream(dream);
     setShowProofModal(true);
   };
-  const handleProofUploadSuccess = (proof) => {
-    // 更新當前夢想的 proof 信息
+
+  const handleProofUploadSuccess = async (proofData) => {
+    setAlertMessage("證明上傳成功，已通知許願者！");
+    const dreamDocRef = doc(db, "dreams", selectedDream.id);
+    await updateDoc(dreamDocRef, {
+      proof: proofData,
+      approved: "pending",
+    });
+
     setInProgressDreams((prevDreams) =>
-      prevDreams.map((d) => (d.id === selectedDream.id ? { ...d, proof } : d))
+      prevDreams.map((d) =>
+        d.id === selectedDream.id
+          ? { ...d, proof: proofData, approved: "pending" }
+          : d
+      )
     );
-    setShowUploadModal(false); // 關閉上傳窗口
+    setShowUploadModal(false);
   };
 
   return (
@@ -109,7 +125,7 @@ const Progress = () => {
       <h2 className="text-2xl font-bold text-white mb-6 md:ml-72">圓夢進度</h2>
 
       {inProgressDreams.length > 0 ? (
-        <div className="flex justify-center md:justify-start flex-wrap gap-6 w-11/12  md:ml-72">
+        <div className="flex justify-center md:justify-start flex-wrap gap-6 w-11/12 md:ml-72">
           {inProgressDreams.map((dream) => {
             const { daysRemaining, progress } = calculateProgress(
               dream.startDate,
@@ -126,12 +142,10 @@ const Progress = () => {
                   alt=""
                   className="absolute z-10 w-32 top-[-55px] left-20"
                 />
-                {/* 願望卡片 */}
                 <div className="mb-6 flex justify-center">
                   <WishCardWithId wishId={dream.wishId} />
                 </div>
 
-                {/* 進度條和截止日期 */}
                 <div className="bg-lightGray p-4 rounded-md">
                   <p className="text-darkBlue font-medium mb-4 text-center">
                     截止日期:{" "}
@@ -150,8 +164,6 @@ const Progress = () => {
                     {Math.ceil(daysRemaining)} 天
                   </p>
                 </div>
-
-                {/* 操作按鈕區域 */}
                 <div className="mt-6 flex flex-col gap-4 items-center">
                   <button
                     className="bg-lightBlue text-white py-2 px-6 rounded-3xl w-full"
@@ -159,15 +171,16 @@ const Progress = () => {
                   >
                     聯絡許願卡主人
                   </button>
-
-                  {dream.proof ? (
+                  {dream.proof && dream.approved === "pending" && (
                     <button
                       className="bg-lightBlue text-white py-2 px-6 rounded-3xl w-full"
                       onClick={() => handleViewProof(dream)}
                     >
                       查看圓夢證明
                     </button>
-                  ) : (
+                  )}
+
+                  {(!dream.proof || dream.approved === "false") && (
                     <button
                       className="bg-lightBlue text-white py-2 px-6 rounded-3xl w-full"
                       onClick={() => handleUploadProof(dream)}
@@ -186,7 +199,6 @@ const Progress = () => {
         </p>
       )}
 
-      {/* 上傳證明的彈出視窗 */}
       {showUploadModal && selectedDream && (
         <ProofUploadModal
           onClose={() => setShowUploadModal(false)}
@@ -197,7 +209,6 @@ const Progress = () => {
         />
       )}
 
-      {/* 查看證明的彈出視窗 */}
       {showProofModal && selectedDream && (
         <ProofDisplayModal
           proof={selectedDream.proof}
@@ -216,6 +227,12 @@ const Progress = () => {
       >
         <img src={angelFly} alt="" className="h-full" />
       </motion.div>
+      {alertMessage && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => setAlertMessage(null)}
+        />
+      )}
     </div>
   );
 };
