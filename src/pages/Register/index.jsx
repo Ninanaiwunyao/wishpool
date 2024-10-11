@@ -3,6 +3,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import {
+  where,
+  query,
+  getDocs,
   doc,
   setDoc,
   addDoc,
@@ -15,15 +18,19 @@ import {
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "@/firebase/firebaseConfig";
 import backgroundImage from "./logInBg.png";
+import CustomAlert from "@/components/CustomAlert";
 
 const Register = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setError,
   } = useForm();
   const navigate = useNavigate();
   const [invitationCode, setInvitationCode] = useState("");
+  const [alertMessage, setAlertMessage] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -36,79 +43,105 @@ const Register = () => {
   const handleRegister = async (data) => {
     const auth = getAuth();
     const storage = getStorage();
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      const user = userCredential.user;
 
-      let avatarUrl = "";
-      if (data.avatar[0]) {
-        const avatarRef = ref(storage, `avatars/${user.uid}`);
-        await uploadBytes(avatarRef, data.avatar[0]);
-        avatarUrl = await getDownloadURL(avatarRef);
+    try {
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("userName", "==", data.userName));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        setError("userName", {
+          type: "manual",
+          message: "用戶名已存在，請選擇其他用戶名",
+        });
+        return;
       }
 
-      const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, {
-        userName: data.userName,
-        avatarUrl: avatarUrl,
-        coins: 30,
-        level: 1,
-        achievements: [],
-        completedWishes: 0,
-        supportedDreams: 0,
-        reputation: 0,
-      });
-      await addDoc(collection(db, "transactions"), {
-        userId: user.uid,
-        amount: 30,
-        type: "registration-bonus",
-        timestamp: serverTimestamp(),
-      });
       if (invitationCode) {
         const inviterRef = doc(db, "users", invitationCode);
         const inviterDoc = await getDoc(inviterRef);
-
-        if (inviterDoc.exists()) {
-          // 更新邀請者和新註冊者的金幣數量
-          await updateDoc(inviterRef, {
-            coins: increment(100), // 邀請者增加 100 金幣
-          });
-
-          await updateDoc(userRef, {
-            coins: increment(100), // 新註冊者也增加 100 金幣
-          });
-
-          // 記錄邀請者的交易
-          await addDoc(collection(db, "transactions"), {
-            userId: invitationCode,
-            amount: 100,
-            type: "invitation-bonus", // 交易類型為邀請獎勵
-            timestamp: serverTimestamp(),
-            invitedUserId: user.uid, // 記錄被邀請者的 UID
-          });
-
-          // 記錄新註冊者的交易
-          await addDoc(collection(db, "transactions"), {
-            userId: user.uid,
-            amount: 100,
-            type: "invitation-bonus", // 交易類型為註冊獎勵
-            timestamp: serverTimestamp(),
-            inviterId: invitationCode, // 記錄邀請者的 UID
-          });
-
-          console.log("註冊成功，邀請者和新註冊者各獲得 100 金幣，並記錄交易");
-        } else {
-          console.log("無效的邀請碼");
+        if (!inviterDoc.exists()) {
+          setAlertMessage("無效的邀請碼，請確認並重新輸入");
+          return;
         }
       }
 
-      navigate("/");
+      await createUserWithEmailAndPassword(auth, data.email, data.password)
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+
+          let avatarUrl = "";
+          if (data.avatar[0]) {
+            const avatarRef = ref(storage, `avatars/${user.uid}`);
+            await uploadBytes(avatarRef, data.avatar[0]);
+            avatarUrl = await getDownloadURL(avatarRef);
+          }
+
+          const userRef = doc(db, "users", user.uid);
+          await setDoc(userRef, {
+            userName: data.userName,
+            avatarUrl: avatarUrl,
+            coins: 30,
+            level: 1,
+            achievements: [],
+            completedWishes: 0,
+            supportedDreams: 0,
+            reputation: 0,
+          });
+          await addDoc(collection(db, "transactions"), {
+            userId: user.uid,
+            amount: 30,
+            type: "registration-bonus",
+            timestamp: serverTimestamp(),
+          });
+
+          if (invitationCode) {
+            const inviterRef = doc(db, "users", invitationCode);
+
+            await updateDoc(inviterRef, {
+              coins: increment(100),
+            });
+
+            await updateDoc(userRef, {
+              coins: increment(100),
+            });
+
+            await addDoc(collection(db, "transactions"), {
+              userId: invitationCode,
+              amount: 100,
+              type: "invitation-bonus",
+              timestamp: serverTimestamp(),
+              invitedUserId: user.uid,
+            });
+
+            await addDoc(collection(db, "transactions"), {
+              userId: user.uid,
+              amount: 100,
+              type: "invitation-bonus",
+              timestamp: serverTimestamp(),
+              inviterId: invitationCode,
+            });
+          }
+
+          navigate("/");
+        })
+        .catch((err) => {
+          if (err.code === "auth/email-already-in-use") {
+            setError("email", {
+              type: "manual",
+              message: "電子郵件已經存在，請使用其他電子郵件",
+            });
+          } else if (err.code === "auth/weak-password") {
+            setError("password", {
+              type: "manual",
+              message: "密碼必須至少6位數",
+            });
+          } else {
+            console.error("註冊失敗:", err.message);
+          }
+        });
     } catch (err) {
       console.error("註冊失敗:", err.message);
+      setAlertMessage(`註冊失敗: ${err.message}`);
     }
   };
 
@@ -164,6 +197,24 @@ const Register = () => {
             )}
           </div>
           <div className="mb-4">
+            <label className="block mb-2">確認密碼</label>
+            <input
+              type="password"
+              placeholder="請再次輸入密碼"
+              {...register("secondPassword", {
+                required: "請再次輸入密碼",
+                validate: (value) =>
+                  value === watch("password") || "兩次密碼不一致",
+              })}
+              className="w-full p-2 rounded border border-gray-300"
+            />
+            {errors.secondPassword && (
+              <p className="text-red-500 text-sm">
+                {errors.secondPassword.message}
+              </p>
+            )}
+          </div>
+          <div className="mb-4">
             <label className="block mb-2">上傳頭像</label>
             <input
               type="file"
@@ -177,7 +228,7 @@ const Register = () => {
               type="text"
               placeholder="請輸入邀請碼"
               value={invitationCode}
-              onChange={(e) => setInvitationCode(e.target.value)} // 保存用戶輸入的邀請碼
+              onChange={(e) => setInvitationCode(e.target.value)}
               className="w-full p-2 rounded border border-gray-300"
             />
           </div>
@@ -197,6 +248,12 @@ const Register = () => {
           </a>
         </p>
       </div>
+      {alertMessage && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => setAlertMessage(null)}
+        />
+      )}
     </div>
   );
 };
