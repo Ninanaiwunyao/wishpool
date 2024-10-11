@@ -12,7 +12,6 @@ import {
 import { getAuth } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
-import CustomAlert from "@/components/CustomAlert";
 
 const ProofUploadModal = ({
   onClose,
@@ -20,11 +19,12 @@ const ProofUploadModal = ({
   wishOwnerId,
   wishId,
   onUploadSuccess,
+  setAlertMessage,
 }) => {
   const [proofText, setProofText] = useState("");
   const [file, setFile] = useState(null);
-  const [isUploading, setIsUploading] = useState(false); // 上傳狀態
-  const [alertMessage, setAlertMessage] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [fileErrorMessage, setFileErrorMessage] = useState(null);
 
   const db = getFirestore();
   const storage = getStorage();
@@ -32,18 +32,32 @@ const ProofUploadModal = ({
   const user = auth.currentUser;
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const fileType = selectedFile.type;
+      if (!["image/jpeg", "image/png", "image/jpg"].includes(fileType)) {
+        setFileErrorMessage("只允許上傳圖片檔案 (JPG, PNG)。");
+        setFile(null);
+      } else {
+        setFileErrorMessage(null);
+        setFile(selectedFile);
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!file || !proofText) {
+      setAlertMessage("請輸入文字證明以及上傳圖片。");
+      return;
+    }
     try {
       setIsUploading(true);
       let fileUrl = null;
       if (file) {
         const fileRef = ref(storage, `proofs/${file.name}_${Date.now()}`);
         await uploadBytes(fileRef, file);
-        fileUrl = await getDownloadURL(fileRef); // 獲取上傳後的下載 URL
+        fileUrl = await getDownloadURL(fileRef);
       }
       const proofData = {
         proofText: proofText || "",
@@ -52,12 +66,9 @@ const ProofUploadModal = ({
         uploaderId: user.uid || "unknown",
       };
       onUploadSuccess(proofData);
-
-      // 向 Firebase 添加證據記錄
       const proofRef = collection(db, "proofs");
       await addDoc(proofRef, proofData);
 
-      // 查詢是否已經存在 `system` 和 `wishOwnerId` 的聊天室
       const chatsRef = collection(db, "chats");
       const q = query(
         chatsRef,
@@ -69,7 +80,6 @@ const ProofUploadModal = ({
 
       querySnapshot.forEach((docSnapshot) => {
         const chatData = docSnapshot.data();
-        // 檢查聊天室是否包含 `system` 和 `wishOwnerId`
         if (
           chatData.participants.includes("system") &&
           chatData.participants.includes(wishOwnerId)
@@ -81,11 +91,9 @@ const ProofUploadModal = ({
       let chatDocRef;
 
       if (existingChat) {
-        // 如果找到現有聊天室，使用該聊天室
         console.log("找到現有聊天室:", existingChat.id);
         chatDocRef = doc(db, "chats", existingChat.id);
       } else {
-        // 如果沒有找到聊天室，則創建新的聊天室
         console.log("未找到聊天室，創建新的聊天室");
         chatDocRef = await addDoc(chatsRef, {
           participants: ["system", wishOwnerId],
@@ -93,17 +101,16 @@ const ProofUploadModal = ({
         });
       }
 
-      // 發送系統消息到聊天室通知審核
       const messagesRef = collection(db, "chats", chatDocRef.id, "messages");
       await addDoc(messagesRef, {
         senderId: "system",
         content: `圓夢者已提交證明，請審核。`,
         timestamp: serverTimestamp(),
         messageType: "proof",
-        relatedId: dreamId, // 與此證明相關的 dream ID
-        wishId: wishId, // 與此證明相關的願望 ID
-        dreamerId: user.uid, // 圓夢者 ID
-        proofText: proofText || "", // 上傳的文字證明
+        relatedId: dreamId,
+        wishId: wishId,
+        dreamerId: user.uid,
+        proofText: proofText || "",
         fileUrl: fileUrl,
         approved: false,
         readBy: [],
@@ -114,7 +121,7 @@ const ProofUploadModal = ({
       console.error("上傳證明失敗", error);
       setAlertMessage("證明上傳失敗");
     } finally {
-      setIsUploading(false); // 上傳結束
+      setIsUploading(false);
     }
   };
 
@@ -134,6 +141,9 @@ const ProofUploadModal = ({
             onChange={handleFileChange}
             className="block w-full"
           />
+          {fileErrorMessage && (
+            <p className="text-red-500">{fileErrorMessage}</p>
+          )}
           <div className="flex justify-end space-x-2">
             <button
               type="button"
@@ -152,15 +162,6 @@ const ProofUploadModal = ({
           </div>
         </form>
       </div>
-      {alertMessage && (
-        <CustomAlert
-          message={alertMessage}
-          onClose={() => {
-            setAlertMessage(null);
-            onClose(); // 在提示框確認後再關閉整個 Modal
-          }}
-        />
-      )}
     </div>
   );
 };
@@ -170,6 +171,7 @@ ProofUploadModal.propTypes = {
   wishOwnerId: PropTypes.string.isRequired,
   wishId: PropTypes.string.isRequired,
   onUploadSuccess: PropTypes.func.isRequired,
+  setAlertMessage: PropTypes.func.isRequired,
 };
 
 export default ProofUploadModal;

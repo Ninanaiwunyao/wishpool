@@ -211,17 +211,15 @@ const Chat = () => {
       const dreamDocRef = doc(db, "dreams", dreamId);
       await updateDoc(dreamDocRef, {
         status: "fulfilled",
+        approved: "true",
       });
-
       const messageRef = doc(db, "chats", chatId, "messages", messageId);
       await updateDoc(messageRef, {
-        approved: true, // 標記為已核可
+        approved: true,
       });
 
-      // 發送通知到聊天室
       await sendSystemNotification(dreamerId, "您的圓夢證明已被核可，恭喜！");
 
-      // 記錄交易
       await addDoc(collection(db, "transactions"), {
         userId: dreamerId,
         amount: amount,
@@ -233,6 +231,11 @@ const Chat = () => {
         dreamerId,
         `硬幣交易通知：您已獲得 ${amount} 個硬幣`
       );
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === messageId ? { ...msg, approved: true } : msg
+        )
+      );
 
       setAlertMessage("核可成功！");
     } catch (error) {
@@ -240,11 +243,11 @@ const Chat = () => {
     }
   };
 
-  const handleReject = async (messageId, dreamerId) => {
+  const handleReject = async (messageId, dreamerId, dreamId) => {
     console.log("handleReject called with:", { chatId, messageId });
     try {
-      if (!chatId || !messageId) {
-        throw new Error("缺少聊天 ID 或訊息 ID");
+      if (!dreamId || !messageId) {
+        throw new Error("缺少夢想 ID 或訊息 ID");
       }
       const messageRef = doc(db, "chats", chatId, "messages", messageId);
       const messageDoc = await getDoc(messageRef);
@@ -255,12 +258,20 @@ const Chat = () => {
       await updateDoc(messageRef, {
         approved: false, // 標記為不核可
       });
+      const dreamDocRef = doc(db, "dreams", dreamId);
+      await updateDoc(dreamDocRef, {
+        approved: "false", // 標記為不核可
+      });
 
       await sendSystemNotification(
         dreamerId,
         "您的圓夢證明未被核可，請重新上傳。"
       );
-
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === messageId ? { ...msg, approved: false } : msg
+        )
+      );
       setAlertMessage("不核可操作已執行");
     } catch (error) {
       console.error("不核可操作失敗：", error);
@@ -340,9 +351,9 @@ const Chat = () => {
                           className="bg-green-500 text-white px-4 py-2 rounded"
                           onClick={() =>
                             handleApprove(
-                              message.relatedId, // Dream ID
-                              message.wishId, // Wish ID
-                              message.dreamerId, // Dreamer ID
+                              message.relatedId,
+                              message.wishId,
+                              message.dreamerId,
                               message.id
                             )
                           }
@@ -352,7 +363,11 @@ const Chat = () => {
                         <button
                           className="bg-red-500 text-white px-4 py-2 rounded"
                           onClick={() =>
-                            handleReject(message.id, message.dreamerId)
+                            handleReject(
+                              message.id,
+                              message.dreamerId,
+                              message.relatedId
+                            )
                           }
                         >
                           不核可
