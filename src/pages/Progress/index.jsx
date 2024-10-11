@@ -105,7 +105,7 @@ const Progress = () => {
   };
 
   return (
-    <div className="flex-col flex justify-center items-center md:items-start md:justify-start md:w-4/5 h-fit min-h-screen mt-36 relative">
+    <div className="flex-col flex items-center md:items-start md:justify-start md:w-4/5 h-fit min-h-screen mt-36 relative">
       <h2 className="text-2xl font-bold text-white mb-6 md:ml-72">圓夢進度</h2>
 
       {inProgressDreams.length > 0 ? (
