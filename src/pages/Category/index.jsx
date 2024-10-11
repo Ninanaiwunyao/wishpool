@@ -41,7 +41,7 @@ const Category = () => {
   }
 
   return (
-    <div className="bg-darkBlue relative w-full h-fit flex flex-col items-center justify-start pt-32">
+    <div className="bg-darkBlue relative w-full min-h-screen h-fit flex flex-col items-center justify-start pt-32">
       <h2 className="text-2xl font-bold text-white mb-4">
         {category}的所有願望
       </h2>
