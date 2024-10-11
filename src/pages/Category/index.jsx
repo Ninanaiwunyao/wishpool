@@ -1,26 +1,38 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useWishes } from "@/WishesContext";
 import WishCard from "@/components/WishCard";
 import { motion } from "framer-motion";
+import CustomAlert from "@/components/CustomAlert";
 
 const Category = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { wishes, loading } = useWishes();
   const [filteredWishes, setFilteredWishes] = useState([]);
+  const [alertMessage, setAlertMessage] = useState(null);
 
   const searchParams = new URLSearchParams(location.search);
   const category = searchParams.get("category");
+  useEffect(() => {
+    if (!category) {
+      setAlertMessage("請選擇一個有效的分類");
+      const timer = setTimeout(() => {
+        navigate("/");
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setAlertMessage(null);
+    }
+  }, [category, navigate]);
 
   useEffect(() => {
-    if (wishes.length > 0) {
-      const filtered = wishes.filter((wish) => {
-        return wish.tags.includes(category);
-      });
+    if (wishes.length > 0 && category) {
+      const filtered = wishes.filter((wish) => wish.tags.includes(category));
       setFilteredWishes(filtered);
     }
   }, [wishes, category]);
-
   if (loading) {
     <div className="flex items-center justify-center h-screen bg-darkBlue">
       <div className="flex flex-col items-center space-y-6">
@@ -45,13 +57,19 @@ const Category = () => {
       <h2 className="text-2xl font-bold text-white mb-4">
         {category}的所有願望
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 h-fit mb-24">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 h-fit mb-24 text-white">
         {filteredWishes.length > 0 ? (
           filteredWishes.map((wish) => <WishCard key={wish.id} wish={wish} />)
         ) : (
           <p>沒有找到符合該標籤的願望。</p>
         )}
       </div>
+      {alertMessage && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => setAlertMessage(null)}
+        />
+      )}
     </div>
   );
 };
