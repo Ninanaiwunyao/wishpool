@@ -48,7 +48,7 @@ root.render(
               </WishesProvider>
             }
           />
-          <Route path="/category" element={<Category />} />
+          <Route path="category" element={<Category />} />
           <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />
           <Route
@@ -67,6 +67,7 @@ root.render(
             <Route path="transaction" element={<Transaction />} />
           </Route>
         </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   </WishesProvider>
