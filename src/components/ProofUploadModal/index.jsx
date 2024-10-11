@@ -112,7 +112,7 @@ const ProofUploadModal = ({
         dreamerId: user.uid,
         proofText: proofText || "",
         fileUrl: fileUrl,
-        approved: false,
+        approved: "pending",
         readBy: [],
       });
 
