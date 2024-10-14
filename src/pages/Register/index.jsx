@@ -165,7 +165,13 @@ const Register = () => {
             <input
               type="text"
               placeholder="請輸入用戶名稱"
-              {...register("userName", { required: "用戶名為必填項" })}
+              {...register("userName", {
+                required: "用戶名為必填項",
+                maxLength: {
+                  value: 10,
+                  message: "名稱不能超過10個字",
+                },
+              })}
               className="w-full p-2 rounded border border-gray-300"
             />
             {errors.userName && (
