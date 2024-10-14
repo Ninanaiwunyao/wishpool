@@ -342,7 +342,7 @@ const WishCardDetail = () => {
               required
               className="border p-2 rounded mb-4"
             />
-            <div>
+            <div className="flex justify-center">
               <button
                 type="submit"
                 className="bg-lightBlue text-white py-2 px-4 rounded"

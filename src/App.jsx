@@ -6,11 +6,18 @@ import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { fairyDustCursor } from "./FairyDustCursor";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    const cursorEffect = fairyDustCursor();
 
+    return () => {
+      cursorEffect.destroy();
+    };
+  }, []);
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -48,6 +55,7 @@ function App() {
       </div>
     );
   }
+
   return (
     <>
       <Header />
