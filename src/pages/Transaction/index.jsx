@@ -10,12 +10,12 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import coinspng from "./coin.png"; // 系統通知頭像
+import coinspng from "./coin.png";
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
-  const [filterType, setFilterType] = useState(""); // 空字串表示不篩選
-  const [userCoins, setUserCoins] = useState(0); // 用來儲存用戶硬幣數量
+  const [filterType, setFilterType] = useState("");
+  const [userCoins, setUserCoins] = useState(0);
   const db = getFirestore();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -26,7 +26,7 @@ const Transactions = () => {
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
         if (userDoc.exists()) {
-          setUserCoins(userDoc.data().coins || 0); // 讀取用戶的硬幣數量
+          setUserCoins(userDoc.data().coins || 0);
         }
       }
     };
@@ -60,11 +60,10 @@ const Transactions = () => {
       }
     };
 
-    fetchUserCoins(); // 加載用戶硬幣數
-    fetchTransactions(); // 加載交易紀錄
+    fetchUserCoins();
+    fetchTransactions();
   }, [db, user]);
 
-  // 根據選擇的篩選條件過濾交易
   const filteredTransactions = filterType
     ? transactions.filter((transaction) =>
         filterType === "income"

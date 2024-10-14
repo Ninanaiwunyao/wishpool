@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import starIcon from "./starIcon.png"; // 引入 starIcon 圖片
-import backgroundImage from "./landingPageBG.jpg"; // 引入 starIcon 圖片
+import starIcon from "./starIcon.png";
+import backgroundImage from "./landingPageBG.jpg";
 import gifImage from "./pool.gif";
 
-// 生成隨機範圍的數值
 const getRandomValue = (min, max) => Math.random() * (max - min) + min;
 
 const LandingPage = () => {
-  // 創建多個隨機浮動的元素
   const [floatingElements, setFloatingElements] = useState([]);
 
   const generateFloatingElements = () => {
@@ -20,25 +18,23 @@ const LandingPage = () => {
         size: getRandomValue(
           window.innerWidth * 0.02,
           window.innerWidth * 0.04
-        ), // 隨機大小
-        startX: getRandomValue(0, 100), // 隨機 X 軸初始位置（相對於螢幕寬度百分比）
-        delay: getRandomValue(3, 10), // 調整漂浮動畫的隨機延遲，最小延遲為 3 秒
-        duration: getRandomValue(15, 25), // 調整漂浮速度（掉落時間），範圍在 15 到 25 秒之間
+        ),
+        startX: getRandomValue(0, 100),
+        delay: getRandomValue(3, 10),
+        duration: getRandomValue(15, 25),
       });
     }
     setFloatingElements(elements);
   };
   useEffect(() => {
-    generateFloatingElements(); // 初始化浮動元素
+    generateFloatingElements();
 
-    // 監聽螢幕大小變化
     const handleResize = () => {
       generateFloatingElements();
     };
 
     window.addEventListener("resize", handleResize);
 
-    // 清理事件監聽器
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -64,7 +60,6 @@ const LandingPage = () => {
         立即入池
       </Link>
 
-      {/* Particles Background - 浮動元素 */}
       {floatingElements.map((element) => (
         <motion.img
           key={element.id}
@@ -74,16 +69,16 @@ const LandingPage = () => {
           style={{
             width: `${element.size}px`,
             height: `${element.size}px`,
-            left: `${element.startX}%`, // 以螢幕寬度的百分比設置 X 軸位置
+            left: `${element.startX}%`,
           }}
-          initial={{ top: "-10%" }} // 元素從螢幕上方掉下來
+          initial={{ top: "-10%" }}
           animate={{
-            top: "95%", // 掉到螢幕下方
+            top: "95%",
           }}
           transition={{
-            duration: element.duration, // 掉落時間（加大範圍，使掉落更平滑）
-            delay: element.delay, // 延遲掉落（避免多顆星星同時掉落）
-            repeat: Infinity, // 無限次重複
+            duration: element.duration,
+            delay: element.delay,
+            repeat: Infinity,
             ease: "linear",
           }}
         />

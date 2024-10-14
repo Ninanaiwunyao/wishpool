@@ -13,10 +13,10 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import angel from "./angel-stand.png"; // 系統通知頭像
+import angel from "./angel-stand.png";
 import memberIcon from "./noIcon.jpg";
 import { motion } from "framer-motion";
-import angelMail from "./angel-mail.png"; // 系統通知頭像
+import angelMail from "./angel-mail.png";
 import MemberPage from "@/pages/MemberPage";
 
 const initialState = {
@@ -33,7 +33,6 @@ const reducer = (state, action) => {
     case "UPDATE_CHAT_INFO": {
       const updatedChatInfo = { ...state.chatInfo, ...action.payload };
 
-      // 創建新的數組副本並基於時間戳排序
       const sortedChats = [...state.chats].sort((a, b) => {
         const lastMessageATime = new Date(
           updatedChatInfo[a.id]?.lastMessage.timestamp || 0
@@ -41,7 +40,7 @@ const reducer = (state, action) => {
         const lastMessageBTime = new Date(
           updatedChatInfo[b.id]?.lastMessage.timestamp || 0
         ).getTime();
-        return lastMessageBTime - lastMessageATime; // 最新訊息排在最上面
+        return lastMessageBTime - lastMessageATime;
       });
 
       return { ...state, chatInfo: updatedChatInfo, chats: sortedChats };
@@ -83,19 +82,17 @@ const Messages = () => {
 
           dispatch({ type: "SET_CHATS", payload: fetchedChats });
 
-          // 並行查詢所有參與者的資訊和最後一條訊息
           const fetchPromises = fetchedChats.map(async (chat) => {
             const otherParticipantId = chat.participants.find(
               (participant) => participant !== user.uid
             );
 
-            // 獲取參與者信息
             let userInfo = { userName: "Unknown", avatarUrl: "" };
             if (otherParticipantId === "system") {
               userInfo = {
                 userName: "系統通知",
                 avatarUrl: angel,
-              }; // 系統頭像
+              };
             } else {
               const userRef = doc(db, "users", otherParticipantId);
               const userDoc = await getDoc(userRef);
@@ -107,7 +104,6 @@ const Messages = () => {
               }
             }
 
-            // 監聽訊息變化
             const messagesRef = collection(db, "chats", chat.id, "messages");
             const lastMessageQuery = query(
               messagesRef,
@@ -128,10 +124,9 @@ const Messages = () => {
                   };
                 }
 
-                // 獲取未讀訊息
                 const unreadMessagesQuery = query(
                   messagesRef,
-                  orderBy("timestamp", "asc") // 根據需要排序
+                  orderBy("timestamp", "asc")
                 );
 
                 const allMessagesSnapshot = await getDocs(unreadMessagesQuery);
@@ -139,12 +134,10 @@ const Messages = () => {
                   (doc) => {
                     const messageData = doc.data();
 
-                    // 自己發送的訊息不計算為未讀
                     if (messageData.senderId === user.uid) {
                       return false;
                     }
 
-                    // 如果是對方發送的訊息，並且 readBy 不包含自己的 ID
                     return (
                       !messageData.readBy ||
                       !messageData.readBy.includes(user.uid)
@@ -152,9 +145,8 @@ const Messages = () => {
                   }
                 );
 
-                const unreadCount = unreadMessages.length; // 記錄未讀訊息數
+                const unreadCount = unreadMessages.length;
 
-                // 更新 chatInfo
                 dispatch({
                   type: "UPDATE_CHAT_INFO",
                   payload: {
@@ -168,14 +160,13 @@ const Messages = () => {
               }
             );
 
-            return () => unsubscribeMessages(); // 清除訊息監聽
+            return () => unsubscribeMessages();
           });
 
-          // 等待所有參與者和訊息資訊查詢完成
           await Promise.all(fetchPromises);
         });
 
-        return () => unsubscribe(); // 清除聊天監聽
+        return () => unsubscribe();
       } catch (error) {
         console.error("Error fetching chats:", error);
       }
@@ -252,7 +243,7 @@ const Messages = () => {
                                 hour: "2-digit",
                                 minute: "2-digit",
                                 second: "2-digit",
-                                hour12: false, // 24小时制
+                                hour12: false,
                               })}
                             </p>
                           </div>

@@ -52,7 +52,7 @@ const WishPool = () => {
     infinite: true,
     centerMode: true,
     centerPadding: "0",
-    slidesToShow: visibleCount, // 動態應用 visibleCount
+    slidesToShow: visibleCount,
     speed: 500,
     focusOnSelect: true,
   };

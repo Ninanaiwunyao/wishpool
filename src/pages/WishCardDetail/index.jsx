@@ -45,18 +45,14 @@ const WishCardDetail = () => {
         const dreamData = dreamDoc.data();
         const endDate = dreamData.endDate.toDate();
 
-        // 如果截止日期已過
         if (endDate < today) {
           console.log(`Dream ${dreamDoc.id} 已過期，正在刪除...`);
 
-          // 刪除該 dream 文檔
           await deleteDoc(dreamDoc.ref);
 
-          // 刪除對應的聊天室
           const chatRef = doc(db, "chats", dreamData.chatId);
           await deleteDoc(chatRef);
 
-          // 刪除聊天室中的消息
           const messagesRef = collection(
             db,
             "chats",
@@ -68,7 +64,6 @@ const WishCardDetail = () => {
             await deleteDoc(messageDoc.ref);
           });
 
-          // 更新對應的願望狀態
           const wishRef = doc(db, "wishes", dreamData.wishId);
           await updateDoc(wishRef, {
             status: "open",
@@ -90,7 +85,6 @@ const WishCardDetail = () => {
         if (docSnapshot.exists()) {
           const userData = docSnapshot.data();
           if (userData.favorites && Array.isArray(userData.favorites)) {
-            // 檢查 favorites 是否包含 wish.id
             if (userData.favorites.includes(wish.id)) {
               setIsFavorited(true);
             }
@@ -177,27 +171,25 @@ const WishCardDetail = () => {
         const hasFavorited = userData.favorites?.includes(wish.id);
 
         if (hasFavorited) {
-          // 如果已收藏，則移除收藏，並減少 likeCount
           await updateDoc(userRef, {
             favorites: arrayRemove(wish.id),
           });
           await updateDoc(wishRef, {
-            likeCount: increment(-1), // 減少 likeCount
+            likeCount: increment(-1),
           });
           await updateDoc(creatorRef, {
-            reputation: increment(-5), // 減少創建者的 reputation
+            reputation: increment(-5),
           });
           setIsFavorited(false);
         } else {
-          // 如果未收藏，則添加收藏，並增加 likeCount
           await updateDoc(userRef, {
             favorites: arrayUnion(wish.id),
           });
           await updateDoc(wishRef, {
-            likeCount: increment(1), // 增加 likeCount
+            likeCount: increment(1),
           });
           await updateDoc(creatorRef, {
-            reputation: increment(5), // 增加創建者的 reputation
+            reputation: increment(5),
           });
           setIsFavorited(true);
         }
@@ -221,19 +213,18 @@ const WishCardDetail = () => {
         chatData.participants.length === 2 &&
         chatData.participants.includes(dreamerId)
       ) {
-        // 已存在這兩個人的聊天室，返回聊天室 ID
         return docSnapshot.id;
       }
     }
     return null;
   };
   const handleDreamClick = () => {
-    setShowForm(true); // 顯示表單
+    setShowForm(true);
   };
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // 確保時間部分被設定為午夜（避免時區或小時的問題）
+    today.setHours(0, 0, 0, 0);
     const selectedEndDate = new Date(endDate);
     if (selectedEndDate < today) {
       setAlertMessage("截止日期不能早於今天！");
@@ -248,31 +239,27 @@ const WishCardDetail = () => {
         console.log("已找到現有聊天室，使用現有聊天室:", existingChatId);
         chatDocRef = doc(db, "chats", existingChatId);
       } else {
-        // 如果沒有找到聊天室，則創建新的聊天室
         console.log("未找到聊天室，創建新的聊天室");
         chatDocRef = await addDoc(collection(db, "chats"), {
-          participants: [wish.creatorId, user.uid], // 許願者和圓夢者
+          participants: [wish.creatorId, user.uid],
         });
       }
 
-      // 然後創建新的 dream 文檔並將 chatId 存入其中
       await addDoc(collection(db, "dreams"), {
         wishId: wish.id,
         dreamerId: user.uid,
         wishOwnerId: wish.creatorId,
         startDate: serverTimestamp(),
-        endDate: new Date(endDate), // 將選擇的截止日期轉換為日期對象
+        endDate: new Date(endDate),
         status: "in-progress",
-        chatId: chatDocRef.id, // 儲存 chatId
+        chatId: chatDocRef.id,
       });
 
-      // 更新 wish 文檔的狀態
       const wishRef = doc(db, "wishes", wish.id);
       await updateDoc(wishRef, {
         status: "accepted",
       });
 
-      // 為聊天室創建一個歡迎訊息
       const messagesRef = collection(db, "chats", chatDocRef.id, "messages");
       await addDoc(messagesRef, {
         senderId: user.uid,
@@ -283,7 +270,7 @@ const WishCardDetail = () => {
       });
 
       setAlertMessage("圓夢已開始，聊天室已建立！");
-      setShowForm(false); // 隱藏表單
+      setShowForm(false);
       setTimeout(() => {
         navigate(`/memberPage/chat/${chatDocRef.id}`);
       }, 2000);

@@ -39,7 +39,7 @@ const WishCard = ({ wish }) => {
     <div
       className="overflow-hidden w-64 h-96 flex flex-col justify-between items-center pb-4 text-2xl font-sans bg-white rounded-3xl shadow-lg transform transition-transform duration-300 hover:scale-105"
       style={{
-        backgroundImage: `url(${woodBG}`, // 在 md 以上显示背景图
+        backgroundImage: `url(${woodBG}`,
         backgroundSize: "cover",
         backgroundPosition: "",
         backgroundRepeat: "no-repeat",

@@ -12,7 +12,7 @@ import WishCard from "@/components/WishCard";
 import memberIcon from "./noIcon.jpg";
 import backgroundImage from "./leaderboardBG.png";
 
-const RankingPage = () => {
+const Leaderboard = () => {
   const [topWishes, setTopWishes] = useState([]);
   const [topDreamers, setTopDreamers] = useState([]);
   const [activeTab, setActiveTab] = useState("wishes");
@@ -28,7 +28,7 @@ const RankingPage = () => {
         where("likeCount", ">", 0),
         orderBy("likeCount", "desc"),
         limit(10)
-      ); // 按 likeCount 降序排列，取前 10
+      );
       const querySnapshot = await getDocs(q);
       const wishes = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -44,7 +44,7 @@ const RankingPage = () => {
         where("supportedDreams", ">", 0),
         orderBy("supportedDreams", "desc"),
         limit(10)
-      ); // 按完成夢想次數降序排列，取前 10
+      );
       const querySnapshot = await getDocs(q);
       const dreamers = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -79,7 +79,6 @@ const RankingPage = () => {
       }}
     >
       <div className="w-3/5 mt-24 mb-72">
-        {/* 選項卡按鈕 */}
         <div className="flex justify-center mb-8">
           <button
             className={`px-6 py-3 mx-2 rounded-md text-white font-semibold transition-colors ${
@@ -102,7 +101,6 @@ const RankingPage = () => {
             圓夢次數最多的用戶
           </button>
         </div>
-        {/* 願望排行榜 */}
         {activeTab === "wishes" && (
           <section className="mb-16">
             <h3 className="text-2xl font-semibold text-white mb-16 text-center">
@@ -111,7 +109,6 @@ const RankingPage = () => {
             <div className="flex flex-wrap gap-12 justify-center items-center md:flex-nowrap md:justify-center">
               {topWishes.length >= 3 && (
                 <>
-                  {/* 第二名 */}
                   <div key={topWishes[1].id} className="order-2 md:order-1">
                     <div className="relative">
                       <div className="z-10 absolute -top-8 left-1/2 transform -translate-x-1/2 bg-yellow text-darkBlue font-bold rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
@@ -125,7 +122,6 @@ const RankingPage = () => {
                     </div>
                   </div>
 
-                  {/* 第一名 */}
                   <div key={topWishes[0].id} className="order-1 md:order-2">
                     <div className="scale-100 md:scale-110 relative">
                       <div className="z-10 absolute -top-8 left-1/2 transform -translate-x-1/2 bg-yellow text-darkBlue font-bold rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
@@ -139,7 +135,6 @@ const RankingPage = () => {
                     </div>
                   </div>
 
-                  {/* 第三名 */}
                   <div key={topWishes[2].id} className="order-3 md:order-3">
                     <div className="relative">
                       <div className="z-10 absolute -top-8 left-1/2 transform -translate-x-1/2 bg-yellow text-darkBlue font-bold rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
@@ -157,7 +152,6 @@ const RankingPage = () => {
             </div>
           </section>
         )}
-        {/* 圓夢次數排行 */}
         {activeTab === "dreamers" && (
           <section>
             <h3 className="text-2xl font-semibold text-white mb-16 text-center">
@@ -166,7 +160,6 @@ const RankingPage = () => {
             <div className="flex flex-wrap gap-24 items-start justify-center md:flex-nowrap mb-72">
               {topDreamers.length >= 3 && (
                 <>
-                  {/* 第一名 */}
                   <div key={topDreamers[0].id} className="order-1 md:order-2">
                     <div className="scale-100 md:scale-125 relative bg-white p-6 rounded-lg shadow-md hover:shadow-lg flex items-center justify-between transition-all duration-300 border-l-4 border-yellow w-64">
                       <div className="absolute -top-8 left-0 bg-yellow text-darkBlue font-bold rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
@@ -188,7 +181,6 @@ const RankingPage = () => {
                     </div>
                   </div>
 
-                  {/* 第二名 */}
                   <div key={topDreamers[1].id} className="order-2 md:order-1">
                     <div className="relative bg-white p-6 rounded-lg shadow-md hover:shadow-lg flex items-center justify-between transition-all duration-300 w-64">
                       <div className="absolute -top-8 left-0 bg-yellow text-darkBlue font-bold rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
@@ -210,7 +202,6 @@ const RankingPage = () => {
                     </div>
                   </div>
 
-                  {/* 第三名 */}
                   <div key={topDreamers[2].id} className="order-3 md:order-3">
                     <div className="relative bg-white p-6 rounded-lg shadow-md hover:shadow-lg flex items-center justify-between transition-all duration-300 w-64">
                       <div className="absolute -top-8 left-0 bg-yellow text-darkBlue font-bold rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
@@ -241,4 +232,4 @@ const RankingPage = () => {
   );
 };
 
-export default RankingPage;
+export default Leaderboard;
