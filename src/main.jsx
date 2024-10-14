@@ -18,57 +18,60 @@ import Chat from "./pages/Chat";
 import Transaction from "./pages/Transaction";
 import LandingPage from "./pages/LandingPage";
 import { WishesProvider } from "./WishesContext.jsx";
+import { UnreadMessagesProvider } from "./UnreadMessagesContext";
 import PrivateRoute from "./components/PrivateRoute";
 import "./index.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <WishesProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="landingPage" element={<LandingPage />} />
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <App />
-            </PrivateRoute>
-          }
-        >
-          <Route index element={<Home />} />
-          <Route path="wishForm" element={<WishForm />} />
-          <Route path="wishPool" element={<WishPoolWithProvider />} />{" "}
+  <UnreadMessagesProvider>
+    <WishesProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="landingPage" element={<LandingPage />} />
           <Route
-            path="wishcarddetail/:id"
-            element={
-              <WishesProvider>
-                <WishCardDetail />
-              </WishesProvider>
-            }
-          />
-          <Route path="category" element={<Category />} />
-          <Route path="leaderboard" element={<Leaderboard />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-          <Route
-            path="/memberpage"
+            path="/"
             element={
               <PrivateRoute>
-                <MemberPage />
+                <App />
               </PrivateRoute>
             }
           >
-            <Route path="profile" element={<Profile />} />
-            <Route path="favorites" element={<Favorites />} />
-            <Route path="progress" element={<Progress />} />
-            <Route path="message" element={<Message />} />
-            <Route path="chat/:id" element={<Chat />} />
-            <Route path="transaction" element={<Transaction />} />
+            <Route index element={<Home />} />
+            <Route path="wishForm" element={<WishForm />} />
+            <Route path="wishPool" element={<WishPoolWithProvider />} />{" "}
+            <Route
+              path="wishcarddetail/:id"
+              element={
+                <WishesProvider>
+                  <WishCardDetail />
+                </WishesProvider>
+              }
+            />
+            <Route path="category" element={<Category />} />
+            <Route path="leaderboard" element={<Leaderboard />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route
+              path="/memberpage"
+              element={
+                <PrivateRoute>
+                  <MemberPage />
+                </PrivateRoute>
+              }
+            >
+              <Route path="profile" element={<Profile />} />
+              <Route path="favorites" element={<Favorites />} />
+              <Route path="progress" element={<Progress />} />
+              <Route path="message" element={<Message />} />
+              <Route path="chat/:id" element={<Chat />} />
+              <Route path="transaction" element={<Transaction />} />
+            </Route>
           </Route>
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
-  </WishesProvider>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </WishesProvider>
+  </UnreadMessagesProvider>
 );
