@@ -37,7 +37,6 @@ const WishForm = () => {
       return;
     }
 
-    // 獲取用戶的硬幣數量
     const userRef = doc(db, "users", user.uid);
     const userDoc = await getDoc(userRef);
 
@@ -64,12 +63,10 @@ const WishForm = () => {
         imageUrl = await getDownloadURL(storageRef);
       }
 
-      // 扣除硬幣
       await updateDoc(userRef, {
         coins: increment(-amount),
       });
 
-      // 新增願望至 wishes 集合
       const wishDocRef = await addDoc(collection(db, "wishes"), {
         amount,
         createdAt: serverTimestamp(),
@@ -83,13 +80,12 @@ const WishForm = () => {
         title: data.title,
       });
 
-      // 新增交易紀錄至 transactions 集合
       await addDoc(collection(db, "transactions"), {
         userId: user.uid,
-        amount: -amount, // 扣除的硬幣
-        type: "make-wish", // 許願交易類型
+        amount: -amount,
+        type: "make-wish",
         timestamp: serverTimestamp(),
-        relatedId: wishDocRef.id, // 記錄相關的願望 ID
+        relatedId: wishDocRef.id,
       });
 
       setAlertMessage("願望已成功提交！");
@@ -117,7 +113,7 @@ const WishForm = () => {
 
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2">
-            請決定要投入多少硬幣
+            請決定要投入多少硬幣（請以5個為單位）
           </label>
           <input
             type="number"
@@ -146,9 +142,17 @@ const WishForm = () => {
             type="text"
             placeholder="輸入願望主旨"
             className="w-full p-2 border rounded"
-            {...register("title", { required: true })}
+            {...register("title", {
+              required: "名稱不能為空",
+              maxLength: {
+                value: 10,
+                message: "不能超過10個字",
+              },
+            })}
           />
-          {errors.title && <p className="text-red-500">此欄位為必填項。</p>}
+          {errors.title && (
+            <p className="text-red-500">{errors.title.message}</p>
+          )}
         </div>
 
         <div className="mb-4">
