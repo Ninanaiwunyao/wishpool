@@ -148,6 +148,10 @@ const WishForm = () => {
                 value: 10,
                 message: "不能超過10個字",
               },
+              validate: {
+                notOnlyWhitespace: (value) =>
+                  value.trim() !== "" || "名稱不能只包含空白字符",
+              },
             })}
           />
           {errors.title && (
@@ -162,10 +166,16 @@ const WishForm = () => {
           <textarea
             placeholder="輸入願望內容"
             className="w-full p-2 border rounded"
-            {...register("description", { required: true })}
+            {...register("description", {
+              required: "此欄位為必填項。",
+              validate: {
+                notOnlyWhitespace: (value) =>
+                  value.trim() !== "" || "內容不能只包含空白字符",
+              },
+            })}
           />
           {errors.description && (
-            <p className="text-red-500">此欄位為必填項。</p>
+            <p className="text-red-500">{errors.description.message}</p>
           )}
         </div>
 
@@ -221,9 +231,31 @@ const WishForm = () => {
           <input
             type="file"
             className="w-full p-2 border rounded"
-            {...register("image", { required: true })}
+            accept="image/*"
+            {...register("image", {
+              required: "此欄位為必填項。",
+              validate: {
+                isImage: (files) => {
+                  if (!files || files.length === 0) {
+                    return "請選擇一張圖片";
+                  }
+                  const file = files[0];
+                  const validImageTypes = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/gif",
+                  ];
+                  return (
+                    validImageTypes.includes(file.type) ||
+                    "只允許上傳 JPEG、PNG 或 GIF 格式的圖片"
+                  );
+                },
+              },
+            })}
           />
-          {errors.image && <p className="text-red-500">此欄位為必填項。</p>}
+          {errors.image && (
+            <p className="text-red-500">{errors.image.message}</p>
+          )}
         </div>
 
         <button

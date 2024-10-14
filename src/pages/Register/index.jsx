@@ -170,6 +170,10 @@ const Register = () => {
                 maxLength: {
                   value: 10,
                   message: "名稱不能超過10個字",
+                  validate: {
+                    notOnlyWhitespace: (value) =>
+                      value.trim() !== "" || "名稱不能只包含空白字符",
+                  },
                 },
               })}
               className="w-full p-2 rounded border border-gray-300"
