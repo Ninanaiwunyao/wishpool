@@ -3,9 +3,11 @@ import { useState, useEffect } from "react";
 import arrowicon from "./311747.svg";
 import backgroundImage from "./starBG.png";
 import MobileBackgroundImage from "./MobileStarBG.png";
+import { useUnreadMessages } from "../../UnreadMessagesContext";
 
 const MemberPage = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const unreadMessagesCount = useUnreadMessages();
   const [isSmOrBelow, setIsSmOrBelow] = useState(window.innerWidth <= 641);
   useEffect(() => {
     const handleResize = () => {
@@ -83,7 +85,7 @@ const MemberPage = () => {
               圓夢進度
             </NavLink>
           </li>
-          <li>
+          <li className="relative">
             <NavLink
               to="/memberpage/message"
               className={({ isActive }) =>
@@ -93,6 +95,11 @@ const MemberPage = () => {
             >
               收件區
             </NavLink>
+            {unreadMessagesCount > 0 && (
+              <div className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                {unreadMessagesCount}
+              </div>
+            )}
           </li>
           <li>
             <NavLink
@@ -108,7 +115,6 @@ const MemberPage = () => {
         </ul>
       </nav>
 
-      {/* 右側內容 */}
       <div className="flex-1 p-0">
         <Outlet />
       </div>

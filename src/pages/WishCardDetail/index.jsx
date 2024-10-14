@@ -122,7 +122,27 @@ const WishCardDetail = () => {
   }
 
   if (!wish) {
-    return <p>No wish found with the given ID.</p>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-darkBlue">
+        <div className="text-center p-8 bg-white rounded-lg shadow-lg">
+          <img
+            src="https://via.placeholder.com/150?text=Wish+Not+Found"
+            alt="No wish found"
+            className="w-24 h-24 mx-auto mb-4"
+          />
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">找不到願望</h2>
+          <p className="text-gray-600 mb-6">
+            抱歉，我們無法找到與此ID匹配的願望。請檢查ID並重試。
+          </p>
+          <button
+            onClick={() => navigate("/wishPool")}
+            className="bg-lightBlue text-white py-2 px-4 rounded hover:bg-darkBlue transition duration-300"
+          >
+            回到願望池
+          </button>
+        </div>
+      </div>
+    );
   }
   const openStatus = wish.status === "open";
   const isOwner = user && wish.creatorId === user.uid;
