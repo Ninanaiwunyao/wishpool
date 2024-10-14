@@ -9,7 +9,6 @@ import mobileBG from "./mobileBG.png";
 const Home = () => {
   const [isMdOrAbove, setIsMdOrAbove] = useState(window.innerWidth >= 1245);
 
-  // 当窗口大小变化时，更新状态以控制背景图片显示
   useEffect(() => {
     const handleResize = () => {
       setIsMdOrAbove(window.innerWidth >= 1245);
@@ -27,7 +26,7 @@ const Home = () => {
       style={{
         backgroundImage: isMdOrAbove
           ? `url(${backgroundImage})`
-          : `url(${mobileBG})`, // 在 md 以上显示背景图
+          : `url(${mobileBG})`,
         backgroundSize: "cover",
         backgroundPosition: isMdOrAbove ? "center -90px" : "",
         backgroundRepeat: "no-repeat",

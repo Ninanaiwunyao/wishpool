@@ -45,21 +45,20 @@ const Chat = () => {
 
           let avatarUrl = "";
           if (messageData.senderId === "system") {
-            // 对于系统消息，使用本地头像和预定义昵称
             avatarUrl = angel;
           } else {
             const userRef = doc(db, "users", messageData.senderId);
             const userDoc = await getDoc(userRef);
 
             if (userDoc.exists()) {
-              avatarUrl = userDoc.data().avatarUrl; // 假設用戶文檔中有 avatarUrl 字段
+              avatarUrl = userDoc.data().avatarUrl;
             }
           }
 
           fetchedMessages.push({
             id: docSnapshot.id,
             ...messageData,
-            avatarUrl, // 加入發送者的頭像
+            avatarUrl,
             approved: messageData.approved || false,
           });
         }
@@ -78,7 +77,6 @@ const Chat = () => {
       const chatDoc = await getDoc(chatDocRef);
       if (chatDoc.exists()) {
         const chatData = chatDoc.data();
-        // 檢查參與者是否包含 "system"
         setIsSystemChat(chatData.participants.includes("system"));
       }
     };
@@ -90,7 +88,6 @@ const Chat = () => {
 
     try {
       const chatsRef = collection(db, "chats");
-      // 查詢是否存在 `system` 和 `userId` 的聊天室
       const q = query(
         chatsRef,
         where("participants", "array-contains", userId)
@@ -111,17 +108,15 @@ const Chat = () => {
       });
 
       if (existingChat) {
-        // 如果找到現有聊天室，則使用此聊天室發送交易通知
         console.log("找到現有聊天室:", existingChat.id);
         await addDoc(collection(db, "chats", existingChat.id, "messages"), {
           senderId: "system",
           content: messageContent,
           timestamp: serverTimestamp(),
-          messageType: "transaction", // 设定类型为 'transaction'
+          messageType: "transaction",
           readBy: [],
         });
       } else {
-        // 如果没有找到聊天室，則创建一个新的聊天室
         console.log("未找到聊天室，创建新的聊天室");
         const newChatDocRef = await addDoc(chatsRef, {
           participants: ["system", userId],
@@ -131,7 +126,7 @@ const Chat = () => {
           senderId: "system",
           content: messageContent,
           timestamp: serverTimestamp(),
-          messageType: "transaction", // 设定类型为 'transaction'
+          messageType: "transaction",
           readBy: [],
         });
       }
@@ -158,7 +153,7 @@ const Chat = () => {
         messageType: "text",
         readBy: [],
       });
-      setNewMessage(""); // 發送成功後清空輸入框
+      setNewMessage("");
     } catch (error) {
       console.error("發送訊息失敗：", error);
     }
@@ -173,37 +168,31 @@ const Chat = () => {
       }
 
       const wishData = wishDoc.data();
-      const wishOwnerId = wishData.creatorId; // 許願者 ID
-      const amount = wishData.amount || 0; // 如果文檔中沒有 amount，默認為 0
-      // 增加圓夢者的 coins
+      const wishOwnerId = wishData.creatorId;
+      const amount = wishData.amount || 0;
       const userDocRef = doc(db, "users", dreamerId);
       const userDoc = await getDoc(userDocRef);
-      const wishOwnerDocRef = doc(db, "users", wishOwnerId); // 許願者
+      const wishOwnerDocRef = doc(db, "users", wishOwnerId);
 
       if (userDoc.exists()) {
         const userData = userDoc.data();
 
-        // 如果 user 沒有 completedDreamsCount 欄位，初始化為 1；如果有，就加 1
         const newsupportedDreams =
           userData.supportedDreams !== undefined ? increment(1) : 1;
 
-        // 更新圓夢者的 coins 和 completedDreamsCount
         await updateDoc(userDocRef, {
           coins: increment(amount),
           supportedDreams: newsupportedDreams,
           reputation: increment(50),
         });
       }
-      // 確認許願者文檔存在
       const wishOwnerDoc = await getDoc(wishOwnerDocRef);
       if (wishOwnerDoc.exists()) {
-        // 增加許願者的 reputation
         await updateDoc(wishOwnerDocRef, {
-          reputation: increment(10), // 許願者增加 10 聲望
+          reputation: increment(10),
         });
       }
 
-      // 更新願望和圓夢狀態為 "fulfilled"
       await updateDoc(wishDocRef, {
         status: "fulfilled",
       });
@@ -256,11 +245,11 @@ const Chat = () => {
         throw new Error("訊息文檔不存在");
       }
       await updateDoc(messageRef, {
-        approved: false, // 標記為不核可
+        approved: false,
       });
       const dreamDocRef = doc(db, "dreams", dreamId);
       await updateDoc(dreamDocRef, {
-        approved: "false", // 標記為不核可
+        approved: "false",
       });
 
       await sendSystemNotification(
@@ -287,7 +276,6 @@ const Chat = () => {
       querySnapshot.forEach(async (docSnapshot) => {
         const messageRef = doc(db, "chats", chatId, "messages", docSnapshot.id);
 
-        // 更新訊息的 readBy 字段
         await updateDoc(messageRef, {
           readBy: arrayUnion(user.uid),
         });
@@ -297,8 +285,7 @@ const Chat = () => {
     if (chatId && user) {
       markMessagesAsRead();
     }
-  }, [chatId, user, db]); // 添加 chatId 和 user 到依賴項數組中
-
+  }, [chatId, user, db]);
   return (
     <div className=" h-screen p-8 flex flex-col md:ml-48">
       <h2 className="md:ml-24 text-2xl font-bold text-white mb-6 mt-16">
@@ -312,10 +299,9 @@ const Chat = () => {
               message.senderId === user.uid ? "justify-end" : "justify-start"
             }`}
           >
-            {/* 顯示發送者的頭像，放在訊息框的外側 */}
             {message.senderId !== user.uid && (
               <img
-                src={message.avatarUrl || memberIcon} // 如果頭像不存在顯示佔位圖
+                src={message.avatarUrl || memberIcon}
                 alt="頭像"
                 className="w-10 h-10 rounded-full mr-4"
               />
@@ -378,7 +364,6 @@ const Chat = () => {
                 )}
             </div>
 
-            {/* 發送者的頭像在訊息框外側 */}
             {message.senderId === user.uid && (
               <img
                 src={message.avatarUrl || memberIcon}
@@ -401,7 +386,7 @@ const Chat = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder={isSystemChat ? "系統通知不可回覆" : "輸入訊息..."}
           className="flex-grow p-2 rounded-l-lg"
-          disabled={isSystemChat} // 禁用輸入框
+          disabled={isSystemChat}
         />
         {!isSystemChat && (
           <button

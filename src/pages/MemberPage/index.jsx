@@ -43,7 +43,6 @@ const MemberPage = () => {
         ) : (
           <img src={arrowicon} alt="➡" className="h-6" />
         )}{" "}
-        {/* 展開或收起的箭頭 */}
       </button>
 
       <nav

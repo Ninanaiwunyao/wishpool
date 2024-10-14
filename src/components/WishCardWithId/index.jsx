@@ -37,7 +37,6 @@ const WishCardWithId = ({ wishId }) => {
             <div className="w-6 h-6 bg-white rounded-full animate-bounce delay-200"></div>
           </motion.div>
 
-          {/* Loading Message */}
           <p className="text-white text-2xl font-bold">Loading...</p>
         </div>
       </div>

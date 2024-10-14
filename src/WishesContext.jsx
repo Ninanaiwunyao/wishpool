@@ -12,7 +12,6 @@ export const WishesProvider = ({ children }) => {
   useEffect(() => {
     const wishesRef = collection(db, "wishes");
 
-    // 使用 onSnapshot 监听数据变化
     const unsubscribe = onSnapshot(wishesRef, (snapshot) => {
       const wishesData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -22,7 +21,6 @@ export const WishesProvider = ({ children }) => {
       setLoading(false);
     });
 
-    // 在组件卸载时取消监听
     return () => unsubscribe();
   }, []);
 

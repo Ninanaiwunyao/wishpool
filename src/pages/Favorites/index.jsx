@@ -35,7 +35,7 @@ const Favorites = () => {
           })
         );
 
-        setFavoriteWishes(wishes.filter(Boolean)); // 去除無效的願望
+        setFavoriteWishes(wishes.filter(Boolean));
       }
       setLoading(false);
     };
