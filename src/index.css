@@ -30,7 +30,7 @@ body {
 
 .slick-prev,
 .slick-next {
-  display: none !important; /* 隱藏默認的左右箭頭 */
+  display: none !important;
 }
 
 /* :root {

@@ -34,7 +34,6 @@ const Login = () => {
   const handleLogin = async (data) => {
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      // 在這裡不需要導航，因為 `onAuthStateChanged` 會自動處理
     } catch (err) {
       console.error("登入失敗:", err.message);
       setAlertMessage("登入失敗，請檢查您的電子郵件和密碼");

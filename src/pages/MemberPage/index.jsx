@@ -24,7 +24,7 @@ const MemberPage = () => {
   };
   return (
     <div
-      className="flex bg-darkBlue items-center h-fit md:min-h-screen "
+      className="flex bg-darkBlue items-center h-fit "
       style={{
         backgroundImage: isSmOrBelow
           ? `url(${MobileBackgroundImage})`
