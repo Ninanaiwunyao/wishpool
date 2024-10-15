@@ -73,12 +73,13 @@ const Transactions = () => {
     : transactions;
 
   return (
-    <div className="p-8 flex flex-col md:ml-40 h-fit mt-12 min-h-screen">
-      <div className="ml-6 md:ml-24 text-2xl font-bold text-white mb-6 mt-16">
-        硬幣紀錄
+    <div className="p-8 flex flex-col md:ml-40 h-fit mt-12 min-h-screen ">
+      <div className="flex justify-center md:justify-start">
+        <div className="md:ml-24 text-2xl font-bold text-white mb-6 md:mt-16 mt-4">
+          硬幣紀錄
+        </div>
       </div>
-
-      <div className="flex items-center ml-6 md:ml-24 mb-6">
+      <div className="flex items-center justify-center md:justify-start md:ml-24 mb-6">
         <div className="flex items-center space-x-4">
           <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
             <img src={coinspng} alt="Coins" className="w-8 h-8 mr-2" />
@@ -110,7 +111,7 @@ const Transactions = () => {
         </div>
       </div>
 
-      <div className="ml-6 md:ml-24 flex flex-col md:w-4/5 h-fit">
+      <div className=" md:ml-24 flex flex-col md:w-4/5 h-fit">
         {filteredTransactions.length === 0 ? (
           <p className="text-white">目前沒有交易紀錄。</p>
         ) : (

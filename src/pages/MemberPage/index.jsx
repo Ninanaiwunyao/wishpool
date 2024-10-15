@@ -29,7 +29,7 @@ const MemberPage = () => {
         backgroundImage: isSmOrBelow
           ? `url(${MobileBackgroundImage})`
           : `url(${backgroundImage})`,
-        backgroundSize: "contain",
+        backgroundSize: isSmOrBelow ? "cover" : "contain",
         backgroundPosition: "center",
         backgroundRepeat: "repeat",
       }}

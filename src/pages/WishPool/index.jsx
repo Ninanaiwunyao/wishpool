@@ -4,6 +4,8 @@ import { WishesProvider, useWishes } from "@/WishesContext";
 import WishCard from "@/components/WishCard";
 import backgroundImage from "./wishpoolBG.png";
 import mobileBackgroundImage from "./mobileWishpoolBG.png";
+import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
+import PropTypes from "prop-types";
 
 const WishPool = () => {
   const { wishes, loading } = useWishes();
@@ -47,6 +49,44 @@ const WishPool = () => {
     .filter((wish) => wish.status === "open")
     .sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate());
 
+  const NextArrow = ({ onClick }) => {
+    return (
+      <div
+        className="custom-arrow custom-arrow-right"
+        onClick={onClick}
+        style={{
+          position: "absolute",
+          right: "-50px",
+          top: "50%",
+          zIndex: 1,
+          transform: "translateY(-50%)",
+          cursor: "pointer",
+        }}
+      >
+        <FaArrowCircleRight size={40} color="#FFF" opacity={0.5} />
+      </div>
+    );
+  };
+
+  const PrevArrow = ({ onClick }) => {
+    return (
+      <div
+        className="custom-arrow custom-arrow-left"
+        onClick={onClick}
+        style={{
+          position: "absolute",
+          left: "-50px",
+          top: "50%",
+          zIndex: 1,
+          transform: "translateY(-50%)",
+          cursor: "pointer",
+        }}
+      >
+        <FaArrowCircleLeft size={40} color="#FFF" opacity={0.5} />
+      </div>
+    );
+  };
+
   const settings = {
     dots: false,
     infinite: true,
@@ -55,6 +95,8 @@ const WishPool = () => {
     slidesToShow: visibleCount,
     speed: 500,
     focusOnSelect: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
   };
 
   return (
@@ -64,6 +106,7 @@ const WishPool = () => {
         backgroundImage: isMdOrAbove
           ? `url(${backgroundImage})`
           : `url(${mobileBackgroundImage})`,
+        backgroundPosition: isMdOrAbove ? "" : "center -70px",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}
@@ -84,5 +127,7 @@ const WishPoolWithProvider = () => (
     <WishPool />
   </WishesProvider>
 );
-
+WishPool.propTypes = {
+  onClick: PropTypes.func,
+};
 export default WishPoolWithProvider;

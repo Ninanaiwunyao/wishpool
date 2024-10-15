@@ -79,7 +79,7 @@ const Leaderboard = () => {
       }}
     >
       <div className="w-3/5 mt-24 mb-72">
-        <div className="flex justify-center mb-8">
+        <div className="flex flex-col md:flex-row justify-center mb-8">
           <button
             className={`px-6 py-3 mx-2 rounded-md text-white font-semibold transition-colors ${
               activeTab === "wishes"

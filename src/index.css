@@ -28,6 +28,11 @@ body {
   min-height: 100vh;
 }
 
+.slick-prev,
+.slick-next {
+  display: none !important; /* 隱藏默認的左右箭頭 */
+}
+
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
