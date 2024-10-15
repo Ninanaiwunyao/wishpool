@@ -188,7 +188,7 @@ const Profile = () => {
             if (error.code === "storage/object-not-found") {
               console.warn("舊頭像文件不存在，無需刪除。");
             } else {
-              throw error; // 其他錯誤繼續拋出
+              throw error;
             }
           }
         }
@@ -260,11 +260,11 @@ const Profile = () => {
         alt=""
         className="hidden md:block absolute right-36 h-72 top-16 z-30"
       />
-      <div className="flex-col flex w-4/5 items-center justify-start md:items-start mb-6 mt-36 md:ml-80 md:mr-24 z-20">
+      <div className="flex-col flex w-4/5 items-center justify-start md:items-start mb-6 mt-24 md:mt-36 md:ml-80 md:mr-24 z-20">
         <div className="">
           <h2 className="text-2xl text-white font-bold mb-6">個人檔案</h2>
         </div>
-        <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col w-10/12 items-center justify-between md:flex-row ">
+        <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col w-full md:w-10/12 items-center justify-between md:flex-row ">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col space-y-4 w-1/8 items-center"
@@ -441,7 +441,7 @@ const Profile = () => {
       <div className="w-4/5 mt-8 mb-16 md:ml-64 md:mr-8 flex flex-col items-center md:items-start z-20">
         <h3 className="text-white text-2xl mb-6 font-bold">許願記錄</h3>
         {userWishes.length > 0 ? (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-12 w-11/12 justify-items-center md:justify-items-start">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-12 w-[88%] justify-items-center md:justify-items-start">
             {userWishes.map((wish) => (
               <WishCard key={wish.id} wish={wish} className=" mb-16" />
             ))}

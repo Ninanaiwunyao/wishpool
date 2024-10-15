@@ -202,7 +202,7 @@ const Messages = () => {
 
   return (
     <>
-      <div className=" p-8 md:ml-40 h-screen mt-28">
+      <div className=" p-8 md:ml-40 h-screen mt-16 md:mt-28 flex flex-col items-center md:items-start md:justify-start">
         <h2 className="text-2xl font-bold text-white mb-6 md:ml-24 ">聊天室</h2>
         {chats.length > 0 ? (
           <div className="flex flex-col md:w-4/5 w-full md:ml-24">
