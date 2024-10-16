@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   getFirestore,
   addDoc,
@@ -21,10 +22,15 @@ const ProofUploadModal = ({
   onUploadSuccess,
   setAlertMessage,
 }) => {
-  const [proofText, setProofText] = useState("");
-  const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [fileErrorMessage, setFileErrorMessage] = useState(null);
+  const [file, setFile] = useState(null);
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    formState: { errors },
+  } = useForm();
 
   const db = getFirestore();
   const storage = getStorage();
@@ -33,24 +39,20 @@ const ProofUploadModal = ({
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
+    setFileErrorMessage(null);
+    clearErrors("file");
     if (selectedFile) {
       const fileType = selectedFile.type;
       if (!["image/jpeg", "image/png", "image/jpg"].includes(fileType)) {
         setFileErrorMessage("只允許上傳圖片檔案 (JPG, PNG)。");
         setFile(null);
       } else {
-        setFileErrorMessage(null);
         setFile(selectedFile);
       }
     }
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!file || !proofText) {
-      setAlertMessage("請輸入文字證明以及上傳圖片。");
-      return;
-    }
+  const onSubmit = async (data) => {
+    const { proofText } = data;
     try {
       setIsUploading(true);
       let fileUrl = null;
@@ -127,20 +129,26 @@ const ProofUploadModal = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
         <h3 className="text-xl font-bold mb-4">上傳圓夢證明</h3>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <textarea
-            value={proofText}
-            onChange={(e) => setProofText(e.target.value)}
+            {...register("proofText", { required: "請輸入證明描述" })}
             placeholder="輸入證明描述..."
             className="w-full p-2 border border-gray-300 rounded"
           ></textarea>
+          {errors.proofText && (
+            <p className="text-red-500">{errors.proofText.message}</p>
+          )}
           <input
             type="file"
+            {...register("file", { required: "請上傳圖片" })}
             onChange={handleFileChange}
             className="block w-full"
           />
           {fileErrorMessage && (
             <p className="text-red-500">{fileErrorMessage}</p>
+          )}
+          {errors.file && (
+            <p className="text-red-500">請上傳圖片 (JPG, PNG)。</p>
           )}
           <div className="flex justify-end space-x-2">
             <button
