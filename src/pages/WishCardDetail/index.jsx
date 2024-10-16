@@ -46,8 +46,6 @@ const WishCardDetail = () => {
         const endDate = dreamData.endDate.toDate();
 
         if (endDate < today) {
-          console.log(`Dream ${dreamDoc.id} 已過期，正在刪除...`);
-
           await deleteDoc(dreamDoc.ref);
 
           const chatRef = doc(db, "chats", dreamData.chatId);
@@ -68,10 +66,6 @@ const WishCardDetail = () => {
           await updateDoc(wishRef, {
             status: "open",
           });
-
-          console.log(
-            `Dream ${dreamDoc.id} 已刪除，對應的 wish 狀態已更新為 open。`
-          );
         }
       });
     };
@@ -236,10 +230,8 @@ const WishCardDetail = () => {
       let chatDocRef;
 
       if (existingChatId) {
-        console.log("已找到現有聊天室，使用現有聊天室:", existingChatId);
         chatDocRef = doc(db, "chats", existingChatId);
       } else {
-        console.log("未找到聊天室，創建新的聊天室");
         chatDocRef = await addDoc(collection(db, "chats"), {
           participants: [wish.creatorId, user.uid],
         });

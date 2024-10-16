@@ -143,7 +143,7 @@ const WishForm = () => {
             placeholder="輸入願望主旨"
             className="w-full p-2 border rounded"
             {...register("title", {
-              required: "名稱不能為空",
+              required: "此欄位為必填項",
               maxLength: {
                 value: 10,
                 message: "不能超過10個字",

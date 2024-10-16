@@ -51,10 +51,12 @@ const Login = () => {
       }}
     >
       <div className="bg-lightBlue p-8 shadow-md rounded-2xl md:w-[500px]">
-        <h2 className="text-2xl font-bold mb-6 text-center">歡迎回到許願池</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-cream">
+          歡迎回到許願池
+        </h2>
         <form onSubmit={handleSubmit(handleLogin)}>
           <div className="mb-4">
-            <label className="block mb-2">入池許可證</label>
+            <label className="block mb-2 text-cream">入池許可證</label>
             <input
               type="email"
               placeholder="請輸入電子郵件"
@@ -66,7 +68,7 @@ const Login = () => {
             )}
           </div>
           <div className="mb-4">
-            <label className="block mb-2">密碼</label>
+            <label className="block mb-2 text-cream">密碼</label>
             <input
               type="password"
               placeholder="請輸入密碼"
@@ -86,9 +88,9 @@ const Login = () => {
             </button>
           </div>
         </form>
-        <p className="text-center mt-4">
+        <p className="text-center mt-4 text-cream">
           還沒有許可證？{" "}
-          <Link to="/register" className="text-darkBlue font-bold">
+          <Link to="/register" className="text-yellow font-bold">
             立即申請
           </Link>
         </p>
