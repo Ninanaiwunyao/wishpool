@@ -25,6 +25,7 @@ const Leaderboard = () => {
       const wishesRef = collection(db, "wishes");
       const q = query(
         wishesRef,
+        where("status", "==", "open"),
         where("likeCount", ">", 0),
         orderBy("likeCount", "desc"),
         limit(10)

@@ -29,7 +29,9 @@ const Category = () => {
 
   useEffect(() => {
     if (wishes.length > 0 && category) {
-      const filtered = wishes.filter((wish) => wish.tags.includes(category));
+      const filtered = wishes
+        .filter((wish) => wish.tags.includes(category))
+        .filter((wish) => wish.status === "open");
       setFilteredWishes(filtered);
     }
   }, [wishes, category]);
