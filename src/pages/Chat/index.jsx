@@ -61,6 +61,19 @@ const Chat = () => {
             avatarUrl,
             approved: messageData.approved || false,
           });
+
+          if (!messageData.readBy || !messageData.readBy.includes(user.uid)) {
+            const messageRef = doc(
+              db,
+              "chats",
+              chatId,
+              "messages",
+              docSnapshot.id
+            );
+            await updateDoc(messageRef, {
+              readBy: arrayUnion(user.uid),
+            });
+          }
         }
 
         setMessages(fetchedMessages);
