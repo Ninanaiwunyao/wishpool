@@ -25,10 +25,9 @@ const Leaderboard = () => {
       const wishesRef = collection(db, "wishes");
       const q = query(
         wishesRef,
-        where("status", "==", "open"),
         where("likeCount", ">", 0),
         orderBy("likeCount", "desc"),
-        limit(10)
+        limit(3)
       );
       const querySnapshot = await getDocs(q);
       const wishes = querySnapshot.docs.map((doc) => ({
@@ -44,7 +43,7 @@ const Leaderboard = () => {
         usersRef,
         where("supportedDreams", ">", 0),
         orderBy("supportedDreams", "desc"),
-        limit(10)
+        limit(3)
       );
       const querySnapshot = await getDocs(q);
       const dreamers = querySnapshot.docs.map((doc) => ({
