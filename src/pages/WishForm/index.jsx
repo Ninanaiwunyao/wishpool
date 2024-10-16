@@ -89,7 +89,9 @@ const WishForm = () => {
       });
 
       setAlertMessage("願望已成功提交！");
-      navigate("/wishPool");
+      setTimeout(() => {
+        navigate("/wishPool");
+      }, 2000);
     } catch (error) {
       console.error("Error adding document: ", error);
     }
