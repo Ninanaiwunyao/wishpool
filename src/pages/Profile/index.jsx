@@ -327,7 +327,7 @@ const Profile = () => {
                     },
                   })}
                   defaultValue={userData.userName}
-                  className="border-solid border-2 border-darkBlue rounded w-64"
+                  className="border-solid border-2 border-darkBlue rounded w-36"
                 />
                 {errors.userName && (
                   <p className="text-red-500">{errors.userName.message}</p>

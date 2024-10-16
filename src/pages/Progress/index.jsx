@@ -208,6 +208,7 @@ const Progress = () => {
           wishId={selectedDream.wishId}
           wishOwnerId={selectedDream.wishOwnerId}
           onUploadSuccess={handleProofUploadSuccess}
+          setAlertMessage={setAlertMessage}
         />
       )}
 
