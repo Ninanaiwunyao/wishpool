@@ -161,7 +161,7 @@ const Register = () => {
         </h2>
         <form onSubmit={handleSubmit(handleRegister)}>
           <div className="mb-4">
-            <label className="block mb-2">名稱</label>
+            <label className="block mb-2 text-cream">名稱</label>
             <input
               type="text"
               placeholder="請輸入用戶名稱"
@@ -183,7 +183,7 @@ const Register = () => {
             )}
           </div>
           <div className="mb-4">
-            <label className="block mb-2">入池許可證</label>
+            <label className="block mb-2 text-cream">入池許可證</label>
             <input
               type="email"
               placeholder="請輸入電子郵件"
@@ -195,7 +195,7 @@ const Register = () => {
             )}
           </div>
           <div className="mb-4">
-            <label className="block mb-2">密碼</label>
+            <label className="block mb-2 text-cream">密碼</label>
             <input
               type="password"
               placeholder="請輸入密碼"
@@ -207,7 +207,7 @@ const Register = () => {
             )}
           </div>
           <div className="mb-4">
-            <label className="block mb-2">確認密碼</label>
+            <label className="block mb-2 text-cream">確認密碼</label>
             <input
               type="password"
               placeholder="請再次輸入密碼"
@@ -225,7 +225,7 @@ const Register = () => {
             )}
           </div>
           <div className="mb-4">
-            <label className="block mb-2">上傳頭像</label>
+            <label className="block mb-2 text-cream">上傳頭像</label>
             <input
               type="file"
               {...register("avatar")}
@@ -233,7 +233,7 @@ const Register = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-2">邀請碼（可選）</label>
+            <label className="block mb-2 text-cream">邀請碼（可選）</label>
             <input
               type="text"
               placeholder="請輸入邀請碼"
@@ -251,9 +251,9 @@ const Register = () => {
             </button>
           </div>
         </form>
-        <p className="text-center mt-4">
+        <p className="text-center mt-4 text-cream">
           已有帳號？{" "}
-          <a href="/login" className="text-darkBlue font-bold">
+          <a href="/login" className="text-yellow font-bold">
             立即登入
           </a>
         </p>

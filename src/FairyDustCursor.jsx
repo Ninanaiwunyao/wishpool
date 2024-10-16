@@ -21,7 +21,6 @@ export function fairyDustCursor(options) {
     "(prefers-reduced-motion: reduce)"
   );
 
-  // Re-initialise or destroy the cursor when the prefers-reduced-motion setting changes
   prefersReducedMotion.onchange = () => {
     if (prefersReducedMotion.matches) {
       destroy();
@@ -33,9 +32,9 @@ export function fairyDustCursor(options) {
   function init() {
     // Don't show the cursor trail if the user has prefers-reduced-motion enabled
     if (prefersReducedMotion.matches) {
-      console.log(
-        "This browser has prefers reduced motion turned on, so the cursor did not init"
-      );
+      // console.log(
+      //   "This browser has prefers reduced motion turned on, so the cursor did not init"
+      // );
       return false;
     }
 
@@ -88,7 +87,6 @@ export function fairyDustCursor(options) {
     loop();
   }
 
-  // Bind events that are needed
   function bindEvents() {
     element.addEventListener("mousemove", onMouseMove);
     element.addEventListener("touchmove", onTouchMove, { passive: true });
@@ -161,12 +159,10 @@ export function fairyDustCursor(options) {
 
     context.clearRect(0, 0, width, height);
 
-    // Update
     for (let i = 0; i < particles.length; i++) {
       particles[i].update(context);
     }
 
-    // Remove dead particles
     for (let i = particles.length - 1; i >= 0; i--) {
       if (particles[i].lifeSpan < 0) {
         particles.splice(i, 1);

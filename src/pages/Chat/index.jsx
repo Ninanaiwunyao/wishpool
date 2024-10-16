@@ -108,7 +108,6 @@ const Chat = () => {
       });
 
       if (existingChat) {
-        console.log("找到現有聊天室:", existingChat.id);
         await addDoc(collection(db, "chats", existingChat.id, "messages"), {
           senderId: "system",
           content: messageContent,
@@ -117,7 +116,6 @@ const Chat = () => {
           readBy: [],
         });
       } else {
-        console.log("未找到聊天室，创建新的聊天室");
         const newChatDocRef = await addDoc(chatsRef, {
           participants: ["system", userId],
           createdAt: serverTimestamp(),
@@ -233,7 +231,6 @@ const Chat = () => {
   };
 
   const handleReject = async (messageId, dreamerId, dreamId) => {
-    console.log("handleReject called with:", { chatId, messageId });
     try {
       if (!dreamId || !messageId) {
         throw new Error("缺少夢想 ID 或訊息 ID");

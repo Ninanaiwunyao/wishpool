@@ -70,10 +70,8 @@ export const UnreadMessagesProvider = ({ children }) => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        console.log("User logged in:", user);
       } else {
         setUser(null);
-        console.log("No user logged in");
       }
     });
 
@@ -82,7 +80,6 @@ export const UnreadMessagesProvider = ({ children }) => {
   useEffect(() => {
     const fetchChats = async () => {
       if (!user) {
-        console.log("No user logged in");
         dispatch({ type: "SET_LOADING", payload: false });
         return;
       }

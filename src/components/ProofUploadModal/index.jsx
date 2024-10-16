@@ -91,10 +91,8 @@ const ProofUploadModal = ({
       let chatDocRef;
 
       if (existingChat) {
-        console.log("找到現有聊天室:", existingChat.id);
         chatDocRef = doc(db, "chats", existingChat.id);
       } else {
-        console.log("未找到聊天室，創建新的聊天室");
         chatDocRef = await addDoc(chatsRef, {
           participants: ["system", wishOwnerId],
           createdAt: serverTimestamp(),
