@@ -33,6 +33,7 @@ const Chat = () => {
   const bottomRef = useRef(null);
 
   useEffect(() => {
+    let isActive = true;
     const fetchMessages = async () => {
       const messagesRef = collection(db, "chats", chatId, "messages");
       const q = query(messagesRef, orderBy("timestamp", "asc"));
@@ -62,7 +63,7 @@ const Chat = () => {
             approved: messageData.approved || false,
           });
 
-          if (!messageData.readBy || !messageData.readBy.includes(user.uid)) {
+          if (isActive && !messageData.readBy.includes(user.uid)) {
             const messageRef = doc(
               db,
               "chats",
@@ -75,7 +76,6 @@ const Chat = () => {
             });
           }
         }
-
         setMessages(fetchedMessages);
       });
 
@@ -83,7 +83,17 @@ const Chat = () => {
     };
 
     fetchMessages();
-  }, [chatId, db]);
+    const handleTabClose = () => {
+      isActive = false;
+    };
+
+    window.addEventListener("beforeunload", handleTabClose);
+
+    return () => {
+      isActive = false;
+      window.removeEventListener("beforeunload", handleTabClose);
+    };
+  }, [chatId, db, user.uid]);
   useEffect(() => {
     const fetchChatInfo = async () => {
       const chatDocRef = doc(db, "chats", chatId);
