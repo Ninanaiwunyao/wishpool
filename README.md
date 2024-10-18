@@ -46,6 +46,6 @@ To start the development server:
    ```bash
    npm run dev
    ```
-This command will run the application locally. Open your browser and navigate to http://localhost:3000 to view it.
+This command will run the application locally. Open your browser and navigate to http://localhost:5173 to view it.
 
 
