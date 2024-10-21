@@ -62,6 +62,7 @@ const Login = () => {
               placeholder="請輸入電子郵件"
               {...register("email", { required: "電子郵件為必填項" })}
               className="w-full p-2 rounded border border-gray-300"
+              defaultValue="admin@mail.com"
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -74,6 +75,7 @@ const Login = () => {
               placeholder="請輸入密碼"
               {...register("password", { required: "密碼為必填項" })}
               className="w-full p-2 rounded border border-gray-300"
+              defaultValue="123456"
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>
