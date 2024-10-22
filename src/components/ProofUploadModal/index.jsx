@@ -1,18 +1,18 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { getAuth } from "firebase/auth";
 import {
-  getFirestore,
   addDoc,
   collection,
-  serverTimestamp,
   doc,
-  query,
-  where,
   getDocs,
+  getFirestore,
+  query,
+  serverTimestamp,
+  where,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const ProofUploadModal = ({
   onClose,

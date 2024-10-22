@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import starIcon from "./starIcon.png";
+import { Link } from "react-router-dom";
 import backgroundImage from "./landingPageBG.jpg";
 import gifImage from "./pool.gif";
+import starIcon from "./starIcon.png";
 
 const getRandomValue = (min, max) => Math.random() * (max - min) + min;
 

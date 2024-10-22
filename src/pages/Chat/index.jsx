@@ -1,25 +1,25 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import CustomAlert from "@/components/CustomAlert";
+import { getAuth } from "firebase/auth";
 import {
-  getFirestore,
-  collection,
   addDoc,
-  query,
-  orderBy,
-  onSnapshot,
-  serverTimestamp,
+  arrayUnion,
+  collection,
   doc,
   getDoc,
-  updateDoc,
-  increment,
-  where,
   getDocs,
-  arrayUnion,
+  getFirestore,
+  increment,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+  where,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import angel from "./angel-stand.png";
 import memberIcon from "./noIcon.jpg";
-import CustomAlert from "@/components/CustomAlert";
 
 const Chat = () => {
   const { id: chatId } = useParams();

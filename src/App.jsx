@@ -1,11 +1,10 @@
-import Header from "./components/Header";
-import { Outlet } from "react-router-dom";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import Header from "./components/Header";
 import { fairyDustCursor } from "./FairyDustCursor";
 
 function App() {

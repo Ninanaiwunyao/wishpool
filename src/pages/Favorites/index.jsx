@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import WishCard from "@/components/WishCard";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import angelBird from "./angel-bird.png";
 
 const Favorites = () => {

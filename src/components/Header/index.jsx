@@ -1,6 +1,6 @@
-import { NavLink } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import starIcon from "./starIcon.png";
 
 const Header = () => {

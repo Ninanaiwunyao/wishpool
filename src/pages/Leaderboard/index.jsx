@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
+import WishCard from "@/components/WishCard";
 import {
   collection,
   getDocs,
   getFirestore,
-  query,
-  orderBy,
   limit,
+  orderBy,
+  query,
   where,
 } from "firebase/firestore";
-import WishCard from "@/components/WishCard";
-import memberIcon from "./noIcon.jpg";
+import { useEffect, useState } from "react";
 import backgroundImage from "./leaderboardBG.png";
+import memberIcon from "./noIcon.jpg";
 
 const Leaderboard = () => {
   const [topWishes, setTopWishes] = useState([]);
