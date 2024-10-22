@@ -1,7 +1,7 @@
-import { createContext, useContext, useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "./firebase/firebaseConfig";
 import PropTypes from "prop-types";
+import { createContext, useContext, useEffect, useState } from "react";
+import { db } from "./firebase/firebaseConfig";
 
 const WishesContext = createContext();
 

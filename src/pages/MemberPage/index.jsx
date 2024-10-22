@@ -1,9 +1,9 @@
-import { Outlet, NavLink } from "react-router-dom";
-import { useState, useEffect } from "react";
-import arrowicon from "./311747.svg";
-import backgroundImage from "./starBG.png";
-import MobileBackgroundImage from "./MobileStarBG.png";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet } from "react-router-dom";
 import { useUnreadMessages } from "../../UnreadMessagesContext";
+import arrowicon from "./311747.svg";
+import MobileBackgroundImage from "./MobileStarBG.png";
+import backgroundImage from "./starBG.png";
 
 const MemberPage = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);

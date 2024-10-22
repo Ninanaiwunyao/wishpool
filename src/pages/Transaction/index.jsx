@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { getAuth } from "firebase/auth";
 import {
-  getFirestore,
   collection,
-  query,
-  where,
-  orderBy,
-  getDocs,
   doc,
   getDoc,
+  getDocs,
+  getFirestore,
+  orderBy,
+  query,
+  where,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { useEffect, useState } from "react";
 import coinspng from "./coin.png";
 
 const Transactions = () => {

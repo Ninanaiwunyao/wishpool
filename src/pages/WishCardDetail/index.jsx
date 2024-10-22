@@ -1,26 +1,25 @@
-import { useNavigate } from "react-router-dom";
-import { useWishes } from "@/WishesContext";
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import {
-  getFirestore,
-  getDoc,
-  doc,
-  addDoc,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-  collection,
-  serverTimestamp,
-  deleteDoc,
-  getDocs,
-  query,
-  where,
-  increment,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import CustomAlert from "@/components/CustomAlert";
+import { useWishes } from "@/WishesContext";
+import { getAuth } from "firebase/auth";
+import {
+  addDoc,
+  arrayRemove,
+  arrayUnion,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  increment,
+  query,
+  serverTimestamp,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const WishCardDetail = () => {
   const navigate = useNavigate();

@@ -1,23 +1,23 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import CustomAlert from "@/components/CustomAlert";
+import { storage } from "@/firebase/firebaseConfig";
+import { getAuth } from "firebase/auth";
 import {
-  collection,
   addDoc,
-  serverTimestamp,
-  getFirestore,
+  collection,
   doc,
   getDoc,
-  updateDoc,
+  getFirestore,
   increment,
+  serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { getAuth } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "@/firebase/firebaseConfig";
-import backgroundImage from "./starBackground.png";
 import angelSit from "./angel-sit.png";
 import angelStand from "./angel-stand.png";
-import CustomAlert from "@/components/CustomAlert";
+import backgroundImage from "./starBackground.png";
 
 const WishForm = () => {
   const {

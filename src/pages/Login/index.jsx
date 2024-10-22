@@ -1,13 +1,13 @@
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import CustomAlert from "@/components/CustomAlert";
 import {
   getAuth,
-  signInWithEmailAndPassword,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import backgroundImage from "./logInBg.png";
-import CustomAlert from "@/components/CustomAlert";
 
 const Login = () => {
   const {

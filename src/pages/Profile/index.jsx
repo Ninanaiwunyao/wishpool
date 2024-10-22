@@ -1,34 +1,34 @@
-import { useCallback, useState, useEffect } from "react";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  updateDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
+import CustomAlert from "@/components/CustomAlert";
+import WishCard from "@/components/WishCard";
 import { getAuth } from "firebase/auth";
 import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import {
+  deleteObject,
+  getDownloadURL,
   getStorage,
   ref,
   uploadBytes,
-  deleteObject,
-  getDownloadURL,
 } from "firebase/storage";
-import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import WishCard from "@/components/WishCard";
-import coinsIcon from "./coinsIcon.png";
-import reputationIcon from "./reputationIcon.png";
-import memberIcon from "./noIcon.jpg";
-import CustomAlert from "@/components/CustomAlert";
-import AvatarEditor from "react-avatar-edit";
 import { motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
+import AvatarEditor from "react-avatar-edit";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import angelMoon from "./angel-moon.png";
+import coinsIcon from "./coinsIcon.png";
 import BGLeft from "./galleryBGLeft.png";
 import BGRight from "./galleryBGRight.png";
+import memberIcon from "./noIcon.jpg";
+import reputationIcon from "./reputationIcon.png";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);

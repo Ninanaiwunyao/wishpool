@@ -1,24 +1,24 @@
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import CustomAlert from "@/components/CustomAlert";
+import { db } from "@/firebase/firebaseConfig";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import {
-  where,
-  query,
-  getDocs,
-  doc,
-  setDoc,
   addDoc,
   collection,
-  serverTimestamp,
+  doc,
   getDoc,
-  updateDoc,
+  getDocs,
   increment,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
 } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db } from "@/firebase/firebaseConfig";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import backgroundImage from "./logInBg.png";
-import CustomAlert from "@/components/CustomAlert";
 
 const Register = () => {
   const {

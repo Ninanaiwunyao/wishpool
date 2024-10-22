@@ -1,23 +1,23 @@
+import CustomAlert from "@/components/CustomAlert";
+import ProofDisplayModal from "@/components/ProofDisplayModal";
+import ProofUploadModal from "@/components/ProofUploadModal";
+import WishCardWithId from "@/components/WishCardWithId";
+import { getAuth } from "firebase/auth";
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { motion } from "framer-motion";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProofUploadModal from "@/components/ProofUploadModal";
-import ProofDisplayModal from "@/components/ProofDisplayModal";
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import WishCardWithId from "@/components/WishCardWithId";
-import moment from "moment";
-import tapepng from "./tape.png";
-import { motion } from "framer-motion";
 import angelFly from "./angel-fly.png";
-import CustomAlert from "@/components/CustomAlert";
+import tapepng from "./tape.png";
 
 const Progress = () => {
   const [alertMessage, setAlertMessage] = useState(null);

@@ -1,3 +1,18 @@
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { motion } from "framer-motion";
+import PropTypes from "prop-types";
 import {
   createContext,
   useContext,
@@ -5,21 +20,6 @@ import {
   useReducer,
   useState,
 } from "react";
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-  orderBy,
-  limit,
-  onSnapshot,
-} from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import PropTypes from "prop-types";
-import { motion } from "framer-motion";
 import angel from "./assets/angel-stand.png";
 import memberIcon from "./assets/noIcon.jpg";
 

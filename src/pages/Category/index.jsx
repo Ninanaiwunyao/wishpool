@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useWishes } from "@/WishesContext";
+import CustomAlert from "@/components/CustomAlert";
 import WishCard from "@/components/WishCard";
 import { motion } from "framer-motion";
-import CustomAlert from "@/components/CustomAlert";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Category = () => {
   const location = useLocation();

@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import backgroundImage from "./homeBackground.png";
-import gifImage from "./pool.gif";
 import angelSit from "./angel-sit.png";
 import angelStand from "./angel-stand.png";
+import backgroundImage from "./homeBackground.png";
 import mobileBG from "./mobileBG.png";
+import gifImage from "./pool.gif";
 
 const Home = () => {
   const [isMdOrAbove, setIsMdOrAbove] = useState(window.innerWidth >= 1245);

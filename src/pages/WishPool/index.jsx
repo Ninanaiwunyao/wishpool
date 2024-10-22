@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import Slider from "react-slick";
 import { WishesProvider, useWishes } from "@/WishesContext";
 import WishCard from "@/components/WishCard";
-import backgroundImage from "./wishpoolBG.png";
-import mobileBackgroundImage from "./mobileWishpoolBG.png";
-import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
+import Slider from "react-slick";
+import mobileBackgroundImage from "./mobileWishpoolBG.png";
+import backgroundImage from "./wishpoolBG.png";
 
 const WishPool = () => {
   const { wishes, loading } = useWishes();
