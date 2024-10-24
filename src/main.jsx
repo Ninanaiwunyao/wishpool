@@ -2,6 +2,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import App from "./App.jsx";
 import PrivateRoute from "./components/PrivateRoute";
+import { UnreadMessagesProvider } from "./Context/UnreadMessagesContext.jsx";
+import { WishesProvider } from "./Context/WishesContext.jsx";
 import "./index.css";
 import Category from "./pages/Category";
 import Chat from "./pages/Chat";
@@ -19,8 +21,6 @@ import Transaction from "./pages/Transaction";
 import WishCardDetail from "./pages/WishCardDetail";
 import WishForm from "./pages/WishForm";
 import WishPoolWithProvider from "./pages/WishPool";
-import { UnreadMessagesProvider } from "./UnreadMessagesContext";
-import { WishesProvider } from "./WishesContext.jsx";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(

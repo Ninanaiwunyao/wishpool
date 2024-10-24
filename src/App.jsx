@@ -1,3 +1,4 @@
+import { fairyDustCursor } from "@/components/FairyDustCursor";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -5,7 +6,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import Header from "./components/Header";
-import { fairyDustCursor } from "./FairyDustCursor";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
