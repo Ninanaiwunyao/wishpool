@@ -1,5 +1,5 @@
 import CustomAlert from "@/components/CustomAlert";
-import { useWishes } from "@/WishesContext";
+import { useWishes } from "@/Context/WishesContext";
 import { getAuth } from "firebase/auth";
 import {
   addDoc,

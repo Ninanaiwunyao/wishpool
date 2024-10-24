@@ -1,4 +1,4 @@
-import { useWishes } from "@/WishesContext";
+import { useWishes } from "@/Context/WishesContext";
 import CustomAlert from "@/components/CustomAlert";
 import WishCard from "@/components/WishCard";
 import { motion } from "framer-motion";

@@ -20,8 +20,8 @@ import {
   useReducer,
   useState,
 } from "react";
-import angel from "./assets/angel-stand.png";
-import memberIcon from "./assets/noIcon.jpg";
+import angel from "../assets/angel-stand.png";
+import memberIcon from "../assets/noIcon.jpg";
 
 const UnreadMessagesContext = createContext();
 

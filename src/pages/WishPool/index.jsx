@@ -1,4 +1,4 @@
-import { WishesProvider, useWishes } from "@/WishesContext";
+import { WishesProvider, useWishes } from "@/Context/WishesContext";
 import WishCard from "@/components/WishCard";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
