@@ -1,6 +1,9 @@
 # Wishpool
 
-**Wishpool** is a web application developed using React, with TailwindCSS for styling, framer-motion for animations, and React Router for routing management.
+**Wishpool** is an interactive platform that combines wish-making and dream-fulfilling, allowing users to make wishes or help others achieve their dreams. You can explore the platform live at [Wishpool Website](https://appworks-school-wishpool.web.app/landingpage).
+
+Through features like the achievement system, leaderboards, and messaging, the platform enhances community interaction and engagement. Developed using React, with TailwindCSS for styling, framer-motion for animations, and React Router for routing management.
+
 ## Features
 1. Wish Creation:
 - Users can create a wish through a form by selecting the amount to invest, wish title, wish tags, and wish content.
