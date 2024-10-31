@@ -152,7 +152,11 @@ const Chat = () => {
         });
       }
     } catch (error) {
+<<<<<<< HEAD
       console.error("查找或创建聊天时出错：", error);
+=======
+      console.error("查詢或創建聊天時出錯：", error);
+>>>>>>> bugfix/general-issues-fix
     }
   };
   useEffect(() => {
