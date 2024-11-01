@@ -152,7 +152,6 @@ const Chat = () => {
         });
       }
     } catch (error) {
-
       console.error("查詢或創建聊天時出錯：", error);
     }
   };
