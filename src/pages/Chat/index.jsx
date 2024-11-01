@@ -185,7 +185,7 @@ const Chat = () => {
       const wishDoc = await getDoc(wishDocRef);
 
       if (!wishDoc.exists()) {
-        throw new Error("願望文檔不存在");
+        throw new Error("願望不存在");
       }
 
       const wishData = wishDoc.data();

@@ -22,7 +22,7 @@ const Home = () => {
 
   return (
     <div
-      className="h-hit relative pb-6 flex items-center justify-center min-h-screen bg-darkBlue"
+      className="h-fit relative pb-6 flex items-center justify-center min-h-screen bg-darkBlue"
       style={{
         backgroundImage: isMdOrAbove
           ? `url(${backgroundImage})`
