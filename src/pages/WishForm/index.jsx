@@ -27,7 +27,12 @@ const WishForm = () => {
   } = useForm();
   const navigate = useNavigate();
   const [alertMessage, setAlertMessage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const onSubmit = async (data) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const db = getFirestore();
     const auth = getAuth();
     const user = auth.currentUser;
@@ -94,6 +99,8 @@ const WishForm = () => {
       }, 2000);
     } catch (error) {
       console.error("Error adding document: ", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -262,9 +269,12 @@ const WishForm = () => {
 
         <button
           type="submit"
-          className="bg-black text-white font-bold rounded px-6 py-2 w-full mt-4"
+          className={`bg-black text-white font-bold rounded px-6 py-2 w-full mt-4 ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={isSubmitting}
         >
-          投入許願池
+          {isSubmitting ? "提交中..." : "投入許願池"}
         </button>
         <img
           src={angelSit}
